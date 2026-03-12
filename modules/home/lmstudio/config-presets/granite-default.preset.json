@@ -1,0 +1,24 @@
+{
+  "identifier": "@local:granite-default",
+  "name": "granite-default",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.systemPrompt",
+        "value": "You are a pragmatic assistant. Prioritize correctness, concise answers, and actionable steps. For code/config tasks: show exact commands and minimal diffs. If uncertain, say so and propose a verification step."
+      },
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.4
+      },
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}

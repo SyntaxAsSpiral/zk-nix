@@ -1,0 +1,258 @@
+{
+    "Effects": [
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": false,
+            "Brightness": 100,
+            "ControllerZones": [],
+            "CustomName": "",
+            "CustomSettings": {
+                "colors": [
+                    8323242,
+                    85,
+                    22015,
+                    8323157
+                ]
+            },
+            "EffectClassName": "CustomMarquee",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 25,
+            "Temperature": 0,
+            "Tint": 0
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": false,
+            "Brightness": 100,
+            "ControllerZones": [],
+            "CustomName": "",
+            "CustomSettings": {
+                "amplitude": 40.96999740600586,
+                "background": 13311,
+                "freq_m1": 39.21999740600586,
+                "freq_m10": 17.31999969482422,
+                "freq_m11": 21.579999923706055,
+                "freq_m12": 0.05999999865889549,
+                "freq_m2": 36.540000915527344,
+                "freq_m3": 21.579999923706055,
+                "freq_m4": 1.1200000047683716,
+                "freq_m5": 31.3799991607666,
+                "freq_m6": 11.550000190734863,
+                "freq_m7": 0.2199999988079071,
+                "freq_m8": 5.0,
+                "freq_m9": 35.29999923706055,
+                "frequency": 1.909999966621399,
+                "thickness": 3
+            },
+            "EffectClassName": "FractalMotion",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 20,
+            "Temperature": 100,
+            "Tint": 0,
+            "UserColors": [
+                16711905
+            ]
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": false,
+            "Brightness": 100,
+            "ControllerZones": [],
+            "CustomName": "",
+            "EffectClassName": "MovingPanes",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 4,
+            "Speed": 50,
+            "Temperature": 0,
+            "Tint": 0,
+            "UserColors": [
+                8323242,
+                22015
+            ]
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": false,
+            "Brightness": 100,
+            "ControllerZones": [],
+            "CustomName": "",
+            "EffectClassName": "Swap",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 3,
+            "Temperature": 0,
+            "Tint": 0,
+            "UserColors": [
+                22015,
+                8323327
+            ]
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 100,
+            "ControllerZones": [
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": false,
+                    "segment_idx": 1,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                },
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": true,
+                    "segment_idx": 2,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                },
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": false,
+                    "segment_idx": 3,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                }
+            ],
+            "CustomName": "",
+            "CustomSettings": {
+                "animation_direction": 1,
+                "animation_speed": 20.0,
+                "color_mode": 1,
+                "color_rotation_direction": 0,
+                "color_rotation_speed": 16.0,
+                "colors": [
+                    85,
+                    22015,
+                    8323327,
+                    8323157,
+                    33023,
+                    170
+                ],
+                "cx": 21,
+                "cy": 3,
+                "spacing": 2,
+                "thickness": 4
+            },
+            "EffectClassName": "Hypnotoad",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 6,
+            "Temperature": 35,
+            "Tint": 0
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": false,
+            "Brightness": 100,
+            "ControllerZones": [],
+            "CustomName": "",
+            "CustomSettings": {
+                "amplitude": 3.8999998569488525,
+                "colors": [
+                    8323157,
+                    85,
+                    22015,
+                    8323327
+                ],
+                "colors_choice": 2,
+                "frequency": 0.11999999731779099,
+                "lacunarity": 0.75,
+                "motion": 2,
+                "motion_speed": 0,
+                "octaves": 2,
+                "persistence": 0.5
+            },
+            "EffectClassName": "NoiseMap",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 30,
+            "Temperature": 0,
+            "Tint": 0
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 100,
+            "ControllerZones": [
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": false,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": true,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 0
+                },
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": true,
+                    "segment_idx": 0,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                }
+            ],
+            "CustomName": "",
+            "CustomSettings": {
+                "colors": [
+                    8703,
+                    7143595,
+                    5381312,
+                    3618773,
+                    1790954,
+                    28415,
+                    255,
+                    8703
+                ],
+                "direction": 2,
+                "height": 50,
+                "spread": 100,
+                "width": 50
+            },
+            "EffectClassName": "CustomGradientWave",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 45,
+            "Temperature": 0,
+            "Tint": 0
+        }
+    ],
+    "version": 2
+}

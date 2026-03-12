@@ -1,0 +1,40 @@
+# VS Code / Kiro / Antigravity Extensions
+#
+# Install for Antigravity:
+# grep -v '^#' ~/.config/Antigravity/User/extensions.txt | grep -v '^\s*$' | while read ext; do antigravity --install-extension "$ext"; done
+#
+# Install for Kiro:
+# grep -v '^#' ~/.config/kiro/User/extensions.txt | grep -v '^\s*$' | while read ext; do kiro --install-extension "$ext"; done
+
+# Themes
+3ash.nord-flat
+arcticicestudio.nord-visual-studio-code
+catppuccin.catppuccin-vsc
+catppuccin.catppuccin-vsc-icons
+grayjack.monokai-grayjack
+
+# Language Support
+golang.go
+jnoortheen.nix-ide
+ms-python.debugpy
+ms-python.python
+ms-vscode.powershell
+svelte.svelte-vscode
+thenuprojectcontributors.vscode-nushell-lang
+
+# Development Tools
+christian-kohler.npm-intellisense
+dbaeumer.vscode-eslint
+ecmel.vscode-html-css
+esbenp.prettier-vscode
+github.vscode-github-actions
+mechatroner.rainbow-csv
+
+# Remote & Network
+jeanp413.open-remote-ssh
+jeanp413.open-remote-wsl
+tailscale.vscode-tailscale
+
+# Utilities
+lilyoliveira.catppuccin-palette-picker
+openai.chatgpt

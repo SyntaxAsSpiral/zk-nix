@@ -1,0 +1,16 @@
+{
+  "identifier": "@local:synthegen",
+  "name": "synthegen",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}

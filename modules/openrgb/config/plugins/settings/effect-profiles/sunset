@@ -1,0 +1,282 @@
+{
+    "Effects": [
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 100,
+            "ControllerZones": [
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": true,
+                    "segment_idx": 0,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                }
+            ],
+            "CustomName": "",
+            "CustomSettings": {
+                "animation_direction": 1,
+                "animation_speed": 20.0,
+                "color_mode": 1,
+                "color_rotation_direction": 0,
+                "color_rotation_speed": 39.0,
+                "colors": [
+                    85,
+                    22015,
+                    8323327,
+                    8323157,
+                    33023,
+                    170
+                ],
+                "cx": 21,
+                "cy": 3,
+                "spacing": 2,
+                "thickness": 4
+            },
+            "EffectClassName": "Hypnotoad",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 14,
+            "Temperature": 100,
+            "Tint": 0
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 11,
+            "ControllerZones": [
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": false,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": false,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 0
+                }
+            ],
+            "CustomName": "",
+            "EffectClassName": "GradientWave",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 19,
+            "Temperature": 100,
+            "Tint": 100,
+            "UserColors": [
+                331050,
+                265271
+            ]
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 8,
+            "ControllerZones": [
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": false,
+                    "segment_idx": 1,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                },
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": false,
+                    "segment_idx": 2,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                },
+                {
+                    "description": "ASUS Aura USB Mainboard Device",
+                    "is_segment": true,
+                    "location": "HID: /dev/hidraw3",
+                    "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                    "reverse": false,
+                    "segment_idx": 3,
+                    "self_brightness": 100,
+                    "serial": "9876543210",
+                    "vendor": "ASUS",
+                    "version": "AULA3-AR32-0303",
+                    "zone_idx": 1
+                }
+            ],
+            "CustomName": "",
+            "CustomSettings": {
+                "grow_speed": 10,
+                "intensity_speed": 41,
+                "max_intensity": 80,
+                "motion": false,
+                "radius": 50,
+                "run_once": false
+            },
+            "EffectClassName": "Sunrise",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 7,
+            "Temperature": 35,
+            "Tint": 0,
+            "UserColors": [
+                85,
+                8323327,
+                22015,
+                8323157
+            ]
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 100,
+            "ControllerZones": [
+                {
+                    "description": "Gigabyte RGB Fusion 2 GPU Device",
+                    "is_segment": false,
+                    "location": "I2C: /dev/i2c-1, address 0x71",
+                    "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                    "reverse": true,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "",
+                    "vendor": "Gigabyte",
+                    "version": "",
+                    "zone_idx": 0
+                },
+                {
+                    "description": "Gigabyte RGB Fusion 2 GPU Device",
+                    "is_segment": false,
+                    "location": "I2C: /dev/i2c-1, address 0x71",
+                    "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                    "reverse": true,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "",
+                    "vendor": "Gigabyte",
+                    "version": "",
+                    "zone_idx": 1
+                },
+                {
+                    "description": "Gigabyte RGB Fusion 2 GPU Device",
+                    "is_segment": false,
+                    "location": "I2C: /dev/i2c-1, address 0x71",
+                    "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                    "reverse": true,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "",
+                    "vendor": "Gigabyte",
+                    "version": "",
+                    "zone_idx": 2
+                },
+                {
+                    "description": "Gigabyte RGB Fusion 2 GPU Device",
+                    "is_segment": false,
+                    "location": "I2C: /dev/i2c-1, address 0x71",
+                    "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                    "reverse": true,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "",
+                    "vendor": "Gigabyte",
+                    "version": "",
+                    "zone_idx": 3
+                }
+            ],
+            "CustomName": "",
+            "CustomSettings": {
+                "colors": [
+                    0,
+                    0,
+                    0,
+                    16711765,
+                    8323157,
+                    7481,
+                    0,
+                    0,
+                    8323242,
+                    85,
+                    94,
+                    4468059,
+                    0,
+                    0,
+                    0,
+                    4928050,
+                    3539016
+                ]
+            },
+            "EffectClassName": "CustomMarquee",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 9,
+            "Temperature": 100,
+            "Tint": 100
+        },
+        {
+            "AllowOnlyFirst": false,
+            "AutoStart": true,
+            "Brightness": 100,
+            "ControllerZones": [
+                {
+                    "description": "Gigabyte RGB Fusion 2 GPU Device",
+                    "is_segment": false,
+                    "location": "I2C: /dev/i2c-1, address 0x71",
+                    "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                    "reverse": true,
+                    "segment_idx": -1,
+                    "self_brightness": 100,
+                    "serial": "",
+                    "vendor": "Gigabyte",
+                    "version": "",
+                    "zone_idx": 4
+                }
+            ],
+            "CustomName": "",
+            "CustomSettings": {
+                "grow_speed": 10,
+                "intensity_speed": 58,
+                "max_intensity": 80,
+                "motion": true,
+                "radius": 67,
+                "run_once": false
+            },
+            "EffectClassName": "Sunrise",
+            "FPS": 60,
+            "RandomColors": false,
+            "Slider2Val": 1,
+            "Speed": 2,
+            "Temperature": 35,
+            "Tint": 0,
+            "UserColors": [
+                85,
+                8323327,
+                22015,
+                8323157
+            ]
+        }
+    ],
+    "version": 2
+}

@@ -1,0 +1,7 @@
+/reference/
+/.kiro/
+result
+/result/
+*.qcow2
+.vscode/
+/modules/openrgb/config/logs/

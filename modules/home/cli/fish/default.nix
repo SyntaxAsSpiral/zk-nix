@@ -1,0 +1,100 @@
+# Fish shell config (zrrh) — styled to loosely match Nushell UX
+{ ... }:
+
+{
+  programs.fish = {
+    enable = true;
+
+    interactiveShellInit = ''
+      set -g fish_greeting
+      set -gx PATH $HOME/.local/bin $PATH
+
+      if status is-interactive
+        fastfetch
+        echo
+      end
+    '';
+
+    shellAliases = {
+      # Route WOL through adeck (same LAN as nxiz) and send twice for reliability.
+      wake-nxiz = "ssh zk@adeck 'wakeonlan -i 192.168.0.255 -p 9 fc:34:97:3b:6e:99; sleep 1; wakeonlan -i 255.255.255.255 -p 9 fc:34:97:3b:6e:99'";
+    };
+
+    functions = {
+      gemini = "npx --yes @google/gemini-cli@latest $argv";
+      codex = "npx --yes @openai/codex@latest $argv";
+      crush = "npx --yes @charmland/crush@latest $argv";
+
+      fish_prompt = ''
+        set -l cwd (string replace -r "^$HOME" "~" (pwd))
+        set -l last_status $status
+
+        set -l c1 8aadf4
+        set -l c2 c6a0f6
+        set -l c3 8bd5ca
+
+        if test (id -u) -eq 0
+          set c1 eed49f
+          set c2 ee99a0
+          set c3 ed8796
+        else if test $last_status -ne 0
+          set c1 f5a97f
+          set c2 f5bde6
+          set c3 ed8796
+        end
+
+        printf "\n"
+        set_color b7bdf8
+        printf "%s" $cwd
+        set_color $c1
+        printf "❱"
+        set_color $c2
+        printf "❱"
+        set_color $c3
+        printf "❱ "
+        set_color normal
+      '';
+
+      fish_right_prompt = ''
+        set -l hour (date "+%H")
+        set -l emoji "🌉"
+
+        if test $hour -lt 7
+          set emoji "🌄"
+        else if test $hour -lt 12
+          set emoji "🌇"
+        else if test $hour -lt 18
+          set emoji "🌆"
+        else if test $hour -lt 22
+          set emoji "🌃"
+        end
+
+        set_color 6e738d
+        printf "%s %s" (date "+%H:%M") $emoji
+        set_color normal
+      '';
+    };
+  };
+
+  # Catppuccin Macchiato syntax colors
+  xdg.configFile."fish/conf.d/10-catppuccin-macchiato.fish".text = ''
+    set -g fish_color_normal cad3f5
+    set -g fish_color_command 8aadf4
+    set -g fish_color_param f0c6c6
+    set -g fish_color_keyword ed8796
+    set -g fish_color_quote a6da95
+    set -g fish_color_redirection f5bde6
+    set -g fish_color_end f5a97f
+    set -g fish_color_comment 8087a2
+    set -g fish_color_error ed8796
+    set -g fish_color_selection --background=363a4f
+    set -g fish_color_search_match --background=363a4f
+    set -g fish_color_operator f5bde6
+    set -g fish_color_escape ee99a0
+    set -g fish_color_autosuggestion 6e738d
+    set -g fish_color_cwd eed49f
+    set -g fish_color_user 8bd5ca
+    set -g fish_color_host 8aadf4
+    set -g fish_color_status ed8796
+  '';
+}

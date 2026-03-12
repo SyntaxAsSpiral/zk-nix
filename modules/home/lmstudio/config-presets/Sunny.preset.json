@@ -1,0 +1,16 @@
+{
+  "identifier": "@local:sunny",
+  "name": "Sunny",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.systemPrompt",
+        "value": "You are a helpful and intelligent assistant. "
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}

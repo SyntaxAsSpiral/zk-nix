@@ -1,0 +1,50 @@
+{
+  "custom/git-review": {
+    "icon": {"clean": "", "dirty": ""},
+    "label": "{dirty}",
+    "tooltip": "{tooltip}",
+    "truncationSize": -1,
+    "execute": "/mnt/repository/nix-os/scripts/git-review.sh",
+    "interval": 15000,
+    "hideOnEmpty": true,
+    "actions": {
+      "onLeftClick": "kitty --class tui-float -e bash -c 'lazygit'",
+      "onRightClick": "# script that actually has local model add commit message and then completes the commit",
+      "onMiddleClick": "",
+      "onScrollUp": "",
+      "onScrollDown": ""
+    }
+  },
+  "custom/fleet-nxiz": {
+    "icon": {"idle": "󱄅", "building": "󰦖"},
+    "label": "{text}",
+    "tooltip": "{tooltip}",
+    "truncationSize": -1,
+    "execute": "/mnt/repository/nix-os/scripts/fleet-nxiz.sh",
+    "interval": 10000,
+    "hideOnEmpty": false,
+    "actions": {
+      "onLeftClick": "kitty --class tui-float -e bash -c 'zcli rebuild --dry; echo; echo Press any key...; read -n1'",
+      "onMiddleClick": "kitty --class tui-float -e bash -c 'zcli rebuild; echo; echo Press any key...; read -n1'",
+      "onRightClick": "kitty --class tui-float -e bash -c 'zcli cleanup; echo; echo Press any key...; read -n1'",
+      "onScrollUp": "",
+      "onScrollDown": ""
+    }
+  },
+  "custom/fleet-adeck": {
+    "icon": {"online": "󱜙", "unreachable": "󱚟", "building": "󰦖"},
+    "label": "{text}",
+    "tooltip": "{tooltip}",
+    "truncationSize": -1,
+    "execute": "/mnt/repository/nix-os/scripts/fleet-adeck.sh",
+    "interval": 10000,
+    "hideOnEmpty": false,
+    "actions": {
+      "onLeftClick": "kitty --class tui-float -e bash -c 'zcli deploy adeck --dry; echo; echo Press any key...; read -n1'",
+      "onMiddleClick": "kitty --class tui-float -e bash -c 'zcli deploy adeck; echo; echo Press any key...; read -n1'",
+      "onRightClick": "kitty --class tui-float -e bash -c 'zcli cleanup adeck; echo; echo Press any key...; read -n1'",
+      "onScrollUp": "",
+      "onScrollDown": ""
+    }
+  }
+}

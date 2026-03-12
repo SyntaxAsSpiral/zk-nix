@@ -1,0 +1,10 @@
+# Esoteric/rare fonts not available in nixpkgs
+# Copy your font files here:
+#
+# - Maya.otf
+# - Aurebesh*.otf (Star Wars)
+# - QUEN*.TTF (Quenya/Elvish)
+# - ModernRunic*.ttf
+# - Symbola*.otf
+#
+# These will be deployed to ~/.local/share/fonts/ on Linux hosts

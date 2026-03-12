@@ -1,0 +1,24 @@
+{
+  "identifier": "@local:phi4-default",
+  "name": "phi4-default",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.systemPrompt",
+        "value": "You are a clear, helpful assistant. Keep responses compact, structured, and practical. Prefer bullet points over long prose. For troubleshooting, start with likely causes and one quick validation command."
+      },
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.5
+      },
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}

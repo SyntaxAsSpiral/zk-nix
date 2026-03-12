@@ -1,0 +1,68 @@
+@include styleModule(
+    'cmodule-git-review',
+    (
+            'text-color': #cba6f7,
+            'icon-color': #94e2d5,
+            'icon-background': #a6e3a1,
+            'label-background': #292c3c,
+            'inner-spacing': 0.5em,
+            'border-enabled': false,
+            'border-color': #a6e3a1,
+            'icon-size': 1.3em
+        )
+);
+
+@include styleModule(
+    'cmodule-fleet-nxiz',
+    (
+            'text-color': #cdd6f4,
+            'icon-color': #b4befe,
+            'icon-background': #74c7ec,
+            'label-background': #292c3c,
+            'inner-spacing': 0em,
+            'border-enabled': false,
+            'border-color': #74c7ec,
+            'icon-size': 1.4em
+        )
+);
+
+@include styleModule(
+    'cmodule-fleet-adeck',
+    (
+            'text-color': #cdd6f4,
+            'icon-color': #89dceb,
+            'icon-background': #a6e3a1,
+            'label-background': #292c3c,
+            'inner-spacing': 0em,
+            'border-enabled': false,
+            'border-color': #a6e3a1,
+            'icon-size': 1.1em
+        )
+);
+
+/* Fleet module building animations */
+@keyframes fleet-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+@keyframes fleet-spin {
+  from { -gtk-icon-transform: rotate(0deg); }
+  to { -gtk-icon-transform: rotate(360deg); }
+}
+
+.cmodule-fleet-nxiz.building label:first-child {
+  animation: fleet-pulse 1.2s ease-in-out infinite;
+  color: #f9e2af;
+}
+
+.cmodule-fleet-adeck.building label:first-child {
+  animation: fleet-pulse 1.2s ease-in-out infinite;
+  color: #f9e2af;
+}
+
+.cmodule-fleet-adeck.unreachable label:first-child {
+  opacity: 0.4;
+  color: #6c7086;
+}

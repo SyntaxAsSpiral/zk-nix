@@ -1,0 +1,32 @@
+[overlay]
+# render image in overlay layer using chafa
+overlay_cmd = "chafa -s x10 $HOME/.config/otter-launcher/image.png"
+overlay_trimmed_lines = 1
+
+#move overlay rightwards
+move_overlay_right = 32
+
+[interface]
+# move the interface
+move_interface_down = 1
+
+# customized header & list prefix
+header = """
+    ┌ \u001B[1;34m  $USER@$(echo $HOSTNAME) \u001B[0m───┐
+    │ \u001B[90m󱎘  \u001B[31m󱎘  \u001B[32m󱎘  \u001B[33m󱎘  \u001B[34m󱎘  \u001B[35m󱎘  \u001B[36m󱎘\u001B[0m │
+    └ \u001B[36m \u001B[1;36m system\u001B[0m archlinux ┘
+    ┌ \u001B[33m \u001B[1;36m window \u001B[0m     $XDG_CURRENT_DESKTOP ┐
+    │ \u001B[31m \u001B[1;36m loads\u001B[0m       $(cat /proc/loadavg | cut -d ' ' -f 1) │
+    │ \u001B[32m \u001B[1;36m memory\u001B[0m     $(free -h | awk 'FNR == 2 {print $3}') │
+    │ \u001B[90m\u001B[0m  """
+list_prefix = "    └ \u001B[34m󱓞  "
+selection_prefix = "    └ \u001B[31m󱓞  "
+default_module_message = "    └ \u001B[34m󱓞  \u001B[33msearch\u001B[0m the internet"
+
+place_holder = "type & search"
+suggestion_mode = "list"
+suggestion_lines = 1
+prefix_color = "\u001B[33m"
+description_color = "\u001B[39m"
+place_holder_color = "\u001B[90m"
+hint_color = "\u001B[90m"
