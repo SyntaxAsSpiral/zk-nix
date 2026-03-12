@@ -1,7 +1,9 @@
 # Shared services
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
-{
+let
+  guiFileHosts = [ "nxiz" "zrrh" ];
+in {
   services.openssh = {
     enable = true;
     extraConfig = "AcceptEnv TERM_PROGRAM";
@@ -26,7 +28,7 @@
     pulse.enable = true;
   };
 
-  # Drive management for Thunar/GUI
-  services.udisks2.enable = true;
-  services.gvfs.enable = true;
+  # Drive management for GUI file managers
+  services.udisks2.enable = builtins.elem config.my.host guiFileHosts;
+  services.gvfs.enable = builtins.elem config.my.host guiFileHosts;
 }
