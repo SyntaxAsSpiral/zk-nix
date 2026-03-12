@@ -28,7 +28,9 @@ in {
     pulse.enable = true;
   };
 
-  # Drive management for GUI file managers
-  services.udisks2.enable = builtins.elem config.my.host guiFileHosts;
+  # Shared drive management; fwupd expects udisks2.
+  services.udisks2.enable = true;
+
+  # GUI virtual filesystem stack only on interactive GUI hosts.
   services.gvfs.enable = builtins.elem config.my.host guiFileHosts;
 }
