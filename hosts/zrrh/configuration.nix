@@ -63,6 +63,15 @@
     deps = [ "etc" ];
   };
 
+  # Thunar service + plugins
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-volman
+      thunar-archive-plugin
+    ];
+  };
+
   # Compositor
   programs.niri.enable = true;
   programs.xwayland.enable = true;

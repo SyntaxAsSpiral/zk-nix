@@ -25,4 +25,8 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  # Drive management for Thunar/GUI
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
 }
