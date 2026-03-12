@@ -178,5 +178,44 @@
           }
         ];
       };
+
+      # Custom graphical installer ISO for zrrh
+      nixosConfigurations.iso = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix"
+          ({ pkgs, lib, ... }: {
+            nixpkgs.hostPlatform = system;
+            
+            # Use zrrh kernel for compatibility
+            boot.kernelPackages = pkgs.linuxPackages_cachyos;
+            networking.hostName = "zrrh-installer";
+            
+            # Put user key in the live image
+            users.users.nixos.openssh.authorizedKeys.keys = [
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfoVdWpimtBi0htouhMDsD1NXuKbIAusgzB1dxYDW4z"
+            ];
+            
+            # Bake the entire flake into the ISO at /flake
+            # By copying it at activation, it becomes a writable copy the user can easily install from
+            system.activationScripts.bakeFlake = {
+              text = ''
+                if [ ! -d /flake ]; then
+                  cp -r ${./.} /flake
+                  chmod -R u+w /flake
+                  chown -R nixos:nixos /flake
+                fi
+              '';
+            };
+
+            environment.systemPackages = with pkgs; [
+              git
+              neovim
+              age
+              nh
+            ];
+          })
+        ];
+      };
     };
 }
