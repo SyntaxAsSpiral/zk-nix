@@ -40,7 +40,7 @@ let
     zrrh = {
       canTouchEfiVariables = true;
       plymouth = true;
-      plymouthTheme = "fade-in";
+      plymouthTheme = "bgrt";
       plymouthThemePackages = [ pkgs.catppuccin-plymouth ];
       plymouthLogo = ../assets/yantra-zrrh.png;
       blacklistNouveau = true;
