@@ -270,8 +270,8 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-sh-at-startup "swayidle -w timeout 300 'brightnessctl -s set 10%' resume 'brightnessctl -r' timeout 600 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'brightnessctl -s set 0'"
 //spawn-at-startup "waybar"
-spawn-sh-at-startup "alacritty -e jolt"
-spawn-sh-at-startup "alacritty -e neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"
+//spawn-sh-at-startup "alacritty -e jolt"
+//spawn-sh-at-startup "alacritty -e neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"
 //spawn-at-startup "alacritty"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
