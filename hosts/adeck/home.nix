@@ -92,6 +92,8 @@ in
 
   programs.home-manager.enable = true;
 
+  programs.msgvault.enable = true;
+
 
 
   home.packages = with pkgs; [

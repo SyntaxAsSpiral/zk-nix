@@ -1,5 +1,5 @@
 # msgvault home-manager module
-# Archive and query Gmail offline (DuckDB/Parquet + SQLite)
+# Archive and query email + messaging offline (DuckDB/Parquet + SQLite FTS5)
 { config, lib, pkgs, ... }:
 
 let
@@ -7,38 +7,32 @@ let
 
   msgvault-pkg = pkgs.buildGoModule rec {
     pname = "msgvault";
-    version = "0.3.0";
+    version = "0.9.0";
 
     src = pkgs.fetchFromGitHub {
       owner = "wesm";
       repo = "msgvault";
       rev = "v${version}";
-      hash = lib.fakeHash; # TODO: update with actual hash
+      hash = "sha256-6oSXZ9yTQEXdJxiQ9OkpWK/wqjZpLwMC4+3/1yv6Eu8=";
     };
 
     go = pkgs.go_1_25;
 
+    proxyVendor = true;
     subPackages = [ "cmd/msgvault" ];
     tags = [ "fts5" ];
-
-    CGO_ENABLED = 1;
-
-    nativeBuildInputs = [ pkgs.pkg-config ];
-    buildInputs = [ pkgs.sqlite ];
 
     ldflags = [
       "-s" "-w"
       "-X" "github.com/wesm/msgvault/cmd/msgvault/cmd.Version=v${version}"
-      "-X" "github.com/wesm/msgvault/cmd/msgvault/cmd.Commit=0d91419"
-      "-X" "github.com/wesm/msgvault/cmd/msgvault/cmd.BuildDate=1970-01-01T00:00:00Z"
     ];
 
-    vendorHash = lib.fakeHash; # TODO: update with actual hash
+    vendorHash = "sha256-XgtHKRLqNX7LCI22Ls3LQjEs+jX7EwapiiFs7I+gtRE=";
 
     doCheck = false;
 
     meta = with lib; {
-      description = "Archive and query Gmail offline (DuckDB/Parquet + SQLite)";
+      description = "Archive and query email + messaging offline (DuckDB/Parquet + SQLite FTS5)";
       homepage = "https://github.com/wesm/msgvault";
       license = licenses.mit;
       mainProgram = "msgvault";
@@ -48,7 +42,13 @@ let
 in
 {
   options.programs.msgvault = {
-    enable = lib.mkEnableOption "msgvault Gmail archiver";
+    enable = lib.mkEnableOption "msgvault archiver";
+
+    home = lib.mkOption {
+      type = lib.types.str;
+      default = "/mnt/vault/msgvault";
+      description = "MSGVAULT_HOME directory";
+    };
 
     package = lib.mkOption {
       type = lib.types.package;
@@ -59,5 +59,9 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [ cfg.package ];
+
+    home.sessionVariables = {
+      MSGVAULT_HOME = cfg.home;
+    };
   };
 }
