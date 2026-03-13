@@ -96,6 +96,8 @@ let
         "image/webp" = "firefox.desktop";
         "image/svg+xml" = "firefox.desktop";
         "application/pdf" = "firefox.desktop";
+        "x-scheme-handler/steam" = "steam.desktop";
+        "x-scheme-handler/steamlink" = "steam.desktop";
       };
     };
   };
