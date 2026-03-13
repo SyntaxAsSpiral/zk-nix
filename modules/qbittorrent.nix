@@ -16,7 +16,7 @@
         Preferences = {
           General.Locale = "en";
           Downloads = {
-            SavePath = "/mnt/vault/torrents/";
+            SavePath = "/mnt/vault/@staging/";
             TempPathEnabled = false;
           };
           WebUI = {
@@ -36,7 +36,7 @@
           MaxRatio = 0;
           MaxRatioAction = 1; # Remove torrent
           Encryption = 1; # Force encrypted connections
-          DefaultSavePath = "/mnt/vault/torrents/";
+          DefaultSavePath = "/mnt/vault/@staging/";
         };
 
         AutoRun = {
@@ -54,7 +54,7 @@
 
     # Ensure torrent staging directory exists on vault
     systemd.tmpfiles.rules = [
-      "d /mnt/vault/torrents 0755 zk users -"
+      "d /mnt/vault/@staging 0755 zk users -"
     ];
   };
 }
