@@ -46,7 +46,7 @@ in
 
     home = lib.mkOption {
       type = lib.types.str;
-      default = "/mnt/vault/@raw";
+      default = "/mnt/vault/@staging/msgvault";
       description = "MSGVAULT_HOME directory";
     };
 
