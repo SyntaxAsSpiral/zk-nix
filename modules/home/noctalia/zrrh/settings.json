@@ -405,7 +405,7 @@
         "showHibernateOnLockScreen": false,
         "showScreenCorners": true,
         "showSessionButtonsOnLockScreen": true,
-        "telemetryEnabled": false
+        "telemetryEnabled": true
     },
     "hooks": {
         "darkModeChange": "",
