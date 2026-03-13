@@ -23,8 +23,20 @@ All hosts share:
 - NFS automount mesh
 - LM Studio on all hosts via LM Link
 - shared home substrate in `modules/home/xdg.nix`
+- agenix for secrets management
+- nix-colors (base16 catppuccin-macchiato) via `modules/home/catppuccin.nix`
 
 Treat host differences as divergence inside one system, not three separate systems.
+
+## Secrets
+
+Secrets are managed with **agenix**. Git history was wiped and reinitialized to purge plaintext secrets.
+
+- `secrets/` contains age-encrypted keys, tokens, and Wi-Fi password
+- `secrets/secrets.nix` defines age recipients
+- Per-host SSH host keys live in `secrets/hosts/{hostname}/`
+- `nix-access-tokens.conf` is `!include`d in `nix.extraOptions`
+- agenix is wired into both NixOS and home-manager via flake modules
 
 ## Build & Deploy
 
@@ -84,7 +96,7 @@ Notes:
 | Host | Role | Desktop shell | GPU | LM Studio role | Build role |
 |---|---|---|---|---|---|
 | `nxiz` | primary interactive workstation trunk | Hyprland + hyprpanel | NVIDIA RTX 3070 | local GUI, embeddings, small/medium inference, mesh participant | evaluates locally, builds on `zrrh` |
-| `adeck` | service gateway; always-on relay and persistent endpoint host | minimal graphical session; current stopgap is Niri + Waybar | AMD Steam Deck APU | stable LM Link relay endpoint and lightweight participant | evaluates locally, builds on `zrrh` |
+| `adeck` | service gateway; always-on relay and persistent endpoint host | Niri + Waybar (minimal) | AMD Steam Deck APU (Jovian-NixOS) | stable LM Link relay endpoint and lightweight participant | evaluates locally, builds on `zrrh` |
 | `zrrh` | heavy compute/media trunk | Niri + Noctalia | NVIDIA RTX 4090 | primary heavy GPU inference node | builds locally; primary mesh build host |
 
 ### Persistent endpoint strategy
@@ -96,9 +108,13 @@ Put services on adeck when they need:
 - stable mesh addressability
 - availability while the workstation sleeps
 
-Current examples:
+Current adeck services:
 - LM Studio / LM Link relay endpoint: `http://adeck:1234/v1`
-- qBittorrent daemon + web UI
+- qBittorrent daemon + web UI (`https://adeck.tail293e98.ts.net:8080`)
+- pulse-generator (daily systemd timer)
+- msgvault (email/messaging archiver, home at `/mnt/vault/@raw`)
+- *claw agent runtimes (nullclaw, zeroclaw, picoclaw)
+- Docker
 
 ## Architecture
 
@@ -136,8 +152,8 @@ Used across system and home modules.
 
 ### Desktop shell surfaces
 
-- **nxiz** → Hyprland + hyprpanel
-- **adeck** → minimal graphical session; current stopgap is Niri + Waybar
+- **nxiz** → Hyprland + hyprpanel + swww
+- **adeck** → Niri + Waybar + kaleidux
 - **zrrh** → Niri + Noctalia
 
 These are peer shell layers of the same system.
@@ -194,15 +210,26 @@ Cross-host mounts:
 - `zrrh:/mnt/media` → `nxiz`, `adeck`
 - `adeck:/mnt/vault` → `nxiz`, `zrrh`
 
+### Vault subvolume layout (adeck)
+
+`/mnt/vault` is btrfs with named subvolumes:
+- `@raw` — msgvault archive home (`MSGVAULT_HOME`)
+- `@staging` — qBittorrent download staging
+
 ### Torrent/media ingress
 
 `adeck` hosts qBittorrent.
 
 Flow:
-- downloads land in `/mnt/vault/torrents/`
-- completed content transfers to `zk@zrrh:/mnt/media/Incoming/`
+- downloads land in `/mnt/vault/@staging/`
+- completed content auto-transfers via scp to `zk@zrrh:/mnt/media/Incoming/`
 
 adeck is the ingress point; zrrh is the media landing zone.
+
+### Data ingestion (adeck)
+
+- **msgvault**: email/messaging archiver (DuckDB/Parquet + SQLite FTS5), home at `/mnt/vault/@raw`
+- **\*claw agents**: nullclaw, zeroclaw, picoclaw — agent runtimes for data collection and processing
 
 ## Network Model
 
@@ -212,16 +239,13 @@ Tailscale is the primary network fabric.
 - Tailscale SSH
 - client routing via `services.tailscale.useRoutingFeatures = "client"`
 
-This supports exit-node/client-routing behavior, including Mullvad-backed routing where needed.
-
-PIA-related config may still exist in-repo, but it is not current centerpiece architecture.
+VPN: **Mullvad via Tailscale addon** on adeck. This provides mesh-wide exit-node routing when needed.
 
 ## Current Realities / Open Issues
 
 - **Performance Stack (CGN):** active on **nxiz** and **zrrh** via `modules/performance.nix`
 - **zrrh 4K Wayland bug:** HDMI-to-TV 4K still fails under Wayland while working under X11/Windows
 - **CPU isolation / compositor affinity:** mapped, not yet active
-- **adeck compositor:** current Niri setup is a stopgap; long-term goal is a minimal graphical surface
 
 ## Module Map
 
@@ -237,11 +261,15 @@ PIA-related config may still exist in-repo, but it is not current centerpiece ar
 | `taildrive.nix` | NFS mounts/exports and local filesystem topology |
 | `packages.nix` | shared system packages |
 | `overlays.nix` | package overrides and overlay glue |
+| `fonts.nix` | system-wide font packages and esoteric font collection |
 | `nh.nix` | GC policy and per-host flake path behavior |
 | `nvidia.nix` | NVIDIA proprietary driver stack (`nxiz`, `zrrh`) |
 | `steam.nix` | Steam + Gamescope + proton-ge (`nxiz`, `zrrh`) |
+| `performance.nix` | CachyOS kernel, CPU governor, scheduler tuning (`nxiz`, `zrrh`) |
 | `pulse-generator.nix` | adeck-only daily systemd timer |
 | `qbittorrent.nix` | adeck-only torrent daemon with HTTPS UI and media handoff |
+| `quickshell.nix` | Qt6/Quickshell environment for custom shell widgets |
+| `openrgb/` | RGB lighting control (profiles, effects) |
 | `greetd.nix` / `ly.nix` | display managers; inert unless explicitly enabled |
 
 ### Home modules (`modules/home/`)
@@ -264,12 +292,25 @@ Important anchors:
   - shared XDG dirs, MIME defaults, session vars, wallpaper population
 - `nushell.nix`
   - login shell and compositor/session startup
+- `catppuccin.nix`
+  - nix-colors base16 palette (catppuccin-macchiato)
+- `msgvault.nix`
+  - email/messaging archiver (adeck-enabled)
+- `kaleidux.nix`
+  - dynamic wallpaper daemon (video + GLSL transitions)
+- `fsel.nix`
+  - TUI app launcher / dmenu / clipboard manager
+- `swww.nix`
+  - Wayland wallpaper daemon (nxiz)
+- `quickshell/`
+  - custom Qt6/QML shell widgets
 
 Other common domains:
 - `editors/`
 - `browser/`
 - `mods/`
 - `otter-launcher/`
+- `spotify.nix`
 - `gtk.nix`
 - `icons.nix`
 - `python.nix`
@@ -283,14 +324,20 @@ Other common domains:
 - logging out of Hyprland drops back to nushell
 - `programs.appimage.binfmt` enabled
 - hyprpanel and `.face` are part of shell identity
+- Wake-on-LAN enabled on wired NIC
+- gnome-keyring for credential storage
+- swww for wallpaper management
 
 ### adeck
 - service gateway and persistent endpoint host
-- flake path is NFS-backed at `/mnt/taildrive/repository/nix-os`
+- Jovian-NixOS for Steam Deck hardware support
+- flake path is NFS-backed at `/mnt/repository/nix-os` (via `/etc/nixos`)
 - `boot.loader.efi.canTouchEfiVariables = false`
-- graphical stack is intentionally minimal-ish and provisional
+- graphical stack is intentionally minimal (Niri + Waybar + kaleidux)
 - Docker enabled
-- qBittorrent runs here
+- qBittorrent runs here (staging to `@staging`, auto-scp to zrrh)
+- msgvault runs here (archive at `@raw`)
+- *claw agent runtimes (nullclaw, zeroclaw, picoclaw)
 - brightness restore service forces 100% on boot
 
 ### zrrh
@@ -299,6 +346,12 @@ Other common domains:
 - Niri + Noctalia
 - LM Studio CUDA-heavy node
 - Noctalia wallpaper rotation is active
+- `programs.appimage.binfmt` enabled
+- Thunar + plugins for file management
+- gamemode enabled
+- LACT for GPU control
+- OpenRGB for lighting
+- xwayland-satellite for X11 app compat
 
 ## Conventions
 
@@ -308,9 +361,8 @@ Other common domains:
 - **build workflow:** prefer `zcli build` / `zcli deploy`
 - **shared home substrate:** keep XDG/MIME/session/wallpaper logic in `modules/home/xdg.nix`
 - **shell identity assets:** keep host `.face` assets in host `home.nix`
-- **secrets:** `secrets/` contains keys, tokens, and Wi-Fi password; `nix-access-tokens.conf` is `!include`d in `nix.extraOptions`
+- **secrets:** managed with agenix; `secrets/` contains encrypted keys, tokens, and Wi-Fi password
 - **assets:** `assets/` holds fonts, icons, GTK themes, wallpapers, and host identity imagery
-- **reference copies:** `reference/` is archival; do not edit
 
 ## Post-Install / Bootstrap
 
