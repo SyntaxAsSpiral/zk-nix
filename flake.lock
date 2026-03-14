@@ -79,11 +79,11 @@
     "cachyos-kernel-patches": {
       "flake": false,
       "locked": {
-        "lastModified": 1773330205,
-        "narHash": "sha256-YVASxGrJYFHtL+5D71hlbc74VfgDnQGRpzVu0YiFHtw=",
+        "lastModified": 1773394774,
+        "narHash": "sha256-jfeXEq2EmwNUdArmUq8gWu4ubneudgoz/6bRS8Zimcw=",
         "owner": "CachyOS",
         "repo": "kernel-patches",
-        "rev": "8242bda544657099da69993f019ff3fb23cfe05f",
+        "rev": "217d964190c29f3785ed379977074ac54248ba8e",
         "type": "github"
       },
       "original": {
@@ -578,11 +578,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1773339151,
-        "narHash": "sha256-T4mZqOKMX3bbOKm/KvlkIOznaUPFpBbNKBT5bDMdRkQ=",
+        "lastModified": 1773463072,
+        "narHash": "sha256-BzOvO2qSg8dIHY01lIaigP5//MZadBvvC08Co4KY64c=",
         "owner": "xddxdd",
         "repo": "nix-cachyos-kernel",
-        "rev": "a984d014ba87dbefd8868d1fe967cc540d313766",
+        "rev": "259b31bc70c4a8798ce4378621ab552a22acff57",
         "type": "github"
       },
       "original": {
@@ -696,11 +696,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1773276312,
-        "narHash": "sha256-UujcRqoPEyi0Bd77+cqfAxa4aq0SoKOYTcJNWn+0ZvM=",
+        "lastModified": 1773389992,
+        "narHash": "sha256-wvfdLLWJ2I9oEpDd9PfMA8osfIZicoQ5MT1jIwNs9Tk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "87fd45fc9269db8f7197d27c620606323bbf5efa",
+        "rev": "c06b4ae3d6599a672a6210b7021d699c351eebda",
         "type": "github"
       },
       "original": {
@@ -712,11 +712,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1773282481,
-        "narHash": "sha256-b/GV2ysM8mKHhinse2wz+uP37epUrSE+sAKXy/xvBY4=",
+        "lastModified": 1773389992,
+        "narHash": "sha256-wvfdLLWJ2I9oEpDd9PfMA8osfIZicoQ5MT1jIwNs9Tk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fe416aaedd397cacb33a610b33d60ff2b431b127",
+        "rev": "c06b4ae3d6599a672a6210b7021d699c351eebda",
         "type": "github"
       },
       "original": {
@@ -805,11 +805,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773426896,
-        "narHash": "sha256-InonCkzlnCdsku697Eg+Jd36YVHUb/YL2BG1XZ7Eoi8=",
+        "lastModified": 1773498808,
+        "narHash": "sha256-YnSRPOQC+fwSE3aA2C1rt9zaI4i3S4LTYY/3fqmRM4s=",
         "owner": "noctalia-dev",
         "repo": "noctalia-shell",
-        "rev": "0bdf5afd2cf51fdcc5fe95b5205e6f6f3f0a9183",
+        "rev": "793771cd770431443d71e30ceede201048435a04",
         "type": "github"
       },
       "original": {
@@ -827,11 +827,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1773277895,
-        "narHash": "sha256-pK01O5J9ogI4rVtDI+PVxckaXqpYZ4uthY0vgVWdyl8=",
+        "lastModified": 1773497298,
+        "narHash": "sha256-ZLv4gLG7PR4ASLYdlW7VNLLMVnQQW1/nSdUfJzuk6+Y=",
         "owner": "noctalia-dev",
         "repo": "noctalia-qs",
-        "rev": "d5209a6b5fe8c6dff8d530e820c96f09830011e3",
+        "rev": "7db1b8067cdab7c4749815f023e6bd218027e644",
         "type": "github"
       },
       "original": {
@@ -846,11 +846,11 @@
         "zig2nix": "zig2nix"
       },
       "locked": {
-        "lastModified": 1773421244,
-        "narHash": "sha256-/DatF9Bg4QXO+HCYZ7fOyWHXNBtynsT41EbjoRZSGVo=",
+        "lastModified": 1773449256,
+        "narHash": "sha256-tdmzzdibMrV38LROR2y0LW/aXypfHwLvkhwhH4HH5D8=",
         "owner": "nullclaw",
         "repo": "nullclaw",
-        "rev": "aae7c3167bc5b447ece3c80a194254f5a57a3529",
+        "rev": "84da6eabc3526f1d17db45a69f8de02b600c366b",
         "type": "github"
       },
       "original": {
@@ -1221,11 +1221,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773426237,
-        "narHash": "sha256-J2F1yrlmKK4rH59zDD8DE6x4Ma3JPzVrX8Adys2rGKQ=",
+        "lastModified": 1773504377,
+        "narHash": "sha256-etF1RYOjDqdDVMG/X84SWK6nRZHKlqKHz/7XwMWaqfw=",
         "owner": "zeroclaw-labs",
         "repo": "zeroclaw",
-        "rev": "a52446c637d5e1ecff7b72c0d3a95b26491df5de",
+        "rev": "4daeb380a0037ba3e8db82de2676b38ae850a748",
         "type": "github"
       },
       "original": {
