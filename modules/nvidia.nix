@@ -6,7 +6,7 @@
   hardware.graphics.enable = true;
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = true;  # preserves VRAM on suspend, fixes resume
+    powerManagement.enable = true;  # enables nvidia-suspend/resume/hibernate services
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -16,5 +16,6 @@
   boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
   boot.extraModprobeConfig = ''
     options nvidia NVreg_DynamicPowerManagement=0x02
+    options nvidia NVreg_PreserveVideoMemoryAllocations=1
   '';
 }
