@@ -120,7 +120,8 @@
                     "id": "Tray",
                     "pinned": [
                         "steam",
-                        "DL speed: 0 B/s\nUP speed: 0 B/s"
+                        "DL speed: 0 B/s\nUP speed: 0 B/s",
+                        "OpenRGB"
                     ]
                 },
                 {
