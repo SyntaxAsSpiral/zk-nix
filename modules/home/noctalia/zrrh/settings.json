@@ -23,7 +23,6 @@
         "showIconBackground": false,
         "sortByMostUsed": true,
         "terminalCommand": "ghostty -e",
-        "useApp2Unit": false,
         "viewMode": "grid"
     },
     "audio": {
@@ -104,6 +103,7 @@
                     "occupiedColor": "secondary",
                     "pillSize": 0.7,
                     "showApplications": false,
+                    "showApplicationsHover": false,
                     "showBadge": true,
                     "showLabelsOnlyWhenOccupied": true,
                     "unfocusedIconsOpacity": 1
@@ -120,7 +120,8 @@
                     "id": "Tray",
                     "pinned": [
                         "steam",
-                        "DL speed: 0 B/s\nUP speed: 0 B/s"
+                        "DL speed: 0 B/s\nUP speed: 0 B/s",
+                        "OpenRGB"
                     ]
                 },
                 {
@@ -588,7 +589,7 @@
         "showHeader": true,
         "showKeybinds": true
     },
-    "settingsVersion": 57,
+    "settingsVersion": 58,
     "systemMonitor": {
         "batteryCriticalThreshold": 5,
         "batteryWarningThreshold": 20,
