@@ -86,7 +86,7 @@ output "eDP-1" {
     focus-at-startup
     mode "800x1280@59.999"
     scale 1.5
-    transform "270"
+    transform "normal"
     // TV is physically above the Deck screen.
     // eDP-1 logical width is ~853, centered under 1920-wide TV => (1920 - 853) / 2 ≈ 534.
     position x=534 y=1080
