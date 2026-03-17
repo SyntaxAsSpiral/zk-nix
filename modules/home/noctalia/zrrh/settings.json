@@ -8,7 +8,9 @@
         "customLaunchPrefixEnabled": false,
         "density": "default",
         "enableClipPreview": true,
+        "enableClipboardChips": true,
         "enableClipboardHistory": false,
+        "enableClipboardSmartIcons": true,
         "enableSessionSearch": true,
         "enableSettingsSearch": true,
         "enableWindowsSearch": true,
@@ -189,7 +191,7 @@
         "manualSunrise": "06:30",
         "manualSunset": "18:30",
         "monitorForColors": "",
-        "predefinedScheme": "Catppuccin",
+        "predefinedScheme": "Rose Pine Moon",
         "schedulingMode": "off",
         "useWallpaperColors": false
     },
@@ -660,10 +662,10 @@
                 "darkMode": true,
                 "generationMethod": "faithful",
                 "paletteColors": [
-                    "#ea9a97",
-                    "#9ccfd8",
-                    "#3e8fb0",
-                    "#eb6f92"
+                    "#cba6f7",
+                    "#fab387",
+                    "#94e2d5",
+                    "#f38ba8"
                 ],
                 "path": "/home/zk/Images/wallpapers/photo_2024-12-11_18-49-03.jpg",
                 "useWallpaperColors": false
@@ -686,10 +688,10 @@
                 "darkMode": true,
                 "generationMethod": "faithful",
                 "paletteColors": [
-                    "#7a88cf",
-                    "#d7729f",
-                    "#9cd58a",
-                    "#f7768e"
+                    "#cba6f7",
+                    "#fab387",
+                    "#94e2d5",
+                    "#f38ba8"
                 ],
                 "path": "/home/zk/Images/wallpapers/Phonebooth-transporter.png",
                 "useWallpaperColors": false
