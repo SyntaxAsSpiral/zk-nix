@@ -27,12 +27,6 @@
       diff.colorMoved = "default";
       merge.conflictstyle = "diff3";
 
-      # Keep GH credential helper stable across nix-store path churn.
-      credential = {
-        "https://github.com".helper = "!/etc/profiles/per-user/zk/bin/gh auth git-credential";
-        "https://gist.github.com".helper = "!/etc/profiles/per-user/zk/bin/gh auth git-credential";
-      };
-
       # Logging
       log.date = "iso";
       log.decorate = "full";
