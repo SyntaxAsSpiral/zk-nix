@@ -10,7 +10,7 @@
     ../../modules/nh.nix
     ../../modules/user.nix
     ../../modules/services.nix
-    ../../modules/taildrive.nix
+    ../../modules/storage.nix
     ../../modules/packages.nix
     ../../modules/networking.nix
     ../../modules/overlays.nix

@@ -11,7 +11,7 @@
     ../../modules/nh.nix
     ../../modules/user.nix
     ../../modules/services.nix
-    ../../modules/taildrive.nix
+    ../../modules/storage.nix
     ../../modules/packages.nix
     ../../modules/networking.nix
     ../../modules/overlays.nix
@@ -78,6 +78,15 @@
     enable = true;
     xwayland.enable = true;
     withUWSM = true;
+  };
+
+  # Thunar service + plugins
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-volman
+      thunar-archive-plugin
+    ];
   };
 
   xdg.portal = {

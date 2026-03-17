@@ -45,14 +45,14 @@ indicator_no_arg_module = ""
 description = "open dirs (yazi)"
 prefix = "do"
 cmd = """
-find $HOME /mnt/repository /mnt/archive /mnt/media -maxdepth 3 -type d -not -path '*/.cache/*' -not -path '*/.git/*' 2>/dev/null | fzf --reverse --padding 1,3 --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0' --prompt '  ' | xargs -r -I [] hyprctl dispatch exec -- kitty --class tui-float -e yazi '[]'
+find $HOME /mnt/repository /mnt/archive -maxdepth 3 -type d -not -path '*/.cache/*' -not -path '*/.git/*' 2>/dev/null | fzf --reverse --padding 1,3 --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0' --prompt '  ' | xargs -r -I [] hyprctl dispatch exec -- kitty --class tui-float -e yazi '[]'
 """
 
 [[modules]]
 description = "open files (fzf)"
 prefix = "fo"
 cmd = """
-find $HOME /mnt/repository /mnt/archive /mnt/media -type f -not -path '*/.cache/*' 2>/dev/null | fzf --reverse --padding 1,3 --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0' --prompt '  ' | xargs -r -I [] hyprctl dispatch exec -- xdg-open '[]'
+find $HOME /mnt/repository /mnt/archive -type f -not -path '*/.cache/*' 2>/dev/null | fzf --reverse --padding 1,3 --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0' --prompt '  ' | xargs -r -I [] hyprctl dispatch exec -- xdg-open '[]'
 """
 
 [[modules]]

@@ -8,7 +8,7 @@
     ../../modules/boot.nix
     ../../modules/user.nix
     ../../modules/networking.nix
-    ../../modules/taildrive.nix
+    ../../modules/storage.nix
     ../../modules/nh.nix
     ../../modules/services.nix
     ../../modules/pulse-generator.nix

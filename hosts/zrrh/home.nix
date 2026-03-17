@@ -45,6 +45,7 @@
 
     ../../modules/home/noctalia/zrrh/default.nix
     ../../modules/openrgb/home.nix
+    ../../modules/home/thunar.nix
     ../../modules/home/xdg.nix
   ];
 
@@ -76,12 +77,6 @@
         exec npx --yes @mariozechner/pi-coding-agent "$@"
       '';
     })
-
-    # File manager + opener/thumbnail stack
-    thunar
-    xfce4-exo
-    tumbler
-    glib
 
     # Media key controls for Niri binds
     playerctl
@@ -122,19 +117,5 @@
   home.file = {
     ".face".source = ../../assets/zrrh-face.png;
     ".config/ghostty/cursor-blaze.glsl".source = ../../modules/home/terminal/cursor-blaze.glsl;
-    ".config/Thunar/thunarrc".text = ''
-      [Configuration]
-      LastView=ThunarIconView
-      LastSidePane=ThunarShortcutsPane
-      LastLocationBar=ThunarLocationButtons
-      LastMenubarVisible=TRUE
-      LastStatusbarVisible=TRUE
-      MiscHiddenLastStatusbar=FALSE
-      MiscImagePreviewMode=THUNAR_IMAGE_PREVIEW_MODE_EMBEDDED
-      MiscThumbnailMode=THUNAR_THUMBNAIL_MODE_ALWAYS
-      MiscShowThumbnailsInTree=TRUE
-      MiscFileSizeBinary=TRUE
-      MiscSingleClick=FALSE
-    '';
   };
 }

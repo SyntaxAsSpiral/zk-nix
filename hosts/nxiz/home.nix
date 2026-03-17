@@ -42,6 +42,7 @@
     ../../modules/home/python.nix
     ../../modules/home/ssh.nix
     ../../modules/home/terminal/kitty.nix
+    ../../modules/home/thunar.nix
     ../../modules/home/xdg.nix
   ];
 

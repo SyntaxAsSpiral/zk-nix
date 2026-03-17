@@ -20,7 +20,7 @@ All hosts share:
 - flat shared modules under `modules/`
 - per-host branching via `config.my.host`
 - Tailscale mesh
-- NFS automount mesh
+- Tailscale mesh + Taildrive for cross-host file access
 - LM Studio on all hosts via LM Link
 - shared home substrate in `modules/home/xdg.nix`
 - agenix for secrets management
@@ -196,19 +196,16 @@ Per-host config:
 - `modules/home/lmstudio/adeck/`
 - `modules/home/lmstudio/zrrh/`
 
-### NFS mesh
+### Taildrive mesh
 
-Defined in `modules/taildrive.nix`. Systemd automount, lazy mount-on-access, idle timeout.
+Defined in `modules/storage.nix`. Each host declares Taildrive shares for its local disks. Shares are registered via a systemd oneshot after tailscaled comes online.
 
 Ownership:
 - `nxiz` → `/mnt/repository`, `/mnt/archive`
 - `zrrh` → `/mnt/media`, `/mnt/games`
 - `adeck` → `/mnt/vault`
 
-Cross-host mounts:
-- `nxiz:/mnt/repository` → `adeck`, `zrrh`
-- `zrrh:/mnt/media` → `nxiz`, `adeck`
-- `adeck:/mnt/vault` → `nxiz`, `zrrh`
+Cross-host access is via Taildrive WebDAV (`http://100.100.100.100:8080/{tailnet}/{host}/{share}`), browsable through Thunar bookmarks on GUI hosts. No NFS, no mount dependencies, no boot-order issues.
 
 ### Vault subvolume layout (adeck)
 
@@ -258,7 +255,7 @@ VPN: **Mullvad via Tailscale addon** on adeck. This provides mesh-wide exit-node
 | `user.nix` | user `zk`, shell setup, getty autologin |
 | `services.nix` | SSH, mosh, nix-ld, Bluetooth, PipeWire |
 | `networking.nix` | NetworkManager, Tailscale, firewall, DNS, client routing |
-| `taildrive.nix` | NFS mounts/exports and local filesystem topology |
+| `storage.nix` | local disk mounts and Taildrive share registration |
 | `packages.nix` | shared system packages |
 | `overlays.nix` | package overrides and overlay glue |
 | `fonts.nix` | system-wide font packages and esoteric font collection |
@@ -302,6 +299,8 @@ Important anchors:
   - TUI app launcher / dmenu / clipboard manager
 - `swww.nix`
   - Wayland wallpaper daemon (nxiz)
+- `thunar.nix`
+  - Thunar file manager: packages, thunarrc, bookmarks, custom actions (nxiz, zrrh)
 - `quickshell/`
   - custom Qt6/QML shell widgets
 
@@ -331,7 +330,7 @@ Other common domains:
 ### adeck
 - service gateway and persistent endpoint host
 - Jovian-NixOS for Steam Deck hardware support
-- flake path is NFS-backed at `/mnt/repository/nix-os` (via `/etc/nixos`)
+- flake path is at `/etc/nixos`
 - `boot.loader.efi.canTouchEfiVariables = false`
 - graphical stack is intentionally minimal (Niri + Waybar + kaleidux)
 - Docker enabled
@@ -347,7 +346,7 @@ Other common domains:
 - LM Studio CUDA-heavy node
 - Noctalia wallpaper rotation is active
 - `programs.appimage.binfmt` enabled
-- Thunar + plugins for file management
+- Thunar + plugins for file management (nxiz, zrrh via `modules/home/thunar.nix`)
 - gamemode enabled
 - LACT for GPU control
 - OpenRGB for lighting

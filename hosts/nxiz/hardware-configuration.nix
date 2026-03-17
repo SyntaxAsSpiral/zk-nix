@@ -25,20 +25,10 @@
       options = [ "subvol=@home" ];
     };
 
-  fileSystems."/mnt/repository" =
-    { device = "/dev/disk/by-uuid/0d00b77b-254d-4372-82c3-d19e139ab088";
-      fsType = "btrfs";
-    };
-
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/90B6-5EC8";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
-    };
-
-  fileSystems."/mnt/archive" =
-    { device = "/dev/disk/by-uuid/619e6bb2-7f29-4236-82a0-1153e7503454";
-      fsType = "btrfs";
     };
 
   swapDevices = [ ];

@@ -1,5 +1,5 @@
 # XDG base directories, user-dirs, and MIME defaults
-# Shared across all hosts — mesh paths via NFS automount
+# Shared across all hosts — remote content via Taildrive bookmarks
 { config, lib, osConfig, ... }:
 
 let
@@ -20,26 +20,16 @@ let
   };
 
   # ── Mesh directories ──
-  # Media lives on zrrh:/mnt/media (local there, NFS automount elsewhere)
-  # Documents live on nxiz:/mnt/repository (local there, NFS automount elsewhere)
-  meshDirs = {
-    documents = "/mnt/repository/zk-docs";
-    music = "/mnt/media/Music";
-    pictures = "/mnt/media/Pictures";
-    videos = "/mnt/media/Videos";
-  };
-
-  # ── Per-host extensions ──
+  # Only set XDG user dirs for paths that are local to the host.
+  # Remote content is accessed via Taildrive bookmarks in Thunar.
   perHost = {
     nxiz = {
       dirs = {
+        documents = "/mnt/repository/zk-docs";
         extraConfig = {
           ARCHIVE = "/mnt/archive";
           PROJECTS = "/mnt/repository";
           BOOK = "/mnt/repository/zk-docs/reading";
-          COMICS = "/mnt/media/Comics";
-          VM = "${home}/Machines";
-          NOTES = "${home}/Notes";
         };
       };
       localDirs = [
@@ -53,6 +43,8 @@ let
         HYPRSHOT_DIR = "${home}/Images/screenshots";
       };
       mimeApps = {
+        "inode/directory" = "thunar.desktop";
+        "x-scheme-handler/file" = "thunar.desktop";
         "text/plain" = "kiro.desktop";
         "text/x-shellscript" = "kiro.desktop";
         "application/x-yaml" = "kiro.desktop";
@@ -61,7 +53,6 @@ let
         "x-scheme-handler/http" = "firefox.desktop";
         "x-scheme-handler/https" = "firefox.desktop";
         "x-scheme-handler/ftp" = "firefox.desktop";
-        "x-scheme-handler/file" = "firefox.desktop";
         "x-scheme-handler/about" = "firefox.desktop";
         "x-scheme-handler/chrome" = "firefox.desktop";
       };
@@ -80,6 +71,9 @@ let
 
     zrrh = {
       dirs = {
+        music = "/mnt/media/Music";
+        pictures = "/mnt/media/Pictures";
+        videos = "/mnt/media/Videos";
         extraConfig = {};
       };
       localDirs = [];
@@ -120,14 +114,13 @@ in {
   xdg.dataHome = "${home}/.local/share";
   xdg.cacheHome = "${home}/.cache";
 
-  xdg.userDirs = commonDirs // meshDirs // h.dirs // {
+  xdg.userDirs = commonDirs // h.dirs // {
     enable = true;
     createDirectories = false;
     extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
   };
 
-  # Create only local dirs — mesh paths exist on their owning host,
-  # NFS automount handles the rest at access time
+  # Create only local dirs — remote content accessed via Taildrive
   home.activation.createLocalXdgDirs = config.lib.dag.entryAfter [ "writeBoundary" ] (
     ''
       mkdir -p "${home}/Desktop"
