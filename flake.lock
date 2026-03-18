@@ -388,11 +388,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773279064,
-        "narHash": "sha256-BLcSfp2aNm+0oDoHbvTufBRS2XwKqbIeUOXD8t58efE=",
+        "lastModified": 1773782512,
+        "narHash": "sha256-c+gLUUw6GSA9OHyXGaaueWJoapoaQfeNT1mhoV5JKZg=",
         "owner": "Mjoyufull",
         "repo": "fsel",
-        "rev": "7b38c6223eed6e509f98e066ff89f481bd1930d7",
+        "rev": "d68140eb7f7be59e18ad9ecc6dea3358112b3446",
         "type": "github"
       },
       "original": {
