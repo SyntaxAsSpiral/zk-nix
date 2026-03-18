@@ -39,7 +39,6 @@
 
     # System
     ../../modules/home/spotify.nix
-    ../../modules/home/ssh.nix
     ../../modules/home/niri/zrrh.nix
     ../../modules/home/terminal/ghostty.nix
 

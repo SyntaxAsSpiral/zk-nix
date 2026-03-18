@@ -313,7 +313,6 @@ Other common domains:
 - `gtk.nix`
 - `icons.nix`
 - `python.nix`
-- `ssh.nix`
 
 ## Host Notes
 

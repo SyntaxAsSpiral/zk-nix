@@ -37,10 +37,8 @@
     ../../modules/home/nushell.nix
     ../../modules/home/lmstudio/nxiz/default.nix
     ../../modules/home/spotify.nix
-    ../../modules/home/ssh.nix
     ../../modules/home/msgvault.nix # INERT: programs.msgvault.enable = false (default)
     ../../modules/home/python.nix
-    ../../modules/home/ssh.nix
     ../../modules/home/terminal/kitty.nix
     ../../modules/home/thunar.nix
     ../../modules/home/xdg.nix

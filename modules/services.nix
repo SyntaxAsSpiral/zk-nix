@@ -27,7 +27,11 @@ in {
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
+  
+  services.gnome-keyring = {
+    enable = true;
+    components = [ "secrets" "ssh" ];
+  };
   # Shared drive management; fwupd expects udisks2.
   services.udisks2.enable = true;
 
