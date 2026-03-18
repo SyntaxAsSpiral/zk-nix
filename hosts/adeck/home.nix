@@ -75,7 +75,6 @@ in
     ../../modules/home/lmstudio/adeck/default.nix
 
     # System
-    ../../modules/home/ssh.nix
     ../../modules/home/msgvault.nix
     ../../modules/home/cli/jolt.nix
     ../../modules/home/fsel.nix
