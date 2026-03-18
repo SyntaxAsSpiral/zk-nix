@@ -16,9 +16,6 @@
     '';
     nixpkgs.config.allowUnfree = true;
 
-    system.autoUpgrade.enable = true;
-    system.autoUpgrade.dates = "weekly";
-
     programs.nh = {
       enable = true;
       clean = {
