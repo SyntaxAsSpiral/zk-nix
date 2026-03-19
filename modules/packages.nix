@@ -34,6 +34,7 @@
     mosh
     openssh
     rsync
+    sshfs
     wget
 
     # Network GUI/TUI
