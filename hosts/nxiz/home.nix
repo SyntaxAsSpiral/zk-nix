@@ -50,6 +50,12 @@
 
   programs.home-manager.enable = true;
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableNushellIntegration = true;
+  };
+
   xdg.desktopEntries.gimp = {
     name = "GIMP";
     genericName = "Image Editor";

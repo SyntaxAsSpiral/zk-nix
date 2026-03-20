@@ -55,6 +55,12 @@
 
   programs.home-manager.enable = true;
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableFishIntegration = true;
+  };
+
   # Allow nwg-look/GTK to be managed dynamically by disabling declarative HM GTK
   gtk.enable = lib.mkForce false;
 
