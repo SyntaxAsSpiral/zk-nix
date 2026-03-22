@@ -332,8 +332,10 @@
         "indicatorColor": "error",
         "indicatorOpacity": 0.6,
         "indicatorThickness": 3,
+        "launcherIcon": "",
         "launcherIconColor": "error",
         "launcherPosition": "start",
+        "launcherUseDistroLogo": false,
         "monitors": [
         ],
         "onlySameOutput": true,
@@ -411,6 +413,7 @@
         "telemetryEnabled": true
     },
     "hooks": {
+        "colorGeneration": "",
         "darkModeChange": "",
         "enabled": false,
         "performanceModeDisabled": "",
@@ -459,7 +462,7 @@
         "disableDiscoverability": false,
         "networkPanelView": "wifi",
         "wifiDetailsViewMode": "grid",
-        "wifiEnabled": true
+        "wifiEnabled": false
     },
     "nightLight": {
         "autoSchedule": true,
@@ -522,7 +525,8 @@
         "overlayLayer": true
     },
     "plugins": {
-        "autoUpdate": false
+        "autoUpdate": false,
+        "notifyUpdates": true
     },
     "sessionMenu": {
         "countdownDuration": 5000,
@@ -591,7 +595,7 @@
         "showHeader": true,
         "showKeybinds": true
     },
-    "settingsVersion": 58,
+    "settingsVersion": 59,
     "systemMonitor": {
         "batteryCriticalThreshold": 5,
         "batteryWarningThreshold": 20,
@@ -697,13 +701,13 @@
                 "useWallpaperColors": false
             },
             {
-                "colorScheme": "Catppuccin Lavender",
+                "colorScheme": "Rose Pine Moon",
                 "darkMode": true,
                 "generationMethod": "faithful",
                 "paletteColors": [
-                    "#b4befe",
-                    "#f5bde6",
-                    "#c6a0f6",
+                    "#cba6f7",
+                    "#fab387",
+                    "#94e2d5",
                     "#f38ba8"
                 ],
                 "path": "/home/zk/Images/wallpapers/a_street_with_buildings_in_the_background.png",
@@ -727,7 +731,14 @@
         "sortOrder": "name",
         "transitionDuration": 1500,
         "transitionEdgeSmoothness": 0.18,
-        "transitionType": "random",
+        "transitionType": [
+            "fade",
+            "disc",
+            "stripes",
+            "wipe",
+            "pixelate",
+            "honeycomb"
+        ],
         "useSolidColor": false,
         "useWallhaven": false,
         "viewMode": "recursive",

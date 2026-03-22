@@ -108,7 +108,7 @@
                     "self_brightness": 100,
                     "serial": "9876543210",
                     "vendor": "ASUS",
-                    "version": "AULA3-AR32-0303",
+                    "version": "AULA3-AR32-0309",
                     "zone_idx": 1
                 },
                 {
@@ -121,7 +121,7 @@
                     "self_brightness": 100,
                     "serial": "9876543210",
                     "vendor": "ASUS",
-                    "version": "AULA3-AR32-0303",
+                    "version": "AULA3-AR32-0309",
                     "zone_idx": 1
                 },
                 {
@@ -134,7 +134,7 @@
                     "self_brightness": 100,
                     "serial": "9876543210",
                     "vendor": "ASUS",
-                    "version": "AULA3-AR32-0303",
+                    "version": "AULA3-AR32-0309",
                     "zone_idx": 1
                 }
             ],
@@ -211,7 +211,7 @@
                     "self_brightness": 100,
                     "serial": "9876543210",
                     "vendor": "ASUS",
-                    "version": "AULA3-AR32-0303",
+                    "version": "AULA3-AR32-0309",
                     "zone_idx": 0
                 },
                 {
@@ -224,7 +224,7 @@
                     "self_brightness": 100,
                     "serial": "9876543210",
                     "vendor": "ASUS",
-                    "version": "AULA3-AR32-0303",
+                    "version": "AULA3-AR32-0309",
                     "zone_idx": 1
                 }
             ],
