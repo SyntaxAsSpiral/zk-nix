@@ -34,6 +34,7 @@
     mosh
     openssh
     rsync
+    sshfs
     wget
 
     # Network GUI/TUI
@@ -73,6 +74,9 @@
     just
     tmux
 
+    # Browser automation
+    playwright-driver.browsers
+
     # Nix tooling
     manix
     nh
@@ -82,4 +86,9 @@
     # FHS compat wrapper for non-Nix binaries
     steam-run
   ];
+
+  environment.sessionVariables = {
+    PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+  };
 }

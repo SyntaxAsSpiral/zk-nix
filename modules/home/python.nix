@@ -8,7 +8,8 @@
       flake8 # Linting tool
       mypy # Type checking
       requests # HTTP library for the Weather.py script
-      
+      playwright # Browser automation
+
       # From dev.nix
       pyyaml
       python-frontmatter
