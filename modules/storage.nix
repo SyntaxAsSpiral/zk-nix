@@ -46,9 +46,25 @@ let
             "x-systemd.device-timeout=5"
           ];
         };
+        "/mnt/echo" = {
+          device = "/dev/disk/by-uuid/ba0a8294-d776-48ed-b436-8fefda48fc03";
+          fsType = "btrfs";
+          options = [
+            "ssd"
+            "discard=async"
+            "noatime"
+            "nofail"
+            "noauto"
+            "x-systemd.automount"
+            "x-systemd.idle-timeout=60"
+            "x-systemd.mount-timeout=5"
+            "x-systemd.device-timeout=5"
+          ];
+        };
       };
       driveShares = {
         vault = "/mnt/vault";
+        echo = "/mnt/echo";
       };
     };
 
