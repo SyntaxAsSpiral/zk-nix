@@ -45,6 +45,12 @@ let
       mimeApps = {
         "inode/directory" = "thunar.desktop";
         "x-scheme-handler/file" = "thunar.desktop";
+        "audio/wav" = "mpv.desktop";
+        "audio/x-wav" = "mpv.desktop";
+        "audio/mpeg" = "mpv.desktop";
+        "audio/mp4" = "mpv.desktop";
+        "audio/aac" = "mpv.desktop";
+        "video/mp4" = "mpv.desktop";
         "text/plain" = "kiro.desktop";
         "text/x-shellscript" = "kiro.desktop";
         "application/x-yaml" = "kiro.desktop";

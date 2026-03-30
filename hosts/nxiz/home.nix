@@ -80,6 +80,7 @@
     # Apps
     altus
     gimp
+    mpv
 
     # Dev Tools
     cargo
