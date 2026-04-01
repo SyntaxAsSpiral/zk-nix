@@ -56,6 +56,7 @@ let
         "application/x-yaml" = "kiro.desktop";
         "application/json" = "kiro.desktop";
         "application/toml" = "kiro.desktop";
+        "application/pdf" = "org.pwmt.zathura.desktop";
         "x-scheme-handler/http" = "firefox.desktop";
         "x-scheme-handler/https" = "firefox.desktop";
         "x-scheme-handler/ftp" = "firefox.desktop";
@@ -95,7 +96,7 @@ let
         "image/gif" = "firefox.desktop";
         "image/webp" = "firefox.desktop";
         "image/svg+xml" = "firefox.desktop";
-        "application/pdf" = "firefox.desktop";
+        "application/pdf" = "org.pwmt.zathura.desktop";
         "x-scheme-handler/steam" = "steam.desktop";
         "x-scheme-handler/steamlink" = "steam.desktop";
       };

@@ -81,6 +81,7 @@
     altus
     gimp
     mpv
+    zathura
 
     # Dev Tools
     cargo
