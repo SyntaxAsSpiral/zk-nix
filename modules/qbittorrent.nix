@@ -16,7 +16,7 @@
         Preferences = {
           General.Locale = "en";
           Downloads = {
-            SavePath = "/mnt/vault/@staging/";
+            SavePath = "/mnt/vault/@temp/torrents/";
             TempPathEnabled = false;
           };
           WebUI = {
@@ -36,13 +36,13 @@
           MaxRatio = 0;
           MaxRatioAction = 1; # Remove torrent
           Encryption = 1; # Force encrypted connections
-          DefaultSavePath = "/mnt/vault/@staging/";
+          DefaultSavePath = "/mnt/vault/@temp/torrents/";
         };
 
         AutoRun = {
           Enabled = true;
-          # %F = content path (file or folder)
-          Program = ''/run/current-system/sw/bin/scp -r "%F" zk@zrrh:/mnt/media/Incoming/'';
+          # Completion triggers a local scanner that syncs stable payloads to zrrh
+          Program = "/etc/nixos/scripts/qbt-sync-zrrh.sh";
         };
       };
 
@@ -52,9 +52,9 @@
     # Allow scp in autorun to read SSH keys from ~/.ssh
     systemd.services.qbittorrent.serviceConfig.ProtectHome = lib.mkForce false;
 
-    # Ensure torrent staging directory exists on vault
+    # Ensure torrent directory exists on the temp subvolume
     systemd.tmpfiles.rules = [
-      "d /mnt/vault/@staging 0755 zk users -"
+      "d /mnt/vault/@temp/torrents 0755 zk users -"
     ];
   };
 }
