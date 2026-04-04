@@ -61,6 +61,10 @@
     enableFishIntegration = true;
   };
 
+  programs.fish.shellAliases = {
+    deck-torrents-sync = "ssh zk@adeck '/etc/nixos/scripts/qbt-sync-zrrh.sh'";
+  };
+
   # Allow nwg-look/GTK to be managed dynamically by disabling declarative HM GTK
   gtk.enable = lib.mkForce false;
 
