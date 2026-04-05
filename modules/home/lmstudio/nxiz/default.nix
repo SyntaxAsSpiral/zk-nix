@@ -21,7 +21,7 @@
     mimeType = [ "x-scheme-handler/lmstudio" ];
     settings = {
       Keywords = "developer;llm;";
-      StartupWMClass = "LM Studio";
+      StartupWMClass = "LM-Studio";
     };
   };
 }

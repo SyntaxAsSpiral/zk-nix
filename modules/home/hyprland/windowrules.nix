@@ -55,7 +55,7 @@
     }
     {
       name = "lmstudio-scratchpad";
-      "match:class" = "^(LM Studio)$";
+      "match:class" = "^(LM Studio|LM-Studio)$";
       workspace = "special:magic silent";
     }
     {
