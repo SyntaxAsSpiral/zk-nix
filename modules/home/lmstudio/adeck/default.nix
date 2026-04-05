@@ -1,22 +1,10 @@
 { config, pkgs, ... }:
 
-let
-  lms = pkgs.buildFHSEnv {
-    name = "lms";
-    runScript = "${config.home.homeDirectory}/.lmstudio/bin/lms";
-    targetPkgs = pkgs: [
-      pkgs.gcc.cc.lib  # libgomp (OpenMP runtime for llama.cpp)
-    ];
-  };
-in
 {
-  # LM Studio on adeck: llmster only (no GUI/AppImage).
-  # Installed via `curl` — Nix manages dirs, settings, and server config.
+  # LM Studio on adeck: llmster only (no GUI/AppImage) via nixpkgs.
   home.activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
+    mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/.internal"
   '';
-
-  home.packages = [ lms ];
 
   home.file.".lmstudio/settings.json".source = ./settings.json;
   home.file.".lmstudio/config-presets".source = ../config-presets;
@@ -30,8 +18,8 @@ in
     };
     Service = {
       Type = "forking";
-      ExecStart = "${lms}/bin/lms daemon up";
-      ExecStop = "${lms}/bin/lms daemon down";
+      ExecStart = "${pkgs.lmstudio}/bin/lms daemon up";
+      ExecStop = "${pkgs.lmstudio}/bin/lms daemon down";
       TimeoutStopSec = "20s";
       KillMode = "control-group";
       Restart = "on-failure";
