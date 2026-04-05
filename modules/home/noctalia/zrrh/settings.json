@@ -32,6 +32,7 @@
         ],
         "preferredPlayer": "spotify",
         "spectrumFrameRate": 60,
+        "spectrumMirrored": true,
         "visualizerType": "mirrored",
         "volumeFeedback": false,
         "volumeFeedbackSoundFile": "",
@@ -49,7 +50,6 @@
         "density": "comfortable",
         "displayMode": "always_visible",
         "enableExclusionZoneInset": true,
-        "floating": false,
         "fontScale": 0.8200000000000001,
         "frameRadius": 12,
         "frameThickness": 8,
@@ -462,7 +462,7 @@
         "disableDiscoverability": false,
         "networkPanelView": "wifi",
         "wifiDetailsViewMode": "grid",
-        "wifiEnabled": false
+        "wifiEnabled": true
     },
     "nightLight": {
         "autoSchedule": true,
@@ -675,7 +675,7 @@
                 "useWallpaperColors": false
             },
             {
-                "colorScheme": "Catppuccin",
+                "colorScheme": "Rose Pine Moon",
                 "darkMode": true,
                 "generationMethod": "faithful",
                 "paletteColors": [
@@ -688,7 +688,7 @@
                 "useWallpaperColors": false
             },
             {
-                "colorScheme": "Tokyo Night Moon",
+                "colorScheme": "Rose Pine Moon",
                 "darkMode": true,
                 "generationMethod": "faithful",
                 "paletteColors": [
