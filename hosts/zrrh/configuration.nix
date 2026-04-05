@@ -101,7 +101,6 @@
   # PIA managed natively for now (disable declarative pia.nix service to avoid conflicts).
 
   environment.systemPackages = with pkgs; [
-    lmstudio
     mangohud
     vkbasalt
     vlc

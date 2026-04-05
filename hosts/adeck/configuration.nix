@@ -72,7 +72,6 @@
   systemd.services.jupiter-fan-control.enable = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
-    lmstudio
     brightnessctl
     wlr-randr
     kanshi
