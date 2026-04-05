@@ -59,7 +59,7 @@
       language_models = {
         openai_compatible = {
           ZRRH = {
-            api_url = "http://zrrh:1234/v1";
+            api_url = "http://adeck:1234/v1";
             available_models = [
               {
                 name = "openai/gpt-oss-20b";

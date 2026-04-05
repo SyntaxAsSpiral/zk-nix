@@ -95,7 +95,7 @@
   "appFirstLoad": false,
   "autoLoadBundledLLM": true,
   "modelLoadingGuardrails": {
-    "mode": "high",
+    "mode": "low",
     "customThresholdBytes": 4294967296,
     "alwaysAllowLoadAnyway": false
   },
@@ -116,7 +116,7 @@
   "hfDownloadToken": "",
   "defaultContextLength": {
     "type": "custom",
-    "value": 100000
+    "value": 150000
   },
   "appIntroAcceptedForBuild": null
 }

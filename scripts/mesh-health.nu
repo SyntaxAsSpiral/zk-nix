@@ -4,7 +4,7 @@
 
 def mesh-hosts [] {
   [
-    { host: "zrrh", ip: "100.126.60.24", role: "Local Inference", expect: "online", ssh: true }
+    { host: "zrrh", ip: "100.77.90.79", role: "Local Inference", expect: "online", ssh: true }
     { host: "adeck", ip: "100.89.32.9", role: "Agentic Server", expect: "always-on", ssh: true }
     { host: "zdeck", ip: "100.64.136.57", role: "Gaming", expect: "usually-offline", ssh: false }
     { host: "zk-pixel", ip: "100.96.213.111", role: "Mobile", expect: "intermittent", ssh: false }
@@ -124,9 +124,9 @@ def collect-dns [] {
   } catch { ["dig unavailable"] }
 }
 
-def collect-inference-zrrh [] {
+def collect-inference-mesh [] {
   try {
-    let resp = http get --max-time 3sec http://zrrh:1234/v1/models
+    let resp = http get --max-time 3sec http://adeck:1234/v1/models
     $resp | get -i data | default [] | each {|m| $m.id }
   } catch { { status: "OFFLINE" } }
 }
@@ -149,7 +149,7 @@ def collect-sockets [] {
 
 def main [
   --raw (-r)  # Emit raw JSON without piping to mods
-  --api (-a): string = "zrrh"  # mods API to use
+  --api (-a): string = "zrrh"  # mods API to use (logical remote inference provider; routes via adeck)
   --model (-m): string = "gpt-oss-20b-heretic"  # mods model to use
 ] {
   print "🔍 Collecting mesh health data..."
@@ -164,7 +164,7 @@ def main [
     wifi: (collect-wifi)
     active_connections: (collect-connections)
     dns: (collect-dns)
-    inference_zrrh: (collect-inference-zrrh)
+    inference_mesh: (collect-inference-mesh)
     sockets: (collect-sockets)
   }
 

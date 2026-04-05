@@ -206,9 +206,9 @@ apis:
         max-input-chars: 4194304
 
   zrrh:
-    base-url: http://zrrh:1234/v1
+    base-url: http://adeck:1234/v1
     api-key: lmstudio
-    models: # LM Studio on zrrh via Tailscale mesh
+    models: # LM Studio mesh relay on adeck, backed by zrrh
       "gpt-oss-20b-heretic":
         aliases: ["heretic", "gpt-oss", "zrrh"]
         max-input-chars: 392000
