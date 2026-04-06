@@ -1,7 +1,7 @@
 { ... }:
 
 let
-  pulseLogDir = "/home/zk/pulse-log";
+  lexemancySiteDir = "/home/zk/lexemancy-site";
   pulsePython = "/etc/profiles/per-user/zk/bin/python3";
 in
 {
@@ -13,7 +13,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       User = "zk";
-      WorkingDirectory = pulseLogDir;
+      WorkingDirectory = lexemancySiteDir;
       Environment = "PATH=/etc/profiles/per-user/zk/bin:/run/current-system/sw/bin";
       ExecStart = "${pulsePython} src/github_status_rotator.py";
       StandardOutput = "journal";
