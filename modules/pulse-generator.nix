@@ -15,7 +15,7 @@ in
       User = "zk";
       WorkingDirectory = lexemancySiteDir;
       Environment = "PATH=/etc/profiles/per-user/zk/bin:/run/current-system/sw/bin";
-      ExecStart = "${pulsePython} src/github_status_rotator.py";
+      ExecStart = "${pulsePython} src/pulse_rotator.py";
       StandardOutput = "journal";
       StandardError = "journal";
     };
