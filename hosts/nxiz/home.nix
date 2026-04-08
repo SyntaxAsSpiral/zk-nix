@@ -162,7 +162,7 @@
 
     ".face".source = ../../assets/nxiz-face.png;
 
-    ".pi".source = config.lib.file.mkOutOfStoreSymlink "/mnt/repository/pi/.pi";
+    ".pi".source = config.lib.file.mkOutOfStoreSymlink "/mnt/repository/daemonturgy/pi/.pi";
 
     ".config/monitors.xml".source = ./nxiz-monitors.xml;
   };
