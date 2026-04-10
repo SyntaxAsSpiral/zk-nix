@@ -160,7 +160,7 @@
   "tear": true,
   "terminal": "kitty",
   "wallpaper.enable": true,
-  "wallpaper.image": "/home/zk/Images/wallpapers/wallpaper-ultrawide.png",
+  "wallpaper.image": "/home/zk/Images/wallpapers/nxiz-face-hyprpanel.png",
   "wallpaper.pywal": false,
   "bar.bluetooth.label": false,
   "theme.bar.buttons.bluetooth.background": "#292c3c",
