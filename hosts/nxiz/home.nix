@@ -2,7 +2,7 @@
 {
   config,
   pkgs,
-  inputs,
+  # inputs,
   ...
 }:
 
@@ -82,6 +82,7 @@
     gimp
     mpv
     zathura
+    lmstudio
 
     # Dev Tools
     cargo
@@ -111,7 +112,13 @@
 
     (writeShellApplication {
       name = "fzf-emoji";
-      runtimeInputs = [ fzf jq wl-clipboard curl coreutils ];
+      runtimeInputs = [
+        fzf
+        jq
+        wl-clipboard
+        curl
+        coreutils
+      ];
       text = ''
         set -euo pipefail
 

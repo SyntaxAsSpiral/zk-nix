@@ -19,8 +19,6 @@
     ../../modules/nvidia.nix
     ../../modules/steam.nix
     ../../modules/performance.nix
-    ../../modules/lmstudio.nix
-
     # host-specific #
 
     # Login manager playground modules (inert by default).
@@ -33,11 +31,6 @@
 
   my.host = "nxiz";
   my.performance.enable = true;
-  my.lmstudio = {
-    enable = true;
-    daemon.enable = false;
-  };
-
   # Host Identity (SSH)
   services.openssh.hostKeys = [
     {

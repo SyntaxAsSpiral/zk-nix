@@ -3,13 +3,23 @@
 
 {
   options.my.host = lib.mkOption {
-    type = lib.types.enum [ "nxiz" "adeck" "zrrh" ];
+    type = lib.types.enum [
+      "nxiz"
+      "adeck"
+      "zrrh"
+    ];
     description = "Host identifier — selects per-host blocks in shared modules";
   };
 
   config = {
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
-    nix.settings.trusted-users = [ "root" "zk" ];
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    nix.settings.trusted-users = [
+      "root"
+      "zk"
+    ];
     nix.settings.auto-optimise-store = true;
     nix.extraOptions = ''
       !include /etc/nixos/secrets/nix-access-tokens.conf

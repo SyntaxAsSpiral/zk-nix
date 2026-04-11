@@ -19,14 +19,11 @@
     ../../modules/steam.nix
     ../../modules/performance.nix
     ../../modules/openrgb
-    ../../modules/lmstudio.nix
     inputs.pia.nixosModules.default
   ];
 
   my.host = "zrrh";
   my.performance.enable = true;
-  my.lmstudio.enable = true;
-
   # Host Identity (SSH)
   services.openssh.hostKeys = [
     {
