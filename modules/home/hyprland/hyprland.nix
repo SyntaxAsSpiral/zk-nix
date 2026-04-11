@@ -55,7 +55,7 @@
       "exec-once" = [
         "gnome-keyring-daemon --start --components=secrets,ssh"
         "hyprpanel"
-        "/home/zk/.lmstudio/bin/LM-Studio.AppImage --no-sandbox --enable-features=UseOzonePlatform,WaylandWindowDecorations"
+        "lm-studio --no-sandbox --enable-features=UseOzonePlatform,WaylandWindowDecorations"
       ];
     };
   };

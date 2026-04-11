@@ -15,9 +15,14 @@
     ../../modules/packages.nix
     ../../modules/fonts.nix
     ../../modules/qbittorrent.nix
+    ../../modules/lmstudio.nix
   ];
 
   my.host = "adeck";
+  my.lmstudio = {
+    enable = true;
+    headless = true;
+  };
 
   # Host Identity (SSH)
   services.openssh.hostKeys = [

@@ -19,6 +19,7 @@
     ../../modules/nvidia.nix
     ../../modules/steam.nix
     ../../modules/performance.nix
+    ../../modules/lmstudio.nix
 
     # host-specific #
 
@@ -32,6 +33,10 @@
 
   my.host = "nxiz";
   my.performance.enable = true;
+  my.lmstudio = {
+    enable = true;
+    daemon.enable = false;
+  };
 
   # Host Identity (SSH)
   services.openssh.hostKeys = [

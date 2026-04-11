@@ -100,19 +100,6 @@
     # System management
     (import ../../modules/home/cli/zcli.nix { inherit pkgs; })
 
-    # Flake-managed wrappers
-    (writeShellApplication {
-      name = "lms";
-      text = ''
-        set -euo pipefail
-        if [ ! -x "$HOME/.lmstudio/bin/lms" ]; then
-          echo "lms wrapper: LM Studio CLI not found at $HOME/.lmstudio/bin/lms" >&2
-          exit 1
-        fi
-        exec "$HOME/.lmstudio/bin/lms" "$@"
-      '';
-    })
-
     (writeShellApplication {
       name = "pi";
       runtimeInputs = [ nodejs ];
