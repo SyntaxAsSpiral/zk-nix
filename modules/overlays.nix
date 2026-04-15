@@ -19,5 +19,6 @@
         buildInputs = prev.lib.remove prev.libgepub old.buildInputs;
       });
     })
+
   ];
 }
