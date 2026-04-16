@@ -32,7 +32,7 @@
     ../../modules/home/otter-launcher/otter-launcher.nix
     ../../modules/home/gtk.nix
     ../../modules/home/hyprland/hyprland.nix
-    ../../modules/home/swww.nix
+    ../../modules/home/awww.nix
     ../../modules/home/icons.nix
     ../../modules/home/mods/mods.nix
     ../../modules/home/nushell.nix

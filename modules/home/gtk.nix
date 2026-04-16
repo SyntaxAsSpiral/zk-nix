@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   # GTK theme
@@ -10,6 +10,7 @@
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
     };
+    gtk4.theme = config.gtk.theme;  # Keep legacy default (inherit from gtk.theme)
     theme = {
       name = "Catppuccin-Purple-Dark-Catppuccin";
       package = null;  # provided via home.file

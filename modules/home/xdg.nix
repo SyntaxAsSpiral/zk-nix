@@ -125,6 +125,7 @@ in {
   xdg.userDirs = commonDirs // h.dirs // {
     enable = true;
     createDirectories = false;
+    setSessionVariables = true;  # Keep legacy (stateVersion < 26.05)
     extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
   };
 

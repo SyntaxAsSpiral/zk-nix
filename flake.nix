@@ -95,7 +95,18 @@
 
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nix-colors, antigravity-nix, yazi-plugins, jovian, agenix, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      home-manager,
+      nix-colors,
+      antigravity-nix,
+      yazi-plugins,
+      jovian,
+      agenix,
+      ...
+    }:
     let
       system = "x86_64-linux";
     in
@@ -129,8 +140,10 @@
         specialArgs = { inherit inputs; };
 
         modules = [
-          { nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ]; }
+          {
+            nixpkgs.hostPlatform = system;
+            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+          }
           ./hosts/nxiz/configuration.nix
           agenix.nixosModules.default
           home-manager.nixosModules.home-manager
@@ -156,8 +169,10 @@
         specialArgs = { inherit inputs; };
 
         modules = [
-          { nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ]; }
+          {
+            nixpkgs.hostPlatform = system;
+            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+          }
           ./hosts/zrrh/configuration.nix
           agenix.nixosModules.default
           home-manager.nixosModules.home-manager
@@ -180,7 +195,7 @@
       };
 
       # 6. Formatter (nix fmt)
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
 
       # 7. Dev Shell (nix develop)
       devShells.${system}.default =
@@ -191,7 +206,7 @@
           packages = with pkgs; [
             nixd
             nil
-            nixfmt-rfc-style
+            nixfmt
             statix
             deadnix
           ];
