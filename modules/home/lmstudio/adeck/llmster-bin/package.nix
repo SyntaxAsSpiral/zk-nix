@@ -64,6 +64,7 @@ stdenv.mkDerivation (finalAttrs: {
     mkdir -p $out/libexec
     mv llmster .bundle $out/libexec/
     makeWrapper $out/libexec/llmster $out/bin/llmster
+    makeWrapper $out/libexec/.bundle/lms $out/bin/lms
 
     runHook postInstall
   '';
