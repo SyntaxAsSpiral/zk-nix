@@ -99,6 +99,7 @@ let
         "application/pdf" = "org.pwmt.zathura.desktop";
         "x-scheme-handler/steam" = "steam.desktop";
         "x-scheme-handler/steamlink" = "steam.desktop";
+        "x-scheme-handler/lmstudio" = "lm-studio.desktop";
       };
     };
   };
