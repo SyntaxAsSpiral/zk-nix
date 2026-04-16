@@ -715,3 +715,9 @@ binds {
     // moving the mouse or pressing any other key.
     Mod+Shift+P { power-off-monitors; }
 }
+
+// Ensure LM Studio starts quietly on a secondary workspace
+window-rule {
+    match app-id=r#"lm-studio"#
+    open-on-workspace "2"
+}
