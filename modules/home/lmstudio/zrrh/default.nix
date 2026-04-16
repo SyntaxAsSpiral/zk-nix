@@ -15,7 +15,7 @@
   home.file.".local/share/applications/lm-studio.desktop".text = ''
     [Desktop Entry]
     Name=LM Studio
-    Exec=/etc/profiles/per-user/zk/bin/lm-studio
+    Exec=/etc/profiles/per-user/zk/bin/lm-studio --no-sandbox --enable-features=UseOzonePlatform,WaylandWindowDecorations
     Terminal=false
     Type=Application
     Icon=lm-studio
