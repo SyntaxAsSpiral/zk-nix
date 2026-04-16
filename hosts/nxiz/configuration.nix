@@ -1,5 +1,5 @@
 # NixOS configuration for nxiz
-{ inputs, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [

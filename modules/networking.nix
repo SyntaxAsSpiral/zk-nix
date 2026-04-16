@@ -22,20 +22,29 @@ let
   h = perHost.${config.my.host};
 in
 {
-  networking.hostName = h.hostName;
-  networking.networkmanager.enable = true;
-  networking.networkmanager.dns = lib.mkIf h.resolvedDns "systemd-resolved";
-  networking.firewall = {
-    enable = true;
-    trustedInterfaces = [ "tailscale0" ];
-    allowedUDPPorts = [ 41641 ];
-    allowedUDPPortRanges = [{ from = 60000; to = 61000; }];
+  networking = {
+    hostName = h.hostName;
+    networkmanager.enable = true;
+    networkmanager.dns = lib.mkIf h.resolvedDns "systemd-resolved";
+    firewall = {
+      enable = true;
+      trustedInterfaces = [ "tailscale0" ];
+      allowedUDPPorts = [ 41641 ];
+      allowedUDPPortRanges = [{ from = 60000; to = 61000; }];
+    };
   };
 
-  services.resolved.enable = h.resolvedDns;
-  services.resolved.settings = lib.mkIf h.resolvedDns {
-    Resolve.DNS = [ "1.1.1.1" "9.9.9.9" ];
-    Resolve.FallbackDNS = [ "1.1.1.1" "9.9.9.9" ];
+  services = {
+    resolved.enable = h.resolvedDns;
+    resolved.settings = lib.mkIf h.resolvedDns {
+      Resolve.DNS = [ "1.1.1.1" "9.9.9.9" ];
+      Resolve.FallbackDNS = [ "1.1.1.1" "9.9.9.9" ];
+    };
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "client";
+      extraUpFlags = [ "--ssh" ];
+    };
   };
 
   environment.etc."systemd/system-sleep/10-dns-resume" = lib.mkIf h.postResumeDnsFlush {
@@ -48,11 +57,5 @@ in
       fi
     '';
     mode = "0755";
-  };
-
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "client";
-    extraUpFlags = [ "--ssh" ];
   };
 }

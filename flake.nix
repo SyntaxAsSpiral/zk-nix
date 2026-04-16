@@ -97,12 +97,9 @@
 
   outputs =
     inputs@{
-      self,
       nixpkgs,
       home-manager,
       nix-colors,
-      antigravity-nix,
-      yazi-plugins,
       jovian,
       agenix,
       ...

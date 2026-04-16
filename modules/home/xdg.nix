@@ -114,37 +114,40 @@ let
   };
 
 in {
-  xdg.enable = true;
-  xdg.mime.enable = true;
-  xdg.mimeApps.enable = true;
-
-  xdg.configHome = "${home}/.config";
-  xdg.dataHome = "${home}/.local/share";
-  xdg.cacheHome = "${home}/.cache";
-
-  xdg.userDirs = commonDirs // h.dirs // {
+  xdg = {
     enable = true;
-    createDirectories = false;
-    setSessionVariables = true;  # Keep legacy (stateVersion < 26.05)
-    extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
+    mime.enable = true;
+    mimeApps.enable = true;
+    mimeApps.defaultApplications = h.mimeApps;
+
+    configHome = "${home}/.config";
+    dataHome = "${home}/.local/share";
+    cacheHome = "${home}/.cache";
+
+    userDirs = commonDirs // h.dirs // {
+      enable = true;
+      createDirectories = false;
+      setSessionVariables = true;  # Keep legacy (stateVersion < 26.05)
+      extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
+    };
   };
 
-  # Create only local dirs — remote content accessed via Taildrive
-  home.activation.createLocalXdgDirs = config.lib.dag.entryAfter [ "writeBoundary" ] (
-    ''
-      mkdir -p "${home}/Desktop"
-      mkdir -p "${home}/Downloads"
-      mkdir -p "${home}/Public"
-      mkdir -p "${home}/Templates"
-      mkdir -p "${home}/Images/wallpapers"
-      mkdir -p "${home}/Images/screenshots"
-    '' + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
-  );
+  home = {
+    # Create only local dirs — remote content accessed via Taildrive
+    activation.createLocalXdgDirs = config.lib.dag.entryAfter [ "writeBoundary" ] (
+      ''
+        mkdir -p "${home}/Desktop"
+        mkdir -p "${home}/Downloads"
+        mkdir -p "${home}/Public"
+        mkdir -p "${home}/Templates"
+        mkdir -p "${home}/Images/wallpapers"
+        mkdir -p "${home}/Images/screenshots"
+      '' + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
+    );
 
-  home.sessionVariables = h.sessionVariables;
+    sessionVariables = h.sessionVariables;
 
-  xdg.mimeApps.defaultApplications = h.mimeApps;
-
-  # Populate ~/Images/wallpapers with per-host wallpaper set from repo
-  home.file."Images/wallpapers".source = wpSource.${osConfig.my.host};
+    # Populate ~/Images/wallpapers with per-host wallpaper set from repo
+    file."Images/wallpapers".source = wpSource.${osConfig.my.host};
+  };
 }

@@ -1,6 +1,5 @@
 {
   inputs,
-  lib,
   pkgs,
   osConfig ? {}, # Optional fallback if HM used standalone
   ...

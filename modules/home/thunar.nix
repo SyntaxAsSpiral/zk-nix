@@ -3,7 +3,7 @@
 # System-level (programs.thunar) is in host configuration.nix.
 # This module handles home-manager: packages, thunarrc, bookmarks,
 # custom actions, and exo helpers.
-{ config, pkgs, lib, osConfig, ... }:
+{ pkgs, lib, osConfig, ... }:
 
 let
   tailnet = "tail293e98.ts.net";

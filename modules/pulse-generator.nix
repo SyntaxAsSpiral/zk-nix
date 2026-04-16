@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 let
   lexemancySiteDir = "/home/zk/lexemancy-site";

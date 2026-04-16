@@ -12,15 +12,17 @@
   };
 
   config = {
-    nix.settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    nix.settings.trusted-users = [
-      "root"
-      "zk"
-    ];
-    nix.settings.auto-optimise-store = true;
+    nix.settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "zk"
+      ];
+      auto-optimise-store = true;
+    };
     nix.extraOptions = ''
       !include /etc/nixos/secrets/nix-access-tokens.conf
     '';

@@ -44,9 +44,98 @@
     ../../modules/home/xdg.nix
   ];
 
-  home.username = "zk";
-  home.homeDirectory = "/home/zk";
-  home.stateVersion = "25.11";
+  home = {
+    username = "zk";
+    homeDirectory = "/home/zk";
+    stateVersion = "25.11";
+
+    # User packages
+    packages = with pkgs; [
+      # Apps
+      altus
+      gimp
+      mpv
+      zathura
+      lmstudio
+      kiro
+
+      # Dev Tools
+      cargo
+      gcc
+      gnumake
+      go
+      rustc
+      godot
+      xdg-desktop-portal-gtk
+
+      # LSP servers (in PATH for Zed/editors with nix-ld)
+      nixd
+      nil
+      nixfmt
+
+      # System management
+      (import ../../modules/home/cli/zcli.nix { inherit pkgs; })
+
+      (writeShellApplication {
+        name = "pi";
+        runtimeInputs = [ nodejs ];
+        text = ''
+          set -euo pipefail
+          exec npx --yes @mariozechner/pi-coding-agent "$@"
+        '';
+      })
+
+      (writeShellApplication {
+        name = "fzf-emoji";
+        runtimeInputs = [
+          fzf
+          jq
+          wl-clipboard
+          curl
+          coreutils
+        ];
+        text = ''
+          set -euo pipefail
+
+          data_url="https://raw.githubusercontent.com/github/gemoji/0eca75db9301421efc8710baf7a7576793ae452a/db/emoji.json"
+          cache_dir="''${XDG_CACHE_HOME:-$HOME/.cache}/fzf-emoji"
+          data_file="$cache_dir/emoji.json"
+
+          mkdir -p "$cache_dir"
+          if [ ! -s "$data_file" ]; then
+            curl -fsSL "$data_url" -o "$data_file"
+          fi
+
+          jq -r '.[] | (.emoji + " :" + .aliases[0] + ": " + .category + " » " + .description)' "$data_file" |
+            fzf \
+              --delimiter ' ' \
+              --layout=reverse \
+              --prompt 'emoji> ' \
+              --bind 'enter:become(printf {1} | wl-copy --trim-newline)' \
+              --bind 'ctrl-y:become(printf {2} | wl-copy --trim-newline)'
+        '';
+      })
+    ];
+
+    activation.ensureLocalBin = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "$HOME/.local/bin"
+      chmod 0755 "$HOME/.local/bin"
+    '';
+
+    file = {
+      # Minimal zshrc for Electron app shell environment resolution
+      # (Kiro, Antigravity, etc. probe zsh to inherit PATH/env)
+      ".zshrc".text = ''
+        export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:/etc/profiles/per-user/zk/bin:$PATH"
+      '';
+
+      ".face".source = ../../assets/nxiz-face.png;
+
+      ".pi".source = config.lib.file.mkOutOfStoreSymlink "/mnt/repository/daemonturgy/pi/.pi";
+
+      ".config/monitors.xml".source = ./nxiz-monitors.xml;
+    };
+  };
 
   programs.home-manager.enable = true;
 
@@ -73,92 +162,5 @@
     settings = {
       Keywords = "GIMP;graphic;design;illustration;painting;";
     };
-  };
-
-  # User packages
-  home.packages = with pkgs; [
-    # Apps
-    altus
-    gimp
-    mpv
-    zathura
-    lmstudio
-    kiro
-
-    # Dev Tools
-    cargo
-    gcc
-    gnumake
-    go
-    rustc
-    godot
-    xdg-desktop-portal-gtk
-
-    # LSP servers (in PATH for Zed/editors with nix-ld)
-    nixd
-    nil
-    nixfmt
-
-    # System management
-    (import ../../modules/home/cli/zcli.nix { inherit pkgs; })
-
-    (writeShellApplication {
-      name = "pi";
-      runtimeInputs = [ nodejs ];
-      text = ''
-        set -euo pipefail
-        exec npx --yes @mariozechner/pi-coding-agent "$@"
-      '';
-    })
-
-    (writeShellApplication {
-      name = "fzf-emoji";
-      runtimeInputs = [
-        fzf
-        jq
-        wl-clipboard
-        curl
-        coreutils
-      ];
-      text = ''
-        set -euo pipefail
-
-        data_url="https://raw.githubusercontent.com/github/gemoji/0eca75db9301421efc8710baf7a7576793ae452a/db/emoji.json"
-        cache_dir="''${XDG_CACHE_HOME:-$HOME/.cache}/fzf-emoji"
-        data_file="$cache_dir/emoji.json"
-
-        mkdir -p "$cache_dir"
-        if [ ! -s "$data_file" ]; then
-          curl -fsSL "$data_url" -o "$data_file"
-        fi
-
-        jq -r '.[] | (.emoji + " :" + .aliases[0] + ": " + .category + " » " + .description)' "$data_file" |
-          fzf \
-            --delimiter ' ' \
-            --layout=reverse \
-            --prompt 'emoji> ' \
-            --bind 'enter:become(printf {1} | wl-copy --trim-newline)' \
-            --bind 'ctrl-y:become(printf {2} | wl-copy --trim-newline)'
-      '';
-    })
-  ];
-
-  home.activation.ensureLocalBin = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "$HOME/.local/bin"
-    chmod 0755 "$HOME/.local/bin"
-  '';
-
-  home.file = {
-    # Minimal zshrc for Electron app shell environment resolution
-    # (Kiro, Antigravity, etc. probe zsh to inherit PATH/env)
-    ".zshrc".text = ''
-      export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:/etc/profiles/per-user/zk/bin:$PATH"
-    '';
-
-    ".face".source = ../../assets/nxiz-face.png;
-
-    ".pi".source = config.lib.file.mkOutOfStoreSymlink "/mnt/repository/daemonturgy/pi/.pi";
-
-    ".config/monitors.xml".source = ./nxiz-monitors.xml;
   };
 }

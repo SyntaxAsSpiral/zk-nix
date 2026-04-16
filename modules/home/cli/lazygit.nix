@@ -1,6 +1,5 @@
 # Lazygit is a simple terminal UI for git commands.
 {
-  config,
   lib,
   ...
 }: let

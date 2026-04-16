@@ -17,7 +17,7 @@ in
       dates = "weekly";
       extraArgs = "--keep 5 --keep-since 7d";
     };
-    flake = h.flake;
+    inherit (h) flake;
   };
 
   environment.systemPackages = with pkgs; [

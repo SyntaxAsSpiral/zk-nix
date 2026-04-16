@@ -1,5 +1,5 @@
 # Hyprland keybindings — bind/bindm/bindel/bindl
-{ ... }:
+_:
 
 {
   wayland.windowManager.hyprland.settings = {

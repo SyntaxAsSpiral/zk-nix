@@ -1,5 +1,5 @@
 # Fish shell config (zrrh) — styled to loosely match Nushell UX
-{ ... }:
+_:
 
 {
   programs.fish = {
