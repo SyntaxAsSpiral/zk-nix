@@ -9,6 +9,7 @@
 {
   imports = [
     ../../modules/home/catppuccin.nix
+    ../../modules/home/daemon-profile.nix
     ../../modules/home/cli/bat.nix
     ../../modules/home/cli/btop.nix
     ../../modules/home/cli/eza.nix

@@ -14,7 +14,7 @@ zcli $VERSION — mesh build/deploy wrapper
 
 Usage:
   zcli build <host|all> [host ...] [--dry]
-  zcli deploy <host|all> [host ...]
+  zcli deploy <host|all> [host ...] [--dry]
 
 Behavior:
   - on nxiz/adeck: evaluation happens locally, builds happen on zrrh
@@ -26,6 +26,7 @@ Examples:
   zcli build nxiz --dry
   zcli build nxiz adeck
   zcli deploy nxiz
+  zcli deploy nxiz --dry
   zcli deploy all
 EOF
     }
@@ -116,10 +117,14 @@ EOF
     }
 
     parse_deploy_args() {
+      DEPLOY_DRY=false
       DEPLOY_HOSTS=()
 
       while [[ $# -gt 0 ]]; do
         case "$1" in
+          --dry)
+            DEPLOY_DRY=true
+            shift ;;
           -h|--help)
             usage
             exit 0 ;;
@@ -184,11 +189,18 @@ EOF
 
     run_deploy() {
       local target="$1"
+      local mode
       local -a cmd
+
+      if [[ "$DEPLOY_DRY" == "true" ]]; then
+        mode="dry-activate"
+      else
+        mode="switch"
+      fi
 
       cmd=(
         sudo
-        ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch
+        ${pkgs.nixos-rebuild}/bin/nixos-rebuild "$mode"
         --flake "$FLAKE_PATH#$target"
       )
 
@@ -200,7 +212,11 @@ EOF
         cmd+=(--target-host "zk@$target" --sudo)
       fi
 
-      echo "==> deploy $target"
+      if [[ "$DEPLOY_DRY" == "true" ]]; then
+        echo "==> dry-activate $target"
+      else
+        echo "==> deploy $target"
+      fi
       if [[ "$HOSTNAME" == "$CONTROL_HOST" ]]; then
         echo "    eval host: $HOSTNAME"
         echo "    build host: local ($CONTROL_HOST)"

@@ -178,5 +178,39 @@
           }
         ];
       };
+
+      # 6. Formatter (nix fmt)
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-rfc-style;
+
+      # 7. Dev Shell (nix develop)
+      devShells.${system}.default =
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        pkgs.mkShell {
+          packages = with pkgs; [
+            nixd
+            nil
+            nixfmt-rfc-style
+            statix
+            deadnix
+          ];
+        };
+
+      # 8. Lint Checks (nix flake check)
+      checks.${system} =
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          statix = pkgs.runCommand "statix-check" { buildInputs = [ pkgs.statix ]; } ''
+            statix check ${./.}
+            touch $out
+          '';
+          deadnix = pkgs.runCommand "deadnix-check" { buildInputs = [ pkgs.deadnix ]; } ''
+            deadnix --fail ${./.}
+            touch $out
+          '';
+        };
     };
 }
