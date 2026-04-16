@@ -99,6 +99,7 @@ let
         "application/pdf" = "org.pwmt.zathura.desktop";
         "x-scheme-handler/steam" = "steam.desktop";
         "x-scheme-handler/steamlink" = "steam.desktop";
+        "x-scheme-handler/lmstudio" = "lm-studio.desktop";
       };
     };
   };
@@ -124,6 +125,7 @@ in {
   xdg.userDirs = commonDirs // h.dirs // {
     enable = true;
     createDirectories = false;
+    setSessionVariables = true;  # Keep legacy (stateVersion < 26.05)
     extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
   };
 

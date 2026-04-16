@@ -6,6 +6,9 @@
     # Palette
     ../../modules/home/catppuccin.nix
 
+    # Daemon profile (transient tooling)
+    ../../modules/home/daemon-profile.nix
+
     # Shell
     ../../modules/home/nushell.nix
     ../../modules/home/cli/fish/default.nix

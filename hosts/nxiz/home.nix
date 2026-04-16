@@ -9,6 +9,7 @@
 {
   imports = [
     ../../modules/home/catppuccin.nix
+    ../../modules/home/daemon-profile.nix
     ../../modules/home/cli/bat.nix
     ../../modules/home/cli/btop.nix
     ../../modules/home/cli/eza.nix
@@ -21,7 +22,6 @@
     ../../modules/home/cli/lazygit.nix
     ../../modules/home/cli/yazi/default.nix
     ../../modules/home/editors/antigravity.nix
-    ../../modules/home/editors/kiro.nix
     ../../modules/home/editors/nano.nix
     ../../modules/home/editors/nixvim.nix
     ../../modules/home/editors/obsidian.nix
@@ -31,7 +31,7 @@
     ../../modules/home/otter-launcher/otter-launcher.nix
     ../../modules/home/gtk.nix
     ../../modules/home/hyprland/hyprland.nix
-    ../../modules/home/swww.nix
+    ../../modules/home/awww.nix
     ../../modules/home/icons.nix
     ../../modules/home/mods/mods.nix
     ../../modules/home/nushell.nix
@@ -83,6 +83,7 @@
     mpv
     zathura
     lmstudio
+    kiro
 
     # Dev Tools
     cargo

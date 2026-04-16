@@ -37,7 +37,7 @@
     pkgs.matugen
 
     ## To enable matugen based color theming and setting wallpapers via hyprpanel
-    pkgs.swww
+    pkgs.awww
     ];
 
   # Mutable symlinks — hyprpanel GUI writes config back to repo
