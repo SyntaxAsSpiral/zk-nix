@@ -90,6 +90,7 @@
     # Media key controls for Niri binds
     playerctl
     zathura
+    lmstudio
 
     # Emoji picker (fzf + otter module, no rofi)
     (writeShellApplication {
