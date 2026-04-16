@@ -2,8 +2,14 @@
   inputs,
   lib,
   pkgs,
+  osConfig ? {}, # Optional fallback if HM used standalone
   ...
-}: {
+}:
+let
+  # Determine terminal based on host identity
+  host = if (osConfig ? my && osConfig.my ? host) then osConfig.my.host else "nxiz";
+  terminalCmd = if host == "zrrh" then "ghostty" else "kitty";
+in {
   # Bring in Nixvim's Home Manager module so programs.nixvim options exist
   imports = [inputs.nixvim.homeModules.nixvim];
 
@@ -448,5 +454,17 @@
         end
       end
     '';
+  };
+
+  # Overwrite the default Neovim desktop entry with one that bypasses Thunar's
+  # broken `Terminal=true` handling (exo-open) by calling the terminal directly.
+  xdg.desktopEntries.nvim = {
+    name = "Neovim";
+    genericName = "Text Editor";
+    exec = "${terminalCmd} -e nvim %F";
+    icon = "nvim";
+    terminal = false;
+    categories = [ "Utility" "TextEditor" ];
+    mimeType = [ "text/plain" "text/markdown" ];
   };
 }

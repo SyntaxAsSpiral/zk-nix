@@ -22,7 +22,6 @@
     ../../modules/home/cli/lazygit.nix
     ../../modules/home/cli/yazi/default.nix
     ../../modules/home/editors/antigravity.nix
-    ../../modules/home/editors/kiro.nix
     ../../modules/home/editors/nano.nix
     ../../modules/home/editors/nixvim.nix
     ../../modules/home/editors/obsidian.nix
@@ -84,6 +83,7 @@
     mpv
     zathura
     lmstudio
+    kiro
 
     # Dev Tools
     cargo
