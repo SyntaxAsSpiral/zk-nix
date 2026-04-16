@@ -7,7 +7,7 @@
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
   '';
 
-  home.file.".lmstudio/settings.json".source = ./settings.json;
+  # Temporary: leave ~/.lmstudio/settings.json unmanaged so it can be edited imperatively on zrrh.
   home.file.".lmstudio/config-presets".source = ../config-presets;
 
   # Noctalia launches apps through XDG desktop entries.

@@ -116,7 +116,7 @@
   "hfDownloadToken": "",
   "defaultContextLength": {
     "type": "custom",
-    "value": 150000
+    "value": 100000
   },
   "appIntroAcceptedForBuild": null
 }
