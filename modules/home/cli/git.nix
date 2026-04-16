@@ -9,6 +9,7 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
+    signing.format = null; # Silence HM deprecation warning
     settings = {
       user.name = "Zach Battin";
       user.email = "zach@example.com";
