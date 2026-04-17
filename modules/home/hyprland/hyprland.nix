@@ -36,7 +36,7 @@
       "$search"      = "kitty --class launcher -e otter-launcher";
       "$browser"     = "firefox";
       "$editor"      = "zeditor";
-      "$editor-alt"  = "kiro";
+      "$editor-alt"  = "antigravity";
       "$notes"       = "obsidian";
       "$mainMod"     = "SUPER";
       "$screensaver" = "bash -c 'for ws in $(hyprctl monitors -j | jq -r \".[].activeWorkspace.id\"); do hyprctl dispatch exec \"[fullscreen;silent;workspace:$ws] kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\"; done'";
