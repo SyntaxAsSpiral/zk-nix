@@ -3,7 +3,27 @@
 # Scans repos in /mnt/repository for uncommitted changes
 
 SCAN_DIRS=(
-  "/mnt/repository/"
+  "/mnt/repository/autopoesis"
+  "/mnt/repository/collectivist"
+  "/mnt/repository/consensus"
+  "/mnt/repository/context-vault"
+  "/mnt/repository/daemonturgy/claurst"
+  "/mnt/repository/daemonturgy/excalibur"
+  "/mnt/repository/daemonturgy/mempalace"
+  "/mnt/repository/daemonturgy/mesh-inference"
+  "/mnt/repository/daemonturgy/pi"
+  "/mnt/repository/forensic-files"
+  "/mnt/repository/kludge-chan"
+  "/mnt/repository/lexemancy-site"
+  "/mnt/repository/lɛxigȫn"
+  "/mnt/repository/nix-os"
+  "/mnt/repository/obsidian-workshop"
+  "/mnt/repository/obsidian-workshop/apply-opencode"
+  "/mnt/repository/obsidian-workshop/obsidian-lmstudio-connect"
+  "/mnt/repository/obsidian-workshop/obsidian-sample-plugin"
+  "/mnt/repository/semantic-json"
+  "/mnt/repository/sideriod"
+  "/mnt/repository/svadharma"
 )
 
 dirty=0

@@ -1,96 +1,102 @@
 #!/usr/bin/env bash
-# check-nix-updates.sh — flake input staleness for hyprpanel updates module
+# check-nix-updates.sh — specific package staleness for hyprpanel updates module
 #
 # Modes:
-#   (no args)   → fast: count inputs whose locked rev != latest on branch (network)
-#   -tooltip    → fast: list stale input names
-#   -check      → slow: full network check, human-readable output for terminal
+#   (no args)   → fast: count pkgs whose local version != remote version
+#   -tooltip    → fast: list stale pkg names
+#   -check      → slow: full check, human-readable output for terminal
 
-FLAKE="/mnt/repository/nix-os"
 MODE="${1:-}"
 
-metadata=$(nix flake metadata "$FLAKE" --json 2>/dev/null)
-if [[ -z "$metadata" ]]; then
-    echo "0"; exit 0
+# Read packages from a config file (one per line, ignoring empty and comments)
+CONFIG_FILE="$(dirname "$0")/watch-pkgs.conf"
+if [[ -f "$CONFIG_FILE" ]]; then
+    mapfile -t PACKAGES < <(grep -v '^[[:space:]]*$' "$CONFIG_FILE" | grep -v '^[[:space:]]*#')
+else
+    PACKAGES=( "lmstudio" )
 fi
-
-get_inputs() {
-    echo "$metadata" | python3 -c "
-import json, sys
-data = json.load(sys.stdin)
-nodes = data['locks']['nodes']
-root_inputs = nodes.get('root', {}).get('inputs', {})
-for alias, node_key in root_inputs.items():
-    if isinstance(node_key, list): continue
-    node = nodes.get(node_key, {})
-    locked = node.get('locked', {})
-    if locked.get('type') != 'github': continue
-    ref = node.get('original', {}).get('ref', 'HEAD')
-    print(f\"{alias}|{locked.get('owner','')}|{locked.get('repo','')}|{ref}|{locked.get('rev','')}\")
-"
-}
 
 check_stale() {
     local verbose="${1:-}"
     local stale=()
 
-    while IFS= read -r line; do
-        name=$(cut -d'|' -f1 <<< "$line")
-        owner=$(cut -d'|' -f2 <<< "$line")
-        repo=$(cut -d'|' -f3 <<< "$line")
-        ref=$(cut -d'|' -f4 <<< "$line")
-        locked_rev=$(cut -d'|' -f5 <<< "$line")
-        [[ -z "$owner" || -z "$repo" ]] && continue
-        ref="${ref:-HEAD}"
+    for pkg in "${PACKAGES[@]}"; do
+        if [[ "$pkg" == "nixpkgs" || "$pkg" == "core" ]]; then
+            # Special fast check for the core nixpkgs flake input
+            local locked_rev
+            locked_rev=$(nix flake metadata /mnt/repository/nix-os --json 2>/dev/null | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+nodes = data.get('locks', {}).get('nodes', {})
+root_nixpkgs = nodes.get('root', {}).get('inputs', {}).get('nixpkgs')
+if root_nixpkgs and root_nixpkgs in nodes:
+    print(nodes[root_nixpkgs].get('locked', {}).get('rev', ''))
+            " 2>/dev/null)
 
-        latest=$(curl -sf "https://api.github.com/repos/${owner}/${repo}/commits/${ref}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['sha'])" 2>/dev/null)
+            local remote_rev
+            remote_rev=$(curl -sf "https://api.github.com/repos/NixOS/nixpkgs/commits/nixos-unstable" \
+                -H "Accept: application/vnd.github.v3+json" \
+                | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('sha', ''))" 2>/dev/null)
 
-        [[ -z "$latest" ]] && continue
-        if [[ "$latest" != "$locked_rev" ]]; then
+            if [[ -n "$locked_rev" && -n "$remote_rev" && "$locked_rev" != "$remote_rev" ]]; then
+                if [[ -n "$verbose" ]]; then
+                    stale+=("nixpkgs (core): ${locked_rev:0:7} → ${remote_rev:0:7}")
+                else
+                    stale+=("nixpkgs (core)")
+                fi
+            fi
+            continue
+        fi
+
+        # Local version (from the locally locked nixpkgs registry)
+        local_ver=$(nix eval nixpkgs#"${pkg}".version --raw 2>/dev/null)
+        
+        # Remote version (from the latest upstream nixos-unstable)
+        remote_ver=$(nix eval github:nixos/nixpkgs/nixos-unstable#"${pkg}".version --raw 2>/dev/null)
+
+        if [[ -n "$local_ver" && -n "$remote_ver" && "$local_ver" != "$remote_ver" ]]; then
             if [[ -n "$verbose" ]]; then
-                stale+=("$name: ${locked_rev:0:7} → ${latest:0:7}")
+                stale+=("$pkg: $local_ver → $remote_ver")
             else
-                stale+=("$name")
+                stale+=("$pkg")
             fi
         fi
-    done < <(get_inputs)
+    done
 
     printf '%s\n' "${stale[@]}"
 }
 
 case "$MODE" in
     -check)
-        echo "Checking flake inputs against upstream..."
+        echo "Checking specified packages for updates..."
         echo ""
-        stale=$(check_stale verbose)
-        if [[ -z "$stale" ]]; then
-            echo "✓ All inputs up to date"
+        stale_output="$(check_stale verbose)"
+        if [[ -z "$stale_output" ]]; then
+            echo "✓ All watched packages are up to date"
         else
-            echo "Stale inputs:"
-            echo "$stale"
+            echo "Updates available:"
+            echo "$stale_output"
         fi
         echo ""
         echo "--- press enter to close ---"
-        read
+        read -r
         ;;
     -tooltip)
-        stale=$(check_stale)
-        if [[ -z "$stale" ]]; then
-            echo "All inputs up to date"
+        stale_output="$(check_stale)"
+        if [[ -z "$stale_output" ]]; then
+            echo "All watched packages up to date"
         else
-            count=$(echo "$stale" | wc -l)
-            echo "$count input(s) may have updates"
-            echo "$stale"
+            count=$(echo "$stale_output" | wc -l)
+            echo "$count package(s) have updates"
+            echo "$stale_output"
         fi
         ;;
     *)
-        stale=$(check_stale)
-        if [[ -z "$stale" ]]; then
+        stale_output="$(check_stale)"
+        if [[ -z "$stale_output" ]]; then
             echo "0"
         else
-            echo "$stale" | wc -l
+            echo "$stale_output" | wc -l
         fi
         ;;
 esac

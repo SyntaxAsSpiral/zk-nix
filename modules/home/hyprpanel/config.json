@@ -3,12 +3,8 @@
   "bar.layouts": {
     "0": {
       "left": [],
-      "middle": [
-        "worldclock"
-      ],
-      "right": [
-        "windowtitle"
-      ]
+      "middle": ["worldclock"],
+      "right": ["windowtitle"]
     },
     "1": {
       "left": [
@@ -18,16 +14,12 @@
         "hypridle",
         "network",
         "bluetooth",
-        "custom/fleet-adeck",
         "storage",
-        "custom/fleet-nxiz",
         "dashboard",
         "separator",
         "worldclock"
       ],
-      "middle": [
-        "workspaces"
-      ],
+      "middle": ["workspaces"],
       "right": [
         "media",
         "separator",
@@ -185,15 +177,7 @@
   "theme.bar.menus.menu.bluetooth.switch.puck": "#494d64",
   "theme.bar.menus.menu.bluetooth.switch_divider": "#494d64",
   "theme.bar.menus.menu.bluetooth.text": "#cad3f5",
-  "bar.customModules.cava.barCharacters": [
-    "⣀",
-    "⣄",
-    "⣤",
-    "⣦",
-    "⣶",
-    "⣷",
-    "⣿"
-  ],
+  "bar.customModules.cava.barCharacters": ["⣀", "⣄", "⣤", "⣦", "⣶", "⣷", "⣿"],
   "bar.customModules.cava.bars": 8,
   "bar.customModules.cava.icon": "󰜟",
   "bar.customModules.cava.leftClick": "menu:audio",
@@ -413,11 +397,7 @@
   "bar.customModules.storage.labelType": "percentage",
   "bar.customModules.storage.leftClick": "kitty --class tui-float -e otter-launcher do",
   "bar.customModules.storage.middleClick": "kitty --class tui-float -e bash -c 'echo \"=== Disk Usage ===\"; du -sh /mnt/repository/* /home/zk/.cache /home/zk/.local/share 2>/dev/null | sort -rh | head -20 | tee /tmp/disk-usage.txt; echo; echo \"=== AI Cleanup Suggestions ===\"; cat /tmp/disk-usage.txt | mods --api zrrh --raw \"based on these directory sizes, suggest what to clean up. be specific and terse. skip anything under 1G.\"; echo; read -p \"press enter to close\"'",
-  "bar.customModules.storage.paths": [
-    "/",
-    "/mnt/repository/",
-    "/mnt/archive/"
-  ],
+  "bar.customModules.storage.paths": ["/", "/mnt/repository/", "/mnt/archive/"],
   "bar.customModules.storage.round": true,
   "bar.customModules.storage.tooltipStyle": "tree",
   "bar.customModules.storage.units": "auto",
@@ -452,15 +432,15 @@
   "theme.bar.menus.menu.systray.dropdownmenu.divider": "#45465a",
   "theme.bar.menus.menu.systray.dropdownmenu.text": "#cad3f5",
   "bar.customModules.updates.autoHide": false,
-  "bar.customModules.updates.extendedTooltip": false,
+  "bar.customModules.updates.extendedTooltip": true,
   "bar.customModules.updates.icon.pending": "󰚰",
   "bar.customModules.updates.icon.updated": "󱛱",
   "bar.customModules.updates.label": false,
-  "bar.customModules.updates.leftClick": "kitty --class tui-float -e bash -lc 'zcli check-updates; echo; read -n1'",
+  "bar.customModules.updates.leftClick": "",
   "bar.customModules.updates.padZero": true,
   "bar.customModules.updates.pollingInterval": 43200000,
   "bar.customModules.updates.middleClick": "",
-  "bar.customModules.updates.rightClick": "kitty --class tui-float -e bash -lc 'zcli flake-update; echo; read -n1'",
+  "bar.customModules.updates.rightClick": "",
   "bar.customModules.updates.updateCommand": "/mnt/repository/nix-os/scripts/check-nix-updates.sh",
   "bar.customModules.updates.updateTooltipCommand": "/mnt/repository/nix-os/scripts/check-nix-updates.sh -tooltip",
   "theme.bar.buttons.modules.updates.background": "#292c3c",
@@ -481,16 +461,8 @@
   "bar.windowtitle.icon": true,
   "bar.windowtitle.label": true,
   "bar.windowtitle.title_map": [
-    [
-      "kiro",
-      "󰊠",
-      "Kiro"
-    ],
-    [
-      "tui-float",
-      "󰹙",
-      "TUI"
-    ]
+    ["kiro", "󰊠", "Kiro"],
+    ["tui-float", "󰹙", "TUI"]
   ],
   "bar.windowtitle.truncation": false,
   "theme.bar.buttons.windowtitle.background": "#292c3c",
@@ -553,9 +525,7 @@
   "bar.customModules.worldclock.format": "%I:%M %p",
   "bar.customModules.worldclock.formatDiffDate": "",
   "bar.customModules.worldclock.icon": "󱑂",
-  "bar.customModules.worldclock.tz": [
-    "America/Los_Angeles"
-  ],
+  "bar.customModules.worldclock.tz": ["America/Los_Angeles"],
   "theme.bar.buttons.modules.worldclock.background": "#292c3c",
   "theme.bar.buttons.modules.worldclock.border": "#f5bde6",
   "theme.bar.buttons.modules.worldclock.icon": "#74c6ec",
