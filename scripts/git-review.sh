@@ -3,8 +3,7 @@
 # Scans repos in /mnt/repository for uncommitted changes
 
 SCAN_DIRS=(
-  "/mnt/repository/nix-os"
-  "/mnt/repository/context-vault"
+  "/mnt/repository/"
 )
 
 dirty=0
