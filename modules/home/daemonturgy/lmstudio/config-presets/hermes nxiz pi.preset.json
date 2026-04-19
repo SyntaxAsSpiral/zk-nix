@@ -1,0 +1,20 @@
+{
+  "identifier": "@local:hermes-nxiz-pi",
+  "name": "hermes-nxiz-pi",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      },
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.8
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}
