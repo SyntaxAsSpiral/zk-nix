@@ -7,6 +7,7 @@
   # The repo is stored at /etc/nixos on zrrh.
   home.activation.lmstudioConfigZrrh = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
+    mkdir -p /etc/nixos/modules/home/daemonturgy/lmstudio/config-presets
     ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/settings.json ${config.home.homeDirectory}/.lmstudio/settings.json
     ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/config-presets ${config.home.homeDirectory}/.lmstudio/config-presets
   '';

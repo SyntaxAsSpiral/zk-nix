@@ -92,7 +92,11 @@
     "nvidia_modeset"
     "nvidia_uvm"
     "nvidia_drm"
+    "amdgpu" # Load after nvidia to prioritize card indexing
   ];
+
+  # Force console to the NVIDIA card (card1) to ensure Plymouth visibility
+  boot.kernelParams = [ "fbcon=map:1" ];
 
   # GPU Control (AMD/NVIDIA)
   services.lact.enable = true;
