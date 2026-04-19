@@ -69,15 +69,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nullclaw = {
-      url = "github:nullclaw/nullclaw";
-    };
-
-    zeroclaw = {
-      url = "github:zeroclaw-labs/zeroclaw";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-cachyos-kernel = {
       url = "github:xddxdd/nix-cachyos-kernel/65eaf1492a6f0850ef2f08943c6bfc59b144e72a";
       # Do NOT follow nixpkgs — patches are pinned to flake's own nixpkgs
