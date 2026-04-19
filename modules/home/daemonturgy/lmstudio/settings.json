@@ -19,7 +19,7 @@
     "doubleClickMessageToEdit": false,
     "doubleClickChatCellRenames": false,
     "aiNamingMode": "auto",
-    "autoExpandReasoningBlocks": false,
+    "autoExpandReasoningBlocks": true,
     "reasoningBlocksVignette": true,
     "messageGenInfoMode": "lastMessage",
     "visualizeSpeculativeDecoding": false,
@@ -29,7 +29,6 @@
     "showChatUtilityMenuLabels": true,
     "pinnedPlugins": [],
     "showRoleAndInsertButtons": false,
-    "showSyncInputToggleInFooter": true,
     "scrollLastMessageToTop": "scrollToTopNoLatch",
     "showTokenCountInChatListings": false,
     "moveDeletedItemsToTrash": false,
@@ -45,11 +44,11 @@
     }
   },
   "developer": {
-    "showExperimentalFeatures": true,
-    "experimentalLoadPresets": false,
+    "showExperimentalFeatures": false,
+    "experimentalLoadPresets": true,
     "showDebugInfoBlocksInChat": false,
     "showModelDownloadOptionData": false,
-    "showResourceConsumptionWidget": false,
+    "showResourceConsumptionWidget": true,
     "backendDownloadChannel": "stable",
     "appUpdateChannel": "stable",
     "allowDevelopmentPlugins": true,
@@ -60,26 +59,19 @@
     },
     "autoUpdateExtensionPacks": true,
     "autoDeleteExtensionPacks": true,
-    "separateReasoningContent": false,
+    "separateReasoningContentInAPI": true,
     "experimentFlags": [],
     "apiPredictionHistoryEviction": {
       "type": "time",
       "ttlDays": 30
-    },
-    "syncedChatInputGuardrails": {
-      "syncSendMaxModels": 4,
-      "syncSendGlobalTabCap": 10
-    },
-    "syncedChatSend": {
-      "sendMode": "simultaneous"
     },
     "attemptedInstallLmsCliOnStartup": false
   },
   "ui": {
     "missionControlFullscreen": false,
     "showModelFileNameInMyModels": false,
-    "configureLoadParamsBeforeLoad": false,
-    "alwaysOpenModelLoaderFromPicker": true,
+    "configureLoadParamsBeforeLoad": true,
+    "alwaysOpenModelLoaderFromPicker": false,
     "contextDisplayMode": "percentage",
     "appNavigationBarPosition": "left",
     "showTabStripScrollBar": false,
@@ -100,7 +92,8 @@
     "alwaysAllowLoadAnyway": false
   },
   "dismissedModals": [
-    "LM Link Sidebar Button Popover"
+    "LM Link Sidebar Button Popover",
+    "Chat Migration (v3)"
   ],
   "dismissedConversationSnackbars": [],
   "pre030ChatsMigrated": 3,
@@ -112,8 +105,8 @@
   "hfSearchToken": "",
   "hfDownloadToken": "",
   "defaultContextLength": {
-    "type": "max",
-    "value": 50000
+    "type": "custom",
+    "value": 100000
   },
   "appIntroAcceptedForBuild": null
 }

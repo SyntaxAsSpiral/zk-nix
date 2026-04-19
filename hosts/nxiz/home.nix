@@ -33,9 +33,9 @@
     ../../modules/home/hyprland/hyprland.nix
     ../../modules/home/awww.nix
     ../../modules/home/icons.nix
-    ../../modules/home/mods/mods.nix
+    ../../modules/home/daemonturgy/mods/mods.nix
     ../../modules/home/nushell.nix
-    ../../modules/home/lmstudio/nxiz/default.nix
+    ../../modules/home/daemonturgy/lmstudio/nxiz/default.nix
     ../../modules/home/spotify.nix
     ../../modules/home/msgvault.nix # INERT: programs.msgvault.enable = false (default)
     ../../modules/home/python.nix

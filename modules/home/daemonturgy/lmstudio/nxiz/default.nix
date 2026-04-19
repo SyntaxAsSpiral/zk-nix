@@ -7,7 +7,10 @@
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
   '';
 
-  home.file.".lmstudio/settings.json".source = ./settings.json;
+  # Mutable symlinks for LMStudio
+  home.activation.lmstudioConfigNxiz = config.lib.dag.entryAfter [ "linkGeneration" ] ''
+    ln -sf /mnt/repository/nix-os/modules/home/daemonturgy/lmstudio/settings.json ${config.home.homeDirectory}/.lmstudio/settings.json
+  '';
   home.file.".lmstudio/config-presets".source = ../config-presets;
   home.file.".lmstudio/.internal/http-server-config.json".source = ./http-server-config.json;
 }

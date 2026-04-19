@@ -12,7 +12,7 @@
     # Shell
     ../../modules/home/nushell.nix
     ../../modules/home/cli/fish/default.nix
-    ../../modules/home/lmstudio/zrrh/default.nix
+    ../../modules/home/daemonturgy/lmstudio/zrrh/default.nix
 
     # CLI tools
     ../../modules/home/cli/bat.nix

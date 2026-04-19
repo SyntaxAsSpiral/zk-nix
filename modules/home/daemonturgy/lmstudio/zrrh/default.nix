@@ -7,7 +7,11 @@
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
   '';
 
-  # Temporary: leave ~/.lmstudio/settings.json unmanaged so it can be edited imperatively on zrrh.
+  # Mutable symlinks — LMStudio writes its config, so we force link to the repo.
+  # The repo is stored at /etc/nixos on zrrh.
+  home.activation.lmstudioConfigZrrh = config.lib.dag.entryAfter [ "linkGeneration" ] ''
+    ln -sf /etc/nixos/modules/home/daemonturgy/lmstudio/settings.json ${config.home.homeDirectory}/.lmstudio/settings.json
+  '';
   home.file.".lmstudio/config-presets".source = ../config-presets;
 
 }

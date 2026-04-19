@@ -75,7 +75,10 @@ in
     ../../modules/home/python.nix
 
     # LM Studio (relay)
-    ../../modules/home/lmstudio/adeck/default.nix
+    ../../modules/home/daemonturgy/lmstudio/adeck/default.nix
+
+    # Hermes Agent
+    ../../modules/home/daemonturgy/hermes/default.nix
 
     # System
     ../../modules/home/msgvault.nix
