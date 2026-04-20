@@ -59,12 +59,16 @@
           rm "$out/bin/lm-studio"
           cp "$bwrap_target" "$out/bin/lm-studio"
           chmod +w "$out/bin/lm-studio"
-          sed -i '/^    --tmpfs \/etc \\$/a\    --bind-try /etc/nixos /etc/nixos \\' "$out/bin/lm-studio"
+          # Inject before the ro_mounts expansion — unique anchor that doesn't depend
+          # on whitespace of earlier --tmpfs lines.
+          sed -i 's|"''${ro_mounts\[@\]}"|--bind-try /etc/nixos /etc/nixos \\\n    "''${ro_mounts[@]}"|' "$out/bin/lm-studio"
           chmod 555 "$out/bin/lm-studio"
-          grep -q -- '--bind-try /etc/nixos /etc/nixos' "$out/bin/lm-studio" || {
+          if ! grep -q -- '--bind-try /etc/nixos /etc/nixos' "$out/bin/lm-studio"; then
             echo "lmstudio build fix: failed to inject /etc/nixos bind into wrapper" >&2
+            echo "---wrapper tail---" >&2
+            tail -30 "$out/bin/lm-studio" >&2
             exit 1
-          }
+          fi
         '';
       });
     })
