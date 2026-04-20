@@ -320,6 +320,9 @@ code_execution:
 # overload (529), service errors (503), or connection failures.
 #
 # Supported providers:
+#
+# Supported providers:
+#   openrouter   (OPENROUTER_API_KEY)  — routes to any model
 #   openai-codex (OAuth — hermes login) — OpenAI Codex
 #   nous         (OAuth — hermes login) — Nous Portal
 #   zai          (ZAI_API_KEY)         — Z.AI / GLM
@@ -332,7 +335,6 @@ code_execution:
 fallback_model:
   provider: openrouter
   model: qwen/qwen3.6-plus
-  api_key: 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
 #
 # ── Smart Model Routing ────────────────────────────────────────────────
 # Optional cheap-vs-strong routing for simple turns.
