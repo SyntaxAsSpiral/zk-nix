@@ -50,6 +50,21 @@
           # Restore pristine upstream lms, then patch interpreter only.
           install -m 755 "$extracted_path/resources/app/.webpack/lms" "$out/bin/lms"
           patchelf --set-interpreter "${prev.stdenv.cc.bintools.dynamicLinker}" "$out/bin/lms"
+
+          # Expose /etc/nixos inside the bwrap sandbox so flake-anchored symlinks
+          # (e.g. ~/.lmstudio/config-presets → /etc/nixos/modules/.../config-presets)
+          # resolve from within LMStudio. Upstream's wrapper excludes /etc from
+          # auto-bind, producing ENOENT on any /etc/nixos-rooted path. --bind-try
+          # keeps this a no-op on hosts where /etc/nixos is absent.
+          rm "$out/bin/lm-studio"
+          cp "$bwrap_target" "$out/bin/lm-studio"
+          chmod +w "$out/bin/lm-studio"
+          sed -i '/^    --tmpfs \/etc \\$/a\    --bind-try /etc/nixos /etc/nixos \\' "$out/bin/lm-studio"
+          chmod 555 "$out/bin/lm-studio"
+          grep -q -- '--bind-try /etc/nixos /etc/nixos' "$out/bin/lm-studio" || {
+            echo "lmstudio build fix: failed to inject /etc/nixos bind into wrapper" >&2
+            exit 1
+          }
         '';
       });
     })
