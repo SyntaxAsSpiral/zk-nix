@@ -29,7 +29,6 @@
     "showChatUtilityMenuLabels": true,
     "pinnedPlugins": [],
     "showRoleAndInsertButtons": false,
-    "showSyncInputToggleInFooter": true,
     "scrollLastMessageToTop": "scrollToTopNoLatch",
     "showTokenCountInChatListings": false,
     "moveDeletedItemsToTrash": false,
@@ -60,25 +59,18 @@
     },
     "autoUpdateExtensionPacks": true,
     "autoDeleteExtensionPacks": true,
-    "separateReasoningContent": false,
+    "separateReasoningContentInAPI": true,
     "experimentFlags": [],
     "apiPredictionHistoryEviction": {
       "type": "time",
       "ttlDays": 30
-    },
-    "syncedChatInputGuardrails": {
-      "syncSendMaxModels": 4,
-      "syncSendGlobalTabCap": 10
-    },
-    "syncedChatSend": {
-      "sendMode": "simultaneous"
     },
     "attemptedInstallLmsCliOnStartup": false
   },
   "ui": {
     "missionControlFullscreen": false,
     "showModelFileNameInMyModels": false,
-    "configureLoadParamsBeforeLoad": false,
+    "configureLoadParamsBeforeLoad": true,
     "alwaysOpenModelLoaderFromPicker": false,
     "contextDisplayMode": "percentage",
     "appNavigationBarPosition": "left",
