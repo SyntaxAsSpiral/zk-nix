@@ -52,6 +52,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   nativeBuildInputs = [
+    makeWrapper
     makeBinaryWrapper
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
@@ -72,23 +73,25 @@ stdenv.mkDerivation (finalAttrs: {
 
   # Bun-compiled executables (llmster, node, lms) embed runtime data after the ELF sections.
   # patchelf --add-rpath and autoPatchelfHook's --set-rpath rearrange ELF sections to grow
-  # .dynamic/.dynstr, which shifts the appended data and causes SIGSEGV at runtime.
+  # .dynamic/.dynstr, which shifts the appended data and causes SIGSEGV or runtime errors.
   #
-  # For executables: only patch the interpreter (minimal, less likely to corrupt) and provide
-  # library paths via LD_LIBRARY_PATH through a binary wrapper instead of modifying the rpath.
-  # For shared libraries (.so/.node): these are standard ELF without appended data, so patching
-  # the rpath with --add-rpath is safe.
+  # We strictly avoid patchelf --add-rpath. We patch the interpreter for compatibility,
+  # but only wrap the main entry points. Internal runtimes in .bundle/ must remain raw
+  # binaries to avoid breaking the daemon's internal integrity/launch logic.
   postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
     local interpreter="$(cat $NIX_CC/nix-support/dynamic-linker)"
     local rpath="${lib.makeLibraryPath (finalAttrs.buildInputs ++ [ addDriverRunpath.driverLink ])}"
-    find $out/libexec -type f \( -executable -o -name '*.so' -o -name '*.so.*' -o -name '*.node' \) | while read -r file; do
+
+    # 1. Patch the interpreter for all executables to ensure they can run on NixOS.
+    find $out/libexec -type f -executable | while read -r file; do
       if patchelf --print-interpreter "$file" &>/dev/null; then
         patchelf --set-interpreter "$interpreter" "$file"
-        wrapProgram "$file" \
-          --prefix LD_LIBRARY_PATH : "$rpath"
-      elif patchelf --print-rpath "$file" &>/dev/null; then
-        patchelf --add-rpath "$rpath" "$file"
       fi
+    done
+
+    # 2. Only wrap the main entry points. Child runtimes will inherit the LD_LIBRARY_PATH.
+    for bin in "$out/libexec/llmster" "$out/libexec/.bundle/lms"; do
+      wrapProgram "$bin" --prefix LD_LIBRARY_PATH : "$rpath"
     done
   '';
 
