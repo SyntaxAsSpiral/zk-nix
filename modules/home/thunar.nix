@@ -117,7 +117,6 @@ let
 in
 {
   home.packages = with pkgs; [
-    thunar
     xfce4-exo
     tumbler
     glib          # gio for trash/mount operations
