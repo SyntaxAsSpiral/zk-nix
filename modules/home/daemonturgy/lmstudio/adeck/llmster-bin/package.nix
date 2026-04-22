@@ -46,6 +46,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   # stdenv.cc.cc provides libstdc++, libatomic, and libgomp (all required at runtime)
   buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
+    stdenv.cc.cc.lib # provides libatomic.so.1, libstdc++.so.6, etc.
     stdenv.cc.cc
     libxcrypt-legacy
   ];

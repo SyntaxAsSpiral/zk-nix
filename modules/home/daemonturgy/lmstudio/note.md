@@ -7,8 +7,13 @@ On mesh I have full client installled on nxiz and zrrh.
 I have headless cli on adeck. 
 
 Issues:
-
-- full client consistently fails to open with app launcher. this is happening in zrrh (noctalia qs) and nxiz (fsel?).`"x-scheme-handler/lmstudio" = "lm-studio.desktop";` in xdg.nix worked briefly. 
 - headless llmster doesn't exist in nix pkgs. 
 - custom derivation installs llmster on adeck but does not pick up adeck's gpu with vulkan runtime indicating that its not the correct cli tool.
 - fixing env to run install script works but then requires manual updating. and new changes like `libatmoic` suddenly being needed. 
+
+Current State:
+
+- VULKAN ***IS*** INSALLED AND SELECTED ON ADECK `lms runtime ls`
+- `lms runtime survey` displays the SAME ERROR as nxiz or zrrh would if gui was not running.
+- adeck should not NEED gui as it's headless cli llmster install. 
+- adeck ***HAS*** a GPU and works with `lms runtime survey` when cli is install correctly. 
