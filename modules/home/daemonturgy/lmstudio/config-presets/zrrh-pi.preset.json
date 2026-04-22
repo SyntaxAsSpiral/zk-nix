@@ -1,0 +1,27 @@
+{
+  "identifier": "@local:zrrh-pi",
+  "name": "zrrh-pi",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      },
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.7
+      },
+      {
+        "key": "llm.prediction.minPSampling",
+        "value": {
+          "checked": true,
+          "value": 0.05
+        }
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}

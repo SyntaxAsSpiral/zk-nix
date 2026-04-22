@@ -45,7 +45,7 @@
   },
   "developer": {
     "showExperimentalFeatures": false,
-    "experimentalLoadPresets": false,
+    "experimentalLoadPresets": true,
     "showDebugInfoBlocksInChat": false,
     "showModelDownloadOptionData": false,
     "showResourceConsumptionWidget": false,
