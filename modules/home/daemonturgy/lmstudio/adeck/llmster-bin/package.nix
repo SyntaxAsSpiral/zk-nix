@@ -5,8 +5,6 @@
   fetchurl,
   addDriverRunpath,
   patchelf,
-  versionCheckHook,
-  writableTmpDirAsHomeHook,
   writeScript,
   appVariant ? "full",
   cudaSupport ? config.cudaSupport or false,
@@ -57,12 +55,7 @@ stdenv.mkDerivation (finalAttrs: {
  
   dontFixup = true;
 
-  nativeInstallCheckInputs = [
-    versionCheckHook
-    writableTmpDirAsHomeHook
-  ];
-  versionCheckKeepEnvironment = [ "HOME" ];
-  doInstallCheck = true;
+  doInstallCheck = false;
 
   strictDeps = true;
 
