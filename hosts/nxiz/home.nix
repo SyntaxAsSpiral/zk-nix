@@ -163,23 +163,4 @@
       Keywords = "GIMP;graphic;design;illustration;painting;";
     };
   };
-
-  xdg.desktopEntries.lm-studio = {
-    name = "LM Studio";
-    genericName = "Local LLM Runner";
-    comment = "Use the chat UI or local server to experiment with local LLMs";
-    exec = "lm-studio %U";
-    icon = "lm-studio";
-    terminal = false;
-    type = "Application";
-    categories = [
-      "Development"
-      "Utility"
-    ];
-    settings = {
-      StartupWMClass = "LM-Studio";
-      MimeType = "x-scheme-handler/lmstudio;";
-      Keywords = "LMStudio;LLM;AI;";
-    };
-  };
 }
