@@ -5,6 +5,7 @@
   fetchurl,
   addDriverRunpath,
   patchelf,
+  makeWrapper,
   makeBinaryWrapper,
   versionCheckHook,
   writableTmpDirAsHomeHook,
