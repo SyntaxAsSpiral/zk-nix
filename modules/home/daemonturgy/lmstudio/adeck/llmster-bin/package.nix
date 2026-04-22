@@ -5,12 +5,7 @@
   fetchurl,
   addDriverRunpath,
   patchelf,
-  makeWrapper,
-  makeBinaryWrapper,
-  versionCheckHook,
   writableTmpDirAsHomeHook,
-  writeScript,
-  libxcrypt-legacy,
   appVariant ? "full",
   cudaSupport ? config.cudaSupport or false,
   manifestFile ? ./manifest.json,
@@ -46,55 +41,19 @@ stdenv.mkDerivation (finalAttrs: {
   dontStrip = true;
 
   # stdenv.cc.cc provides libstdc++, libatomic, and libgomp (all required at runtime)
-  buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
-    stdenv.cc.cc.lib # provides libatomic.so.1, libstdc++.so.6, etc.
-    stdenv.cc.cc
-    libxcrypt-legacy
-  ];
-
-  nativeBuildInputs = [
-    makeWrapper
-    makeBinaryWrapper
-  ]
-  ++ lib.optionals stdenv.hostPlatform.isLinux [
-    addDriverRunpath
-    patchelf
-  ];
+  nativeBuildInputs = [ ];
+  buildInputs = [ ];
 
   installPhase = ''
     runHook preInstall
-
-    mkdir -p $out/libexec
-    mv llmster .bundle $out/libexec/
-    makeWrapper $out/libexec/llmster $out/bin/llmster
-    makeWrapper $out/libexec/.bundle/lms $out/bin/lms
-
+    mkdir -p $out/libexec $out/bin
+    cp -r llmster .bundle $out/libexec/
+    ln -s $out/libexec/llmster $out/bin/llmster
+    ln -s $out/libexec/.bundle/lms $out/bin/lms
     runHook postInstall
   '';
-
-  # Bun-compiled executables (llmster, node, lms) embed runtime data after the ELF sections.
-  # patchelf --add-rpath and autoPatchelfHook's --set-rpath rearrange ELF sections to grow
-  # .dynamic/.dynstr, which shifts the appended data and causes SIGSEGV or runtime errors.
-  #
-  # We strictly avoid patchelf --add-rpath. We patch the interpreter for compatibility,
-  # but only wrap the main entry points. Internal runtimes in .bundle/ must remain raw
-  # binaries to avoid breaking the daemon's internal integrity/launch logic.
-  postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
-    local interpreter="$(cat $NIX_CC/nix-support/dynamic-linker)"
-    local rpath="${lib.makeLibraryPath (finalAttrs.buildInputs ++ [ addDriverRunpath.driverLink ])}"
-
-    # 1. Patch the interpreter for all executables to ensure they can run on NixOS.
-    find $out/libexec -type f -executable | while read -r file; do
-      if patchelf --print-interpreter "$file" &>/dev/null; then
-        patchelf --set-interpreter "$interpreter" "$file"
-      fi
-    done
-
-    # 2. Only wrap the main entry points. Child runtimes will inherit the LD_LIBRARY_PATH.
-    for bin in "$out/libexec/llmster" "$out/libexec/.bundle/lms"; do
-      wrapProgram "$bin" --prefix LD_LIBRARY_PATH : "$rpath"
-    done
-  '';
+ 
+  dontFixup = true;
 
   nativeInstallCheckInputs = [
     versionCheckHook
