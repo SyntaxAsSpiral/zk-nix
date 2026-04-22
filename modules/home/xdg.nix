@@ -45,6 +45,7 @@ let
       mimeApps = {
         "inode/directory" = "thunar.desktop";
         "x-scheme-handler/file" = "thunar.desktop";
+        "x-scheme-handler/lmstudio" = "lm-studio.desktop";
         "audio/wav" = "mpv.desktop";
         "audio/x-wav" = "mpv.desktop";
         "audio/mpeg" = "mpv.desktop";

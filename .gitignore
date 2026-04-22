@@ -6,3 +6,5 @@ result
 .vscode/
 /modules/openrgb/config/logs/
 tmp/
+.codex/
+.codex
