@@ -692,6 +692,7 @@
                 "useWallpaperColors": false
             },
             {
+                "appearance": "dark",
                 "colorScheme": "Rose Pine Moon",
                 "darkMode": true,
                 "generationMethod": "faithful",
