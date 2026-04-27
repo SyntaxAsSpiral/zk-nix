@@ -7,8 +7,15 @@
     uid = 1000;
     description = "zk@${config.my.host}";
     shell = pkgs.bash;
-    extraGroups = [ "networkmanager" "wheel" "audio" "video" "input" ];
-    packages = [];
+    linger = true;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "audio"
+      "video"
+      "input"
+    ];
+    packages = [ ];
   };
 
   users.defaultUserShell = pkgs.bash;
