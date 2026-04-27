@@ -11,11 +11,10 @@ in
 {
   home.packages = [ hermes ];
 
-  # Mutable symlinks — hermes rewrites its config, so we force link to the repo.
-  # The repo is stored at /etc/nixos on adeck.
+  # Keep SOUL.md declarative, but leave config.yaml mutable.
+  # modules/home/daemonturgy/hermes/config.yaml is only a snapshot copy.
   home.activation.hermesConfig = config.lib.dag.entryAfter [ "linkGeneration" ] ''
     mkdir -p ${config.home.homeDirectory}/.hermes
-    ln -sfT /etc/nixos/modules/home/daemonturgy/hermes/config.yaml ${config.home.homeDirectory}/.hermes/config.yaml
     ln -sfT /etc/nixos/modules/home/daemonturgy/hermes/SOUL.md ${config.home.homeDirectory}/.hermes/SOUL.md
   '';
 
