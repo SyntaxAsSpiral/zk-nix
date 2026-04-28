@@ -10,7 +10,14 @@
       },
       {
         "key": "llm.prediction.temperature",
-        "value": 0.7
+        "value": 0.4
+      },
+      {
+        "key": "llm.prediction.topPSampling",
+        "value": {
+          "checked": true,
+          "value": 0.9
+        }
       },
       {
         "key": "llm.prediction.minPSampling",

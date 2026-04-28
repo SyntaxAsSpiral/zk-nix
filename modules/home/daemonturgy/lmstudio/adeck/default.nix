@@ -1,34 +1,53 @@
 { config, pkgs, ... }:
 
 let
-  llmster = pkgs.callPackage ./llmster-bin/package.nix { };
+  lms = pkgs.buildFHSEnv {
+    name = "lms";
+    runScript = "${config.home.homeDirectory}/.lmstudio/bin/lms";
+    targetPkgs = pkgs: [
+      pkgs.gcc.cc.lib # libgomp (OpenMP runtime for llama.cpp)
+    ];
+  };
 in
 {
-  # LM Studio config for adeck.
-  home.packages = [ llmster ];
-  # System package (pkgs.lmstudio) handles binaries and services.
-  # Mutable symlinks for LMStudio — LMStudio writes its config, so we force link to the repo.
-  home.activation.lmstudioConfigAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+  # LM Studio on adeck: llmster only (no GUI/AppImage).
+  # Installed via `curl` — Nix manages dirs, settings, and server config.
+  home.activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
-    ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/adeck/settings.json ${config.home.homeDirectory}/.lmstudio/settings.json
-    ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/config-presets ${config.home.homeDirectory}/.lmstudio/config-presets
-    ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/adeck/http-server-config.json ${config.home.homeDirectory}/.lmstudio/.internal/http-server-config.json
   '';
 
+  home.packages = [ lms ];
+
+  home.file.".lmstudio/settings.json" = {
+    source = ./settings.json;
+    force = true;
+  };
+  home.file.".lmstudio/config-presets" = {
+    source = ../config-presets;
+    force = true;
+  };
+  home.file.".lmstudio/.internal/http-server-config.json" = {
+    source = ./http-server-config.json;
+    force = true;
+  };
+
+  # Start llmster daemon on boot.
   systemd.user.services.llmster = {
     Unit = {
-      Description = "LM Studio Headless Server (llmster)";
-      After = [ "network.target" ];
+      Description = "LM Studio daemon (llmster)";
+      After = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "forking";
+      ExecStart = "${lms}/bin/lms daemon up";
+      ExecStop = "${lms}/bin/lms daemon down";
+      TimeoutStopSec = "20s";
+      KillMode = "control-group";
+      Restart = "on-failure";
+      RestartSec = 5;
     };
     Install = {
       WantedBy = [ "default.target" ];
-    };
-    Service = {
-      ExecStart = "${llmster}/bin/llmster";
-      Restart = "always";
-      RestartSec = "10";
-      # The bundle needs access to standard node/v8 environment, usually standard with user services
-      Environment = "HOME=%h";
     };
   };
 }

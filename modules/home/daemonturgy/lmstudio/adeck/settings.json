@@ -92,7 +92,7 @@
   "toggledConfigDropdowns": [],
   "userInterfaceComplexityLevel": 0,
   "developerMode": false,
-  "appFirstLoad": true,
+  "appFirstLoad": false,
   "autoLoadBundledLLM": true,
   "modelLoadingGuardrails": {
     "mode": "high",
