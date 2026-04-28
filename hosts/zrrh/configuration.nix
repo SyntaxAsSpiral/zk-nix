@@ -115,7 +115,7 @@ in
     vlc
     qbittorrent
     xwayland-satellite
-    (llama-cpp.override { cudaSupport = true; })
+    llama-cpp
     cudaPkgs.python312Packages.vllm
   ];
 
