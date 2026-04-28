@@ -110,8 +110,6 @@ in
   # GPU Control (AMD/NVIDIA)
   services.lact.enable = true;
 
-  # PIA managed natively for now (disable declarative pia.nix service to avoid conflicts).
-
   environment.systemPackages = with pkgs; [
     mangohud
     vkbasalt
@@ -119,7 +117,7 @@ in
     qbittorrent
     xwayland-satellite
     llama-cpp
-    vllm
+    # vllm
   ];
 
   system.stateVersion = "25.11";
