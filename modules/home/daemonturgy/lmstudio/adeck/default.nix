@@ -1,14 +1,44 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
+let
+  lms = pkgs.buildFHSEnv {
+    name = "lms";
+    runScript = "${config.home.homeDirectory}/.lmstudio/bin/lms";
+    targetPkgs = pkgs: [
+      pkgs.gcc.cc.lib # libgomp (OpenMP runtime for llama.cpp)
+    ];
+  };
+in
 {
-  # LM Studio config for adeck.
-  # The CLI/daemon binaries are installed natively into ~/.lmstudio/bin by:
-  #   curl -fsSL https://lmstudio.ai/install.sh | bash
-  # Keep this module to seed config only; do not install or service-wrap llmster.
-  home.activation.lmstudioConfigAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+  # LM Studio on adeck: llmster only (no GUI/AppImage).
+  # Installed via `curl` — Nix manages dirs, settings, and server config.
+  home.activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
-    ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/adeck/settings.json ${config.home.homeDirectory}/.lmstudio/settings.json
-    ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/config-presets ${config.home.homeDirectory}/.lmstudio/config-presets
-    ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/adeck/http-server-config.json ${config.home.homeDirectory}/.lmstudio/.internal/http-server-config.json
   '';
+
+  home.packages = [ lms ];
+
+  home.file.".lmstudio/settings.json".source = ./settings.json;
+  home.file.".lmstudio/config-presets".source = ../config-presets;
+  home.file.".lmstudio/.internal/http-server-config.json".source = ./http-server-config.json;
+
+  # Start llmster daemon on boot.
+  systemd.user.services.llmster = {
+    Unit = {
+      Description = "LM Studio daemon (llmster)";
+      After = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "forking";
+      ExecStart = "${lms}/bin/lms daemon up";
+      ExecStop = "${lms}/bin/lms daemon down";
+      TimeoutStopSec = "20s";
+      KillMode = "control-group";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
 }
