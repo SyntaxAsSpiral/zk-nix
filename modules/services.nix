@@ -2,8 +2,12 @@
 { config, pkgs, ... }:
 
 let
-  guiFileHosts = [ "nxiz" "zrrh" ];
-in {
+  guiFileHosts = [
+    "nxiz"
+    "zrrh"
+  ];
+in
+{
   services.openssh = {
     enable = true;
     extraConfig = "AcceptEnv TERM_PROGRAM";
