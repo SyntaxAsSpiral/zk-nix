@@ -109,6 +109,8 @@
     vlc
     qbittorrent
     xwayland-satellite
+    (llama-cpp.override { cudaSupport = true; })
+    python313Packages.vllm
   ];
 
   system.stateVersion = "25.11";
