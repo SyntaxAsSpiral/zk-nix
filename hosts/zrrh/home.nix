@@ -122,6 +122,14 @@
     })
 
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    (writeShellApplication {
+      name = "vllm-serve";
+      text = ''
+        export LD_LIBRARY_PATH=/run/opengl-driver/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+        exec "$HOME/.venv/vllm/bin/vllm" serve "$@"
+      '';
+    })
   ];
 
   programs.ghostty.settings = {
