@@ -3,7 +3,10 @@
 let
   cudaPkgs = import inputs.nixpkgs {
     system = pkgs.stdenv.hostPlatform.system;
-    config = { allowUnfree = true; cudaSupport = true; };
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+    };
   };
 in
 
@@ -116,7 +119,7 @@ in
     qbittorrent
     xwayland-satellite
     llama-cpp
-    cudaPkgs.python312Packages.vllm
+    vllm
   ];
 
   system.stateVersion = "25.11";
