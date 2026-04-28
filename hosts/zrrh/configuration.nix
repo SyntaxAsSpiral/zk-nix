@@ -1,14 +1,5 @@
 # NixOS configuration for zrrh — local inference + media/gaming workstation
 { pkgs, inputs, ... }:
-let
-  cudaPkgs = import inputs.nixpkgs {
-    system = pkgs.stdenv.hostPlatform.system;
-    config = {
-      allowUnfree = true;
-      cudaSupport = true;
-    };
-  };
-in
 
 {
   imports = [
