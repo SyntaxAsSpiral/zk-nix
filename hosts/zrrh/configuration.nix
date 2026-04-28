@@ -108,7 +108,7 @@
     qbittorrent
     xwayland-satellite
     llama-cpp
-    # vllm
+    vllm
   ];
 
   system.stateVersion = "25.11";
