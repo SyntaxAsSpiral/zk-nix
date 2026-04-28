@@ -10,8 +10,8 @@ NixOS flake for the `zk` Tailscale mesh. Three hosts share modules from `modules
 
 | Host  | Role                                 | Notable                                                       |
 |-------|--------------------------------------|---------------------------------------------------------------|
-| nxiz  | Primary workstation, Hyprland, NVIDIA | `stateVersion = "25.11"`, uses `nix-cachyos-kernel` overlay  |
-| zrrh  | Daemon Forge / central builder (RTX 4090) | `stateVersion = "25.11"`, uses `nix-cachyos-kernel` overlay |
+| nxiz  | Primary workstation, Hyprland, NVIDIA RTX 3070 | `stateVersion = "25.11"`, uses `nix-cachyos-kernel` overlay  |
+| zrrh  | Daemon Forge / central builder, Niri compositor, NVIDIA RTX 4090 | `stateVersion = "25.11"`, uses `nix-cachyos-kernel` overlay |
 | adeck | Agentic server on Steam Deck hardware, Niri compositor | Jovian module, `stateVersion = "24.11"`, `canTouchEfiVariables = false` |
 
 ## Build / deploy
@@ -60,8 +60,19 @@ Each host's `configuration.nix` is responsible for setting `my.host = "<name>"` 
 
 ### Module layout
 
-- `modules/*.nix` — system-level modules (shared where sensible; host-gated via `my.host`).
-- `modules/home/` — Home-Manager modules grouped by concern (`cli/`, `editors/`, `browser/`, `terminal/`, compositor-specific dirs). Hosts opt in by importing from `hosts/<host>/home.nix`.
+- `modules/*.nix` — system-level modules. Current set: `boot.nix`, `fonts.nix`, `greetd.nix`, `ly.nix`, `networking.nix`, `nh.nix`, `nvidia.nix`, `openrgb/`, `overlays.nix`, `packages.nix`, `performance.nix`, `pulse-generator.nix`, `qbittorrent.nix`, `services.nix`, `steam.nix`, `storage.nix`, `system.nix`, `user.nix`. Not all are shared — desktop-only (fonts, nvidia, steam, greetd, ly, performance, openrgb) are imported only where needed.
+- `modules/home/` — Home-Manager modules grouped by concern. Hosts opt in by importing from `hosts/<host>/home.nix`.
+  - `cli/` — bat, btop, eza, fastfetch, fish, fun, fzf, gh, git, jolt, lazygit, yazi, zcli
+  - `editors/` — antigravity, nano, neovim, nixvim, obsidian, zed
+  - `browser/` — firefox
+  - `terminal/` — alacritty, ghostty, kitty
+  - `hyprland/` — nxiz-only: appearance, hypridle, hyprland, keybinds, monitors, waybar integration, windowrules
+  - `niri/` — per-host configs: `adeck.nix`, `zrrh.nix`
+  - `daemonturgy/` — daemon/agent tooling: `hermes/`, `lmstudio/{adeck,nxiz,zrrh}/`, `mods/`
+  - `noctalia/` — per-host: `zrrh/`
+  - `otter-launcher/` — launcher configs: `zrrh/`
+  - `waybar/` — `adeck.nix`
+  - Top-level HM modules: `awww.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `kaleidux.nix`, `msgvault.nix`, `nushell.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
 - `modules/home/cli/zcli.nix` — builds the `zcli` wrapper via `writeShellScriptBin`; kept here so updates ship with home activation.
 - `hosts/<host>/hardware-configuration.nix` — host-specific hardware; do not share across hosts.
 
@@ -77,7 +88,7 @@ Each host's `configuration.nix` is responsible for setting `my.host = "<name>"` 
 
 ## Scripts
 
-`scripts/` contains HyprPanel data-source shell scripts (`fleet-*.sh`, `git-review.sh`, `check-nix-updates.sh`) and `mesh-health.nu`. They emit JSON for widgets, not a CLI for humans — invoke them through the panel config, not directly, unless debugging a specific widget.
+`scripts/` contains mesh utility scripts: `check-nix-updates.sh` (nixpkgs update checker), `git-review.sh` (pre-deploy diff helper), `qbt-sync-zrrh.sh` (qBittorrent sync between adeck and zrrh), `watch-pkgs.conf` (watchexec config). These are invoked directly or via host services/aliases — not through a compositor panel.
 
 ## Conventions
 

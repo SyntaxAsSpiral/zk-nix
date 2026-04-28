@@ -60,7 +60,7 @@
     },
     "autoUpdateExtensionPacks": false,
     "autoDeleteExtensionPacks": false,
-    "separateReasoningContent": false,
+    "separateReasoningContentInAPI": true,
     "experimentFlags": [],
     "apiPredictionHistoryEviction": {
       "type": "time",
@@ -95,7 +95,7 @@
   "appFirstLoad": false,
   "autoLoadBundledLLM": true,
   "modelLoadingGuardrails": {
-    "mode": "high",
+    "mode": "low",
     "customThresholdBytes": 4294967296,
     "alwaysAllowLoadAnyway": false
   },
