@@ -1,20 +1,19 @@
 { config, pkgs, ... }:
 
 let
-  llmster = pkgs.callPackage ./llmster-bin/package.nix { };
   lms = pkgs.buildFHSEnv {
     name = "lms";
-    runScript = "${llmster}/bin/lms";
+    runScript = "${config.home.homeDirectory}/.lmstudio/bin/lms";
     targetPkgs = pkgs: [
-      pkgs.gcc.cc.lib
-      pkgs.vulkan-loader
+      pkgs.gcc.cc.lib # libgomp (OpenMP runtime for llama.cpp)
     ];
   };
 in
 {
+  # LM Studio on adeck: llmster only (no GUI/AppImage).
+  # Installed via `curl` — Nix manages dirs, settings, and server config.
   home.activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
-    rm -f "$HOME/.lmstudio/.internal/llmster-pid.lock"
   '';
 
   home.packages = [ lms ];
@@ -32,18 +31,18 @@ in
     force = true;
   };
 
+  # Start llmster daemon on boot.
   systemd.user.services.llmster = {
     Unit = {
       Description = "LM Studio daemon (llmster)";
       After = [ "network-online.target" ];
     };
     Service = {
-      Type = "simple";
-      Environment = [
-        "LD_LIBRARY_PATH=${pkgs.gcc.cc.lib}/lib"
-        "HOME=%h"
-      ];
-      ExecStart = "${llmster}/bin/llmster";
+      Type = "forking";
+      ExecStart = "${lms}/bin/lms daemon up";
+      ExecStop = "${lms}/bin/lms daemon down";
+      TimeoutStopSec = "20s";
+      KillMode = "control-group";
       Restart = "on-failure";
       RestartSec = 5;
     };
