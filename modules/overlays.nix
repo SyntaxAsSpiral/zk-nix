@@ -20,8 +20,11 @@
       });
     })
 
-    # Fix lmstudio lms CLI: preserve Bun binary layout.
-    # --set-rpath on this Bun binary corrupts ELF section mapping and crashes in ld.so.
+    # Expose /etc/nixos inside lmstudio bwrap sandbox so flake-anchored symlinks
+    # (e.g. ~/.lmstudio/config-presets → /etc/nixos/modules/.../config-presets)
+    # resolve from within LMStudio.  --bind-try is a no-op on hosts without /etc/nixos.
+    # Note: the old --set-rpath patchelf workaround was removed; fixed upstream in
+    # nixpkgs PR #511533 (merged 2026-04-20).
     (_final: prev: {
       lmstudio = prev.lmstudio.overrideAttrs (old: {
         nativeBuildInputs =
@@ -29,27 +32,10 @@
           ++ [
             prev.coreutils
             prev.gnugrep
-            prev.patchelf
           ];
 
         buildCommand = (old.buildCommand or "") + ''
           bwrap_target="$(readlink -f "$out/bin/lm-studio")"
-          init_script="$(grep -Eo '/nix/store/[^[:space:]]+-lmstudio-[^[:space:]]+-init' "$bwrap_target" | head -n 1)"
-          extracted_path="$(grep -Eo '/nix/store/[^[:space:]]+-lmstudio-[^[:space:]]+-extracted' "$init_script" | head -n 1)"
-
-          if [ -z "$init_script" ] || [ ! -r "$init_script" ]; then
-            echo "lmstudio build fix: failed to resolve init script from $bwrap_target" >&2
-            exit 1
-          fi
-
-          if [ -z "$extracted_path" ] || [ ! -x "$extracted_path/resources/app/.webpack/lms" ]; then
-            echo "lmstudio build fix: failed to resolve extracted lms payload from $init_script" >&2
-            exit 1
-          fi
-
-          # Restore pristine upstream lms, then patch interpreter only.
-          install -m 755 "$extracted_path/resources/app/.webpack/lms" "$out/bin/lms"
-          patchelf --set-interpreter "${prev.stdenv.cc.bintools.dynamicLinker}" "$out/bin/lms"
 
           # Expose /etc/nixos inside the bwrap sandbox so flake-anchored symlinks
           # (e.g. ~/.lmstudio/config-presets → /etc/nixos/modules/.../config-presets)
