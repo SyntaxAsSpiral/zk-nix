@@ -24,6 +24,7 @@
 
   my.host = "zrrh";
   my.performance.enable = true;
+  nixpkgs.config.cudaSupport = true;
   # Host Identity (SSH)
   services.openssh.hostKeys = [
     {
