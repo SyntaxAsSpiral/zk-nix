@@ -29,6 +29,7 @@
     "showChatUtilityMenuLabels": true,
     "pinnedPlugins": [],
     "showRoleAndInsertButtons": false,
+    "showSyncInputToggleInFooter": true,
     "scrollLastMessageToTop": "scrollToTopNoLatch",
     "showTokenCountInChatListings": false,
     "moveDeletedItemsToTrash": false,
@@ -46,11 +47,11 @@
   "developer": {
     "showExperimentalFeatures": false,
     "experimentalLoadPresets": false,
+    "backendDownloadChannel": "stable",
+    "appUpdateChannel": "stable",
     "showDebugInfoBlocksInChat": false,
     "showModelDownloadOptionData": false,
     "showResourceConsumptionWidget": false,
-    "backendDownloadChannel": "stable",
-    "appUpdateChannel": "stable",
     "allowDevelopmentPlugins": true,
     "unloadPreviousJITModelOnLoad": true,
     "jitModelTTL": {
@@ -59,11 +60,18 @@
     },
     "autoUpdateExtensionPacks": false,
     "autoDeleteExtensionPacks": false,
-    "separateReasoningContentInAPI": true,
+    "separateReasoningContent": false,
     "experimentFlags": [],
     "apiPredictionHistoryEviction": {
       "type": "time",
       "ttlDays": 30
+    },
+    "syncedChatInputGuardrails": {
+      "syncSendMaxModels": 4,
+      "syncSendGlobalTabCap": 10
+    },
+    "syncedChatSend": {
+      "sendMode": "simultaneous"
     },
     "attemptedInstallLmsCliOnStartup": false
   },
@@ -82,8 +90,8 @@
     "speculativeDecoding": false
   },
   "toggledConfigDropdowns": [],
-  "developerMode": false,
   "userInterfaceComplexityLevel": 0,
+  "developerMode": false,
   "appFirstLoad": false,
   "autoLoadBundledLLM": true,
   "modelLoadingGuardrails": {
