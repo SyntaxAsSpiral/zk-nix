@@ -1,5 +1,11 @@
 # NixOS configuration for zrrh — local inference + media/gaming workstation
 { pkgs, inputs, ... }:
+let
+  cudaPkgs = import inputs.nixpkgs {
+    system = pkgs.stdenv.hostPlatform.system;
+    config = { allowUnfree = true; cudaSupport = true; };
+  };
+in
 
 {
   imports = [
@@ -24,7 +30,6 @@
 
   my.host = "zrrh";
   my.performance.enable = true;
-  nixpkgs.config.cudaSupport = true;
   # Host Identity (SSH)
   services.openssh.hostKeys = [
     {
@@ -111,7 +116,7 @@
     qbittorrent
     xwayland-satellite
     (llama-cpp.override { cudaSupport = true; })
-    python313Packages.vllm
+    cudaPkgs.python312Packages.vllm
   ];
 
   system.stateVersion = "25.11";
