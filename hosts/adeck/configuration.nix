@@ -15,7 +15,7 @@
     ../../modules/packages.nix
     ../../modules/fonts.nix
     ../../modules/qbittorrent.nix
-    ../../modules/advanced-astrology-mcp.nix
+    ../../modules/sideriod-mcp.nix
   ];
 
   my.host = "adeck";

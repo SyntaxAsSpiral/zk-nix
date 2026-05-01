@@ -1,16 +1,18 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   pythonEnv = pkgs.python3.withPackages (ps: with ps; [ mcp ]);
 in {
-  systemd.services.advanced-astrology-mcp = {
-    description = "Advanced Astrology MCP Server";
+  systemd.services.sideriod-mcp = {
+    description = "Sideriod MCP Server";
     after = [ "network.target" "tailscaled.service" ];
     wantedBy = [ "multi-user.target" ];
 
+    path = [ pkgs.nix pkgs.git ];
+
     environment = {
-      ASTRO_MCP_TRANSPORT = "http";
-      ASTRO_MCP_HOST = "0.0.0.0";
-      ASTRO_MCP_PORT = "8765";
+      SIDERIOD_MCP_TRANSPORT = "http";
+      SIDERIOD_MCP_HOST = "0.0.0.0";
+      SIDERIOD_MCP_PORT = "8765";
     };
 
     serviceConfig = {
