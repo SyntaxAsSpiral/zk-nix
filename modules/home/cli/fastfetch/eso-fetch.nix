@@ -34,7 +34,9 @@ let
 in
 {
   xdg.configFile."fastfetch/eso-base.jsonc".text = builtins.toJSON {
-    display = { separator = "  "; };
+    display = {
+      separator = "  ";
+    };
     logo = {
       type = "auto";
       width = 20;
@@ -47,19 +49,39 @@ in
       "break"
       "break"
       "break"
-      { type = "colors"; symbol = "circle"; }
+      {
+        type = "colors";
+        symbol = "circle";
+      }
       "break"
       "title"
-      { type = "os"; key = "os    "; keyColor = "38;2;243;139;168"; }
-      { type = "kernel"; key = "kernel"; keyColor = "38;2;166;227;161"; }
+      {
+        type = "os";
+        key = "os    ";
+        keyColor = "38;2;243;139;168";
+      }
+      {
+        type = "kernel";
+        key = "kernel";
+        keyColor = "38;2;166;227;161";
+      }
       {
         type = "command";
         key = "hw    ";
         keyColor = "38;2;249;226;175";
         text = "fastfetch --json --structure CPU:GPU --logo none | jq -r '(.[] | select(.type == \"CPU\") | .result.cpu | sub(\"AMD Ryzen (?<v>[0-9]) \"; \"R\\(.v) \") | sub(\" [0-9]+-Core Processor\"; \"\") | sub(\"AMD Custom APU \"; \"Deck \")) + \" / \" + (.[] | select(.type == \"GPU\") | .result[0].name | sub(\"GeForce \"; \"\") | sub(\"NVIDIA \"; \"\") | sub(\"AMD Radeon \"; \"\") | sub(\"AMD Custom GPU\"; \"RDNA2\"))'";
       }
-      { type = "packages"; key = "pkgs  "; keyColor = "38;2;116;199;236"; }
-      { type = "uptime"; key = "uptime"; keyColor = "38;2;203;166;247"; format = "{?days}{days}d {?}{hours}h {minutes}m"; }
+      {
+        type = "packages";
+        key = "pkgs  ";
+        keyColor = "38;2;116;199;236";
+      }
+      {
+        type = "uptime";
+        key = "uptime";
+        keyColor = "38;2;203;166;247";
+        format = "{?days}{days}d {?}{hours}h {minutes}m";
+      }
       "break"
     ];
   };

@@ -110,6 +110,7 @@
           ./hosts/adeck/configuration.nix
           jovian.nixosModules.default
           agenix.nixosModules.default
+          inputs.hermes-agent.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

@@ -1,5 +1,10 @@
 # Performance optimizations inspired by Garuda and CachyOS
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 {
   options.my.performance.enable = lib.mkEnableOption "system-wide performance optimizations";

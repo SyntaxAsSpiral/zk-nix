@@ -52,7 +52,7 @@ stdenv.mkDerivation (finalAttrs: {
     ln -s $out/libexec/.bundle/lms $out/bin/lms
     runHook postInstall
   '';
- 
+
   dontFixup = true;
 
   doInstallCheck = false;

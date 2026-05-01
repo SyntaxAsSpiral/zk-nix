@@ -3,9 +3,15 @@
 
 let
   perHost = {
-    nxiz  = { flake = "/mnt/repository/nix-os"; };
-    adeck = { flake = "/etc/nixos"; };
-    zrrh  = { flake = "/etc/nixos"; };
+    nxiz = {
+      flake = "/mnt/repository/nix-os";
+    };
+    adeck = {
+      flake = "/etc/nixos";
+    };
+    zrrh = {
+      flake = "/etc/nixos";
+    };
   };
   h = perHost.${config.my.host};
 in

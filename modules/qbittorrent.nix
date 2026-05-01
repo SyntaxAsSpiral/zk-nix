@@ -1,10 +1,20 @@
 # qBittorrent-nox on adeck — headless torrent daemon with web UI
 # Access via https://adeck.tail293e98.ts.net:8080 from any mesh node
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   inherit (builtins) concatStringsSep isAttrs isString;
-  inherit (lib) collect mapAttrsRecursive replaceString escape;
+  inherit (lib)
+    collect
+    mapAttrsRecursive
+    replaceString
+    escape
+    ;
   inherit (lib.generators) toINI mkKeyValueDefault mkValueStringDefault;
 
   gendeepINI = toINI {
@@ -13,19 +23,19 @@ let
         sep = "=";
       in
       k: v:
-        if isAttrs v then
-          concatStringsSep "\n" (
-            collect isString (
-              mapAttrsRecursive (
-                path: value:
-                  "${escape [ sep ] (concatStringsSep "\\" ([ k ] ++ path))}${sep}${
-                    replaceString "\n" "\\n" (mkValueStringDefault { } value)
-                  }"
-              ) v
-            )
+      if isAttrs v then
+        concatStringsSep "\n" (
+          collect isString (
+            mapAttrsRecursive (
+              path: value:
+              "${escape [ sep ] (concatStringsSep "\\" ([ k ] ++ path))}${sep}${
+                replaceString "\n" "\\n" (mkValueStringDefault { } value)
+              }"
+            ) v
           )
-        else
-          mkKeyValueDefault { } sep k v;
+        )
+      else
+        mkKeyValueDefault { } sep k v;
   };
 
   enforcedConfig = pkgs.writeText "adeck-qBittorrent.conf" (
@@ -51,7 +61,8 @@ in
           };
           WebUI = {
             Username = "zk";
-            "Password_PBKDF2" = ''@ByteArray(49o93hob1WYLnAHEYkqseQ==:Q9DLtfkoPFHERaNqTl2qV43uLb8bjlhQbYm+ZW60X357V/vEgspVFcynf9SbAt5dSTJPfAYg8FyjAFOzFFYD5w==)'';
+            "Password_PBKDF2" =
+              "@ByteArray(49o93hob1WYLnAHEYkqseQ==:Q9DLtfkoPFHERaNqTl2qV43uLb8bjlhQbYm+ZW60X357V/vEgspVFcynf9SbAt5dSTJPfAYg8FyjAFOzFFYD5w==)";
             HTTPS = {
               Enabled = true;
               CertificatePath = "/var/lib/qBittorrent/adeck.crt";

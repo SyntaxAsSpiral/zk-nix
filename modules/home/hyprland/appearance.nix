@@ -7,53 +7,54 @@ in
 {
   wayland.windowManager.hyprland.settings = {
     general = {
-      gaps_in      = 15;
-      gaps_out     = 20;
-      border_size  = 2;
-      "col.active_border"   = "rgb(cba6f7) rgb(89b4fa) rgb(94e2d5) rgb(f5e0dc) rgb(f2cdcd) rgb(eba0ac) 45deg";
+      gaps_in = 15;
+      gaps_out = 20;
+      border_size = 2;
+      "col.active_border" =
+        "rgb(cba6f7) rgb(89b4fa) rgb(94e2d5) rgb(f5e0dc) rgb(f2cdcd) rgb(eba0ac) 45deg";
       "col.inactive_border" = "rgb(${p.base02})";
       resize_on_border = true;
-      allow_tearing    = false;
-      layout           = "dwindle";
+      allow_tearing = false;
+      layout = "dwindle";
     };
 
     decoration = {
-      rounding        = 10;
-      rounding_power  = 2;
-      active_opacity   = 1.0;
+      rounding = 10;
+      rounding_power = 2;
+      active_opacity = 1.0;
       inactive_opacity = 0.8;
       shadow = {
-        enabled      = true;
-        range        = 4;
+        enabled = true;
+        range = 4;
         render_power = 3;
-        color        = "rgb(${p.base00})";
+        color = "rgb(${p.base00})";
       };
 
       dim_inactive = true;
       dim_strength = 0.1;
-      dim_special  = 0.2;
+      dim_special = 0.2;
 
       blur = {
-        enabled  = true;
-        size     = 3;
-        passes   = 1;
+        enabled = true;
+        size = 3;
+        passes = 1;
         vibrancy = 0.1696;
-        xray     = true;
-        special  = true;
+        xray = true;
+        special = true;
       };
     };
 
     misc = {
-      force_default_wallpaper  = 0;
-      disable_hyprland_logo    = true;
+      force_default_wallpaper = 0;
+      disable_hyprland_logo = true;
       disable_splash_rendering = false;
-      font_family              = "RecMonoCasual Nerd Font";
-      splash_font_family       = "Recursive";
+      font_family = "RecMonoCasual Nerd Font";
+      splash_font_family = "Recursive";
     };
 
     dwindle = {
-      pseudotile           = true;
-      preserve_split       = true;
+      pseudotile = true;
+      preserve_split = true;
       special_scale_factor = 0.8;
     };
 

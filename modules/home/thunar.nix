@@ -3,7 +3,12 @@
 # System-level (programs.thunar) is in host configuration.nix.
 # This module handles home-manager: packages, thunarrc, bookmarks,
 # custom actions, and exo helpers.
-{ pkgs, lib, osConfig, ... }:
+{
+  pkgs,
+  lib,
+  osConfig,
+  ...
+}:
 
 let
   tailnet = "tail293e98.ts.net";
@@ -78,8 +83,7 @@ let
 
   # Render thunarrc from attrset
   thunarrcText = lib.concatStringsSep "\n" (
-    [ "[Configuration]" ] ++
-    (lib.mapAttrsToList (k: v: "${k}=${v}") h.thunarrc)
+    [ "[Configuration]" ] ++ (lib.mapAttrsToList (k: v: "${k}=${v}") h.thunarrc)
   );
 
   # Render bookmarks (one URI per line, GTK bookmark format)
@@ -119,7 +123,7 @@ in
   home.packages = with pkgs; [
     xfce4-exo
     tumbler
-    glib          # gio for trash/mount operations
+    glib # gio for trash/mount operations
   ];
 
   home.file = {

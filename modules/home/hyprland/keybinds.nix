@@ -13,10 +13,10 @@ _:
 
       "$mainMod, A, exec, $search"
       "$mainMod, S, togglespecialworkspace, magic"
-        "$mainMod SHIFT, S, movetoworkspace, special:magic"
+      "$mainMod SHIFT, S, movetoworkspace, special:magic"
       "$mainMod, D, layoutmsg, togglesplit"
       "$mainMod, F, fullscreen, 1" # maximize
-        "$mainMod SHIFT, F, fullscreen, 0"
+      "$mainMod SHIFT, F, fullscreen, 0"
 
       "$mainMod, Z, exec, $notes"
       "$mainMod, X, killactive,"
@@ -26,7 +26,7 @@ _:
       "$mainMod, B, exec, $browser"
       "$mainMod, P, exec, hyprpicker -a" # troubleshooting needed
       "$mainMod, M, exec, hyprpanel -q; hyprpanel"
-        "$mainMod SHIFT, M, exec, hyprctl dispatch exit"      
+      "$mainMod SHIFT, M, exec, hyprctl dispatch exit"
       "$mainMod, period, exec, kitty --class tui-float --title otter-launcher -e otter-launcher em"
       "$mainMod, DELETE, exec, kitty --class tui-float -e btop"
 
@@ -41,7 +41,6 @@ _:
       "$mainMod, down, movefocus, d"
 
       # Scratchpad
-
 
       # Workspaces
       "$mainMod, 1, workspace, 1"

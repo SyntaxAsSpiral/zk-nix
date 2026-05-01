@@ -1,6 +1,11 @@
 # msgvault home-manager module
 # Archive and query email + messaging offline (DuckDB/Parquet + SQLite FTS5)
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.msgvault;
@@ -23,8 +28,10 @@ let
     tags = [ "fts5" ];
 
     ldflags = [
-      "-s" "-w"
-      "-X" "github.com/wesm/msgvault/cmd/msgvault/cmd.Version=v${version}"
+      "-s"
+      "-w"
+      "-X"
+      "github.com/wesm/msgvault/cmd/msgvault/cmd.Version=v${version}"
     ];
 
     vendorHash = "sha256-XgtHKRLqNX7LCI22Ls3LQjEs+jX7EwapiiFs7I+gtRE=";

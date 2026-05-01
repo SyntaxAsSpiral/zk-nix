@@ -18,12 +18,12 @@
         autocrlf = "input";
         editor = "nvim"; # follows $EDITOR convention
       };
-      
+
       # Workflow
       push.default = "simple";
       push.autoSetupRemote = true;
       pull.rebase = false;
-      
+
       # Diffs & Merge
       diff.colorMoved = "default";
       merge.conflictstyle = "diff3";

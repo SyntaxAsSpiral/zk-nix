@@ -187,4 +187,3 @@
     # show_tag_color_names = false   # Show tag color names in display
   '';
 }
-
