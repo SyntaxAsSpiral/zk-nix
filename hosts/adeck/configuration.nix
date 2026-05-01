@@ -166,11 +166,8 @@
     environment = {
       HOME = "/var/lib/hermes";
       HERMES_HOME = "/var/lib/hermes/.hermes";
+      PATH = lib.mkForce "/run/wrappers/bin:${lib.makeBinPath [ pkgs.docker ]}";
     };
-    path = [
-      pkgs.docker
-      pkgs.sudo
-    ];
     serviceConfig = {
       User = "hermes";
       Group = "hermes";
