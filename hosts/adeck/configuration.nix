@@ -121,6 +121,10 @@
     container = {
       enable = true;
       hostUsers = [ "zk" ];
+      extraOptions = [
+        "--env"
+        "HERMES_MANAGED=false"
+      ];
     };
     addToSystemPackages = true;
     extraArgs = [ "--accept-hooks" ];
