@@ -104,6 +104,18 @@
 
   virtualisation.docker.enable = true;
 
+  security.sudo.extraRules = [
+    {
+      users = [ "hermes" ];
+      commands = [
+        {
+          command = "${pkgs.docker}/bin/docker";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
   services.hermes-agent = {
     enable = true;
     container = {
@@ -155,6 +167,10 @@
       HOME = "/var/lib/hermes";
       HERMES_HOME = "/var/lib/hermes/.hermes";
     };
+    path = [
+      pkgs.docker
+      pkgs.sudo
+    ];
     serviceConfig = {
       User = "hermes";
       Group = "hermes";
