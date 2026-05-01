@@ -146,25 +146,6 @@
     };
   };
 
-  systemd.services.hermes-dashboard = {
-    description = "Hermes Agent web dashboard";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "hermes-agent.service" ];
-    wants = [ "hermes-agent.service" ];
-    environment = {
-      HOME = "/var/lib/hermes";
-      HERMES_HOME = "/var/lib/hermes/.hermes";
-    };
-    serviceConfig = {
-      User = "hermes";
-      Group = "hermes";
-      WorkingDirectory = "/var/lib/hermes/workspace";
-      ExecStart = "/run/current-system/sw/bin/hermes dashboard --host 100.89.32.9 --port 9119 --no-open --insecure";
-      Restart = "always";
-      RestartSec = 10;
-    };
-  };
-
   systemd.tmpfiles.rules = [
     "d /home/zk/.local/bin 0755 zk users -"
     "L+ /bin/bash - - - - /run/current-system/sw/bin/bash"
