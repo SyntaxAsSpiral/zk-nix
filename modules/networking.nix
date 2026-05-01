@@ -1,10 +1,5 @@
 # Network configuration
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ config, lib, pkgs, ... }:
 
 let
   perHost = {
@@ -35,26 +30,15 @@ in
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
       allowedUDPPorts = [ 41641 ];
-      allowedUDPPortRanges = [
-        {
-          from = 60000;
-          to = 61000;
-        }
-      ];
+      allowedUDPPortRanges = [{ from = 60000; to = 61000; }];
     };
   };
 
   services = {
     resolved.enable = h.resolvedDns;
     resolved.settings = lib.mkIf h.resolvedDns {
-      Resolve.DNS = [
-        "1.1.1.1"
-        "9.9.9.9"
-      ];
-      Resolve.FallbackDNS = [
-        "1.1.1.1"
-        "9.9.9.9"
-      ];
+      Resolve.DNS = [ "1.1.1.1" "9.9.9.9" ];
+      Resolve.FallbackDNS = [ "1.1.1.1" "9.9.9.9" ];
     };
     tailscale = {
       enable = true;

@@ -1,11 +1,6 @@
 # XDG base directories, user-dirs, and MIME defaults
 # Shared across all hosts — remote content via Taildrive bookmarks
-{
-  config,
-  lib,
-  osConfig,
-  ...
-}:
+{ config, lib, osConfig, ... }:
 
 let
   home = config.home.homeDirectory;
@@ -73,13 +68,13 @@ let
 
     adeck = {
       dirs = {
-        extraConfig = { };
+        extraConfig = {};
       };
-      localDirs = [ ];
+      localDirs = [];
       sessionVariables = {
         EDITOR = "nvim";
       };
-      mimeApps = { };
+      mimeApps = {};
     };
 
     zrrh = {
@@ -87,9 +82,9 @@ let
         music = "/mnt/media/Music";
         pictures = "/mnt/media/Pictures";
         videos = "/mnt/media/Videos";
-        extraConfig = { };
+        extraConfig = {};
       };
-      localDirs = [ ];
+      localDirs = [];
       sessionVariables = {
         BROWSER = "firefox";
         EDITOR = "nvim";
@@ -114,13 +109,12 @@ let
 
   # Per-host wallpaper source from repo assets
   wpSource = {
-    nxiz = ../../assets/wallpapers/wp-nxiz;
+    nxiz  = ../../assets/wallpapers/wp-nxiz;
     adeck = ../../assets/wallpapers/wp-adeck;
-    zrrh = ../../assets/wallpapers/wp-zrrh;
+    zrrh  = ../../assets/wallpapers/wp-zrrh;
   };
 
-in
-{
+in {
   xdg = {
     enable = true;
     mime.enable = true;
@@ -131,15 +125,12 @@ in
     dataHome = "${home}/.local/share";
     cacheHome = "${home}/.cache";
 
-    userDirs =
-      commonDirs
-      // h.dirs
-      // {
-        enable = true;
-        createDirectories = false;
-        setSessionVariables = true; # Keep legacy (stateVersion < 26.05)
-        extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
-      };
+    userDirs = commonDirs // h.dirs // {
+      enable = true;
+      createDirectories = false;
+      setSessionVariables = true;  # Keep legacy (stateVersion < 26.05)
+      extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
+    };
   };
 
   home = {
@@ -152,8 +143,7 @@ in
         mkdir -p "${home}/Templates"
         mkdir -p "${home}/Images/wallpapers"
         mkdir -p "${home}/Images/screenshots"
-      ''
-      + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
+      '' + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
     );
 
     sessionVariables = h.sessionVariables;

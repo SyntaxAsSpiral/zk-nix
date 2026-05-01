@@ -3,11 +3,9 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.my.login.greetd;
-in
-{
+in {
   options.my.login.greetd.enable = lib.mkEnableOption "greetd login manager";
 
   config = lib.mkIf cfg.enable {

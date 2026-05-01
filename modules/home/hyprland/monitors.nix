@@ -1,4 +1,5 @@
-_: {
+_:
+{
   wayland.windowManager.hyprland.settings = {
     monitor = [
       "HDMI-A-2, 2560x1080, 1440x1260, 1"
@@ -6,16 +7,16 @@ _: {
     ];
 
     input = {
-      kb_layout = "us";
+      kb_layout    = "us";
       follow_mouse = 1;
-      sensitivity = 0;
+      sensitivity  = 0;
       touchpad = {
         natural_scroll = false;
       };
     };
 
     device = {
-      name = "epic-mouse-v1";
+      name        = "epic-mouse-v1";
       sensitivity = -0.5;
     };
   };

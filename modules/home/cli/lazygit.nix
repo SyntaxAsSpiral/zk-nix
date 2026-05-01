@@ -2,13 +2,11 @@
 {
   lib,
   ...
-}:
-let
+}: let
   # Catppuccin Frappe colors (manual)
   accent = "#6590f3ff"; # blue
   muted = "#737994"; # overlay0
-in
-{
+in {
   programs.lazygit = {
     enable = true;
     settings = lib.mkForce {
@@ -22,11 +20,8 @@ in
       };
       gui = {
         theme = {
-          activeBorderColor = [
-            accent
-            "bold"
-          ];
-          inactiveBorderColor = [ muted ];
+          activeBorderColor = [accent "bold"];
+          inactiveBorderColor = [muted];
         };
         showListFooter = false;
         showRandomTip = false;

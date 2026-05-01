@@ -1,25 +1,22 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home = {
     packages = with pkgs; [
-      (python3.withPackages (
-        ps: with ps; [
-          pip # Python package installer
-          virtualenv # Virtual environment tool
-          setuptools # Package development library
-          black # Code formatter
-          flake8 # Linting tool
-          mypy # Type checking
-          requests # HTTP library for the Weather.py script
-          playwright # Browser automation
+      (python3.withPackages (ps: with ps; [
+        pip # Python package installer
+        virtualenv # Virtual environment tool
+        setuptools # Package development library
+        black # Code formatter
+        flake8 # Linting tool
+        mypy # Type checking
+        requests # HTTP library for the Weather.py script
+        playwright # Browser automation
 
-          # From dev.nix
-          pyyaml
-          python-frontmatter
-          python-dotenv
-          gpustat
-        ]
-      ))
+        # From dev.nix
+        pyyaml
+        python-frontmatter
+        python-dotenv
+        gpustat
+      ]))
     ];
 
     # Add pip configuration
@@ -34,6 +31,6 @@
     };
 
     # Set Python path in environment
-    sessionPath = [ "${pkgs.python3}/bin" ];
+    sessionPath = ["${pkgs.python3}/bin"];
   };
 }

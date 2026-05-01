@@ -1,11 +1,6 @@
 # Kaleidux — dynamic wallpaper daemon (video + GLSL transitions)
 # kldctl next/prev/query/love/pause/resume/reload/kill
-{
-  config,
-  pkgs,
-  inputs,
-  ...
-}:
+{ config, pkgs, inputs, ... }:
 {
   home.packages = [
     inputs.kaleidux.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -31,9 +26,7 @@
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStart = "${
-        inputs.kaleidux.packages.${pkgs.stdenv.hostPlatform.system}.default
-      }/bin/kaleidux-daemon";
+      ExecStart = "${inputs.kaleidux.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/kaleidux-daemon";
       Restart = "on-failure";
       RestartSec = 5;
     };

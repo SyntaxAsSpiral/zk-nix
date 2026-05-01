@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-{
+{ config, pkgs, ... }: {
   home.packages = [ pkgs.mods ];
 
   home.activation.modsConfig = config.lib.dag.entryAfter [ "linkGeneration" ] ''

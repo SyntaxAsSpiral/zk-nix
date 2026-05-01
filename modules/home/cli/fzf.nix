@@ -2,14 +2,12 @@
 {
   lib,
   ...
-}:
-let
+}: let
   # Catppuccin Frappe colors (manual)
   accent = "#8caaee"; # blue
   foreground = "#c6d0f5"; # text
   muted = "#737994"; # overlay0
-in
-{
+in {
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;

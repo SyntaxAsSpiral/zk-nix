@@ -56,6 +56,8 @@
 
   programs.msgvault.enable = true;
 
+
+
   home.packages = with pkgs; [
     nerd-fonts.recursive-mono
     git-lfs
@@ -68,6 +70,7 @@
     })
 
   ];
+
 
   home.file = {
     ".face".source = ../../assets/adeck-face.png;

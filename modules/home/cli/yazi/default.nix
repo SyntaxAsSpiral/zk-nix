@@ -1,10 +1,8 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   settings = import ./yazi.nix;
   keymap = import ./keymap.nix;
   theme = import ./theme.nix;
-in
-{
+in {
   programs.yazi = {
     enable = true;
     enableZshIntegration = true;

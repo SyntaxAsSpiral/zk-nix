@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 {
-  home.packages = [
+  home.packages = [ 
     pkgs.hyprpanel
     ## Used for Tracking GPU Usage in your Dashboard (NVidia only)
     # python
@@ -38,7 +38,7 @@
 
     ## To enable matugen based color theming and setting wallpapers via hyprpanel
     pkgs.awww
-  ];
+    ];
 
   # Mutable symlinks — hyprpanel GUI writes config back to repo
   # Must run after linkGeneration which otherwise restores the nix store symlink
