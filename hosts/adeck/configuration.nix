@@ -124,38 +124,6 @@
     };
     addToSystemPackages = true;
     extraArgs = [ "--accept-hooks" ];
-    settings = {
-      model = {
-        default = "supergemma4-26b-uncensored-v2";
-        provider = "custom";
-        api_key = "lms";
-        base_url = "http://localhost:1234/v1";
-      };
-      toolsets = [ "hermes-cli" ];
-      agent = {
-        max_turns = 60;
-        gateway_timeout = 1800;
-        restart_drain_timeout = 60;
-        gateway_timeout_warning = 900;
-        gateway_notify_interval = 180;
-        reasoning_effort = "medium";
-      };
-      terminal = {
-        backend = "local";
-        timeout = 180;
-        persistent_shell = true;
-      };
-      compression = {
-        enabled = true;
-        threshold = 0.85;
-        target_ratio = 0.2;
-        protect_last_n = 20;
-      };
-      dashboard = {
-        host = "100.89.32.9";
-        port = 9119;
-      };
-    };
   };
 
   systemd.services.hermes-dashboard = {
