@@ -123,11 +123,18 @@
       hostUsers = [ "zk" ];
       extraOptions = [
         "--env"
-        "HERMES_MANAGED=false"
+        "HERMES_MANAGED="
       ];
     };
     addToSystemPackages = true;
     extraArgs = [ "--accept-hooks" ];
+  };
+
+  system.activationScripts.hermesRuntimeMutable = {
+    text = ''
+      rm -f /var/lib/hermes/.hermes/.managed
+    '';
+    deps = [ "users" ];
   };
 
   systemd.services.hermes-dashboard = {
