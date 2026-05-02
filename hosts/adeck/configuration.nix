@@ -15,6 +15,7 @@
     ../../modules/packages.nix
     ../../modules/fonts.nix
     ../../modules/qbittorrent.nix
+    ../../modules/sideriod-mcp.nix
   ];
 
   my.host = "adeck";
@@ -80,6 +81,10 @@
     playerctl
     swayidle
     inputs.jolt.packages.${pkgs.stdenv.hostPlatform.system}.default
+    llm-agents.pi
+    llm-agents.codex
+    llm-agents.gemini-cli
+    llm-agents.crush
   ];
 
   # Prevent screen dimming during stage 2 boot by forcing it to 100%

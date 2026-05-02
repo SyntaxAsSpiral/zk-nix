@@ -54,7 +54,7 @@
       # Apps
       altus
       gimp
-      mpv
+      vlc
       zathura
       lmstudio
       kiro

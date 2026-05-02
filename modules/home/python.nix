@@ -16,6 +16,7 @@
         python-frontmatter
         python-dotenv
         gpustat
+        mcp
       ]))
     ];
 

@@ -1,6 +1,11 @@
 {
   description = "NixOS configurations for zk mesh";
 
+  nixConfig = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -88,6 +93,10 @@
       url = "github:NousResearch/hermes-agent";
     };
 
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+    };
+
   };
 
   outputs =
@@ -106,7 +115,10 @@
       nixosConfigurations.adeck = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [
-          { nixpkgs.hostPlatform = system; }
+          {
+            nixpkgs.hostPlatform = system;
+            nixpkgs.overlays = [ inputs.llm-agents.overlays.default ];
+          }
           ./hosts/adeck/configuration.nix
           jovian.nixosModules.default
           agenix.nixosModules.default

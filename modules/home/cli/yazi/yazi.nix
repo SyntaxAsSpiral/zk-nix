@@ -114,12 +114,12 @@
       ];
       play = [
         {
-          run = ''mpv --force-window "$@"'';
+          run = ''vlc "$@"'';
           orphan = true;
           for = "unix";
         }
         {
-          run = "mpv --force-window %*";
+          run = "vlc %*";
           orphan = true;
           for = "windows";
         }
