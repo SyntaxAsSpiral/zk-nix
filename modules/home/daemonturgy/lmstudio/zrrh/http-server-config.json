@@ -8,5 +8,5 @@
   "logLinesLimit": 500,
   "networkInterface": "0.0.0.0",
   "justInTimeModelLoading": true,
-  "fileLoggingMode": "succinct"
+  "fileLoggingMode": "full"
 }

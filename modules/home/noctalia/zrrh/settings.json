@@ -153,6 +153,11 @@
                     "visualizerType": "mirrored"
                 },
                 {
+                    "iconColor": "primary",
+                    "id": "KeepAwake",
+                    "textColor": "tertiary"
+                },
+                {
                     "hideWhenZero": true,
                     "hideWhenZeroUnread": true,
                     "iconColor": "primary",
