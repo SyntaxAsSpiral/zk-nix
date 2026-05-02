@@ -1,0 +1,24 @@
+{
+  "identifier": "@local:zrrh-hermes-test",
+  "name": "zrrh-hermes-test",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      },
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.04
+      },
+      {
+        "key": "llm.prediction.llama.cpuThreads",
+        "value": 16
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}

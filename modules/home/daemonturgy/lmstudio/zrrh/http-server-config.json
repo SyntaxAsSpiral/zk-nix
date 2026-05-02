@@ -3,7 +3,7 @@
   "port": 1234,
   "cors": false,
   "logSensitiveData": true,
-  "logIncomingTokens": false,
+  "logIncomingTokens": true,
   "verbose": true,
   "logLinesLimit": 500,
   "networkInterface": "0.0.0.0",
