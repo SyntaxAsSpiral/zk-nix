@@ -58,7 +58,7 @@
       zathura
       lmstudio
       kiro
-      sonic-pi
+      # sonic-pi >> marked broken. fix committed to nixpkgs 4/30/26
 
       # Dev Tools
       cargo
