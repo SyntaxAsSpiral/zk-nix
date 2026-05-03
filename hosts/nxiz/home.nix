@@ -58,6 +58,7 @@
       zathura
       lmstudio
       kiro
+      sonic-pi
 
       # Dev Tools
       cargo
