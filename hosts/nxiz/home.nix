@@ -146,6 +146,17 @@
     enableNushellIntegration = true;
   };
 
+  xdg.desktopEntries.godot = {
+    name = "Godot Engine";
+    genericName = "Game Engine";
+    exec = "godot %f";
+    icon = "godot";
+    terminal = false;
+    type = "Application";
+    categories = [ "Development" "IDE" ];
+    mimeType = [ "application/x-godot-project" ];
+  };
+
   xdg.desktopEntries.gimp = {
     name = "GIMP";
     genericName = "Image Editor";
