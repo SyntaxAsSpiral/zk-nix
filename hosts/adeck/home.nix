@@ -64,6 +64,16 @@
     nodejs_24
     lazydocker
     htop
+    ((sonic-pi.override {
+      ruby = ruby_3_3;
+      boost = boost186;
+    }).overrideAttrs
+      (old: {
+        doCheck = false;
+        meta = old.meta // {
+          broken = false;
+        };
+      }))
     (import ../../modules/home/cli/zcli.nix {
       inherit pkgs;
       flakePath = "/etc/nixos";

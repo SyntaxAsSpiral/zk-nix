@@ -58,7 +58,16 @@
       zathura
       lmstudio
       kiro
-      # sonic-pi >> marked broken. fix committed to nixpkgs 4/30/26
+      ((sonic-pi.override {
+        ruby = ruby_3_3;
+        boost = boost186;
+      }).overrideAttrs
+        (old: {
+          doCheck = false;
+          meta = old.meta // {
+            broken = false;
+          };
+        }))
 
       # Dev Tools
       cargo
