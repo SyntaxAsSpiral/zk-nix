@@ -14,6 +14,7 @@
       "audio"
       "video"
       "input"
+      "dialout"
     ];
     packages = [ ];
   };
