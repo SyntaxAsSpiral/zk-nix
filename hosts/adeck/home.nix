@@ -37,6 +37,9 @@
     # Hermes Agent
     ../../modules/home/daemonturgy/hermes/default.nix
 
+    # Herm TUI
+    ../../modules/home/daemonturgy/herm/default.nix
+
     # System
     ../../modules/home/msgvault.nix
     ../../modules/home/cli/jolt.nix
