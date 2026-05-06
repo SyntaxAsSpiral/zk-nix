@@ -48,9 +48,21 @@ let
       mkdir -p $out/lib $out/bin
       cp -r pkg $out/lib/herm
       hermPy=$(grep -oP "(?<=HERMES_PYTHON=')[^']+" ${hermes}/bin/hermes)
+      hermSite=$("$hermPy" - <<'PY'
+import site
+
+print(site.getsitepackages()[0])
+PY
+)
       makeWrapper ${pkgs.bun}/bin/bun $out/bin/herm \
         --add-flags "$out/lib/herm/index.js" \
+        --run 'export HERMES_CWD="''${HERMES_CWD:-$PWD}"' \
         --set HERMES_HOME "${config.home.homeDirectory}/.hermes" \
+        --set HERMES_AGENT_ROOT "$hermSite" \
+        --set HERMES_BUNDLED_SKILLS "${hermes}/share/hermes-agent/skills" \
+        --set HERMES_BUNDLED_PLUGINS "${hermes}/share/hermes-agent/plugins" \
+        --set HERMES_WEB_DIST "${hermes}/share/hermes-agent/web_dist" \
+        --set HERMES_TUI_DIR "${hermes}/ui-tui" \
         --set HERMES_PYTHON "$hermPy"
       runHook postInstall
     '';
