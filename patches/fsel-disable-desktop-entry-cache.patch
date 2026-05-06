@@ -1,0 +1,88 @@
+--- a/src/core/cache/desktop.rs
++++ b/src/core/cache/desktop.rs
+@@ -48,22 +48,10 @@
+ 
+         Ok(Self { db })
+     }
+-
+-    #[allow(dead_code)]
+     pub fn get_file_list(&self, dirs: &[PathBuf]) -> Result<Option<Vec<PathBuf>>> {
+-        let read_txn = self.db.begin_read()?;
+-        let table = read_txn.open_table(FILE_LIST_TABLE)?;
+-
+-        if let Some(data) = table.get(FILE_LIST_CACHE_KEY)?
+-            && let Ok(cache) = postcard::from_bytes::<FileListCache>(data.value())
+-            && file_list_cache_is_fresh(&cache, dirs)
+-        {
+-            return Ok(Some(cache.paths));
+-        }
+-
++        let _ = dirs;
+         Ok(None)
+     }
+-
+     #[allow(dead_code)]
+     pub fn batch_get(&self, paths: &[PathBuf]) -> Result<HashMap<PathBuf, App>> {
+         let mut result = HashMap::new();
+@@ -93,56 +81,25 @@
+         write_txn.commit()?;
+         Ok(())
+     }
+-
+-    #[allow(dead_code)]
+     pub fn set_file_list(&self, paths: Vec<PathBuf>, scanned_dirs: &[PathBuf]) -> Result<()> {
+-        let cache = FileListCache {
+-            paths,
+-            dir_mtimes: collect_dir_mtimes(scanned_dirs),
+-        };
+-        let data = postcard::to_allocvec(&cache)?;
+-
+-        let write_txn = self.db.begin_write()?;
+-        {
+-            let mut table = write_txn.open_table(FILE_LIST_TABLE)?;
+-            table.insert(FILE_LIST_CACHE_KEY, data.as_slice())?;
+-        }
+-        write_txn.commit()?;
++        let _ = (paths, scanned_dirs);
+         Ok(())
+     }
+ 
+     pub fn get_by_name(&self, app_name: &str) -> Result<Option<App>> {
+-        let read_txn = self.db.begin_read()?;
+-        let index_table = read_txn.open_table(NAME_INDEX_TABLE)?;
+-
+-        if let Some(path_bytes) = index_table.get(app_name)? {
+-            let path_key = std::str::from_utf8(path_bytes.value())
+-                .map_err(|error| eyre!("Invalid cached path key for app '{app_name}': {error}"))?
+-                .to_owned();
+-            let cache_table = read_txn.open_table(DESKTOP_CACHE_TABLE)?;
+-            return read_cached_app_by_key(&cache_table, &path_key);
+-        }
+-
++        let _ = app_name;
+         Ok(None)
+     }
+ 
+     pub fn get(&self, path: &Path) -> Result<Option<App>> {
+-        let read_txn = self.db.begin_read()?;
+-        let table = read_txn.open_table(DESKTOP_CACHE_TABLE)?;
+-        read_cached_app(&table, path)
++        let _ = path;
++        Ok(None)
+     }
+ 
+     pub fn set(&self, path: &Path, app: App) -> Result<()> {
+-        let write_txn = self.db.begin_write()?;
+-        {
+-            let mut cache_table = write_txn.open_table(DESKTOP_CACHE_TABLE)?;
+-            let mut index_table = write_txn.open_table(NAME_INDEX_TABLE)?;
+-            write_cached_app(&mut cache_table, &mut index_table, path, &app)?;
+-        }
+-        write_txn.commit()?;
++        let _ = (path, app);
+         Ok(())
+     }
+-
+     pub fn clear(&self) -> Result<()> {
+         let write_txn = self.db.begin_write()?;
+         {

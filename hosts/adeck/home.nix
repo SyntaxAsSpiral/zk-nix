@@ -37,6 +37,12 @@
     # Hermes Agent
     ../../modules/home/daemonturgy/hermes/default.nix
 
+    # Herm TUI
+    ../../modules/home/daemonturgy/herm/default.nix
+
+    # Stack-chan bridge
+    ../../modules/home/daemonturgy/stackchan/default.nix
+
     # System
     ../../modules/home/msgvault.nix
     ../../modules/home/cli/jolt.nix
@@ -64,6 +70,16 @@
     nodejs_24
     lazydocker
     htop
+    ((sonic-pi.override {
+      ruby = ruby_3_3;
+      boost = boost186;
+    }).overrideAttrs
+      (old: {
+        doCheck = false;
+        meta = old.meta // {
+          broken = false;
+        };
+      }))
     (import ../../modules/home/cli/zcli.nix {
       inherit pkgs;
       flakePath = "/etc/nixos";
