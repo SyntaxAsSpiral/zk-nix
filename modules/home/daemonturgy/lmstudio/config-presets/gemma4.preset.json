@@ -1,0 +1,24 @@
+{
+  "identifier": "@local:gemma4",
+  "name": "gemma4",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.systemPrompt",
+        "value": "<|think|>"
+      },
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      },
+      {
+        "key": "llm.prediction.llama.cpuThreads",
+        "value": 16
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}
