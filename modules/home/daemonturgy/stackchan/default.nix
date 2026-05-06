@@ -15,7 +15,7 @@ in
       After = [ "network-online.target" ];
     };
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = [ ]; # enable manually until xiaozhi self-host replaces cloud brain
     };
     Service = {
       ExecStart = "${pythonEnv}/bin/python3 ${bridgeScript}";
