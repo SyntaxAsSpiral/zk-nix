@@ -40,6 +40,9 @@
     # Herm TUI
     ../../modules/home/daemonturgy/herm/default.nix
 
+    # Stack-chan bridge
+    ../../modules/home/daemonturgy/stackchan/default.nix
+
     # System
     ../../modules/home/msgvault.nix
     ../../modules/home/cli/jolt.nix
