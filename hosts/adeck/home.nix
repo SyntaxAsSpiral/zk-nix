@@ -3,9 +3,6 @@
 
 {
   imports = [
-    # Palette
-    ../../modules/home/catppuccin.nix
-
     # Daemon profile (transient tooling)
     ../../modules/home/daemon-profile.nix
 
