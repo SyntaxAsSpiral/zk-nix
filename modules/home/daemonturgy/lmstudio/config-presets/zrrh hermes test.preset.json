@@ -5,16 +5,20 @@
   "operation": {
     "fields": [
       {
+        "key": "llm.prediction.llama.cpuThreads",
+        "value": 16
+      },
+      {
         "key": "llm.prediction.contextOverflowPolicy",
         "value": "rollingWindow"
       },
       {
         "key": "llm.prediction.temperature",
-        "value": 0.04
+        "value": 0.5
       },
       {
-        "key": "llm.prediction.llama.cpuThreads",
-        "value": 16
+        "key": "ext.virtualModel.customField.google.gemma431b.enableThinking",
+        "value": true
       }
     ]
   },
