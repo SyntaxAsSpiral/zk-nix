@@ -1,6 +1,10 @@
-_:
+{ ... }:
 
 {
+  systemd.user.tmpfiles.rules = [
+    "d %h/.local/share/jolt 0755 - - -"
+  ];
+
   xdg.configFile."jolt/config.toml".text = ''
     appearance = "dark"
     theme = "nord"
@@ -16,7 +20,7 @@ _:
     log_level = "info"
 
     [history]
-    background_recording = false
+    background_recording = true
     sample_interval_secs = 60
     retention_raw_days = 30
     retention_hourly_days = 180
