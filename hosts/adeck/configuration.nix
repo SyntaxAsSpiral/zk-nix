@@ -66,6 +66,7 @@
 
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
+  services.fwupd.enable = true;
   security.polkit.enable = true;
   # Firmware fan control is sufficient on this device; Jovian fan daemon crashes
   # because expected hwmon names are absent on this hardware/kernel combo.
