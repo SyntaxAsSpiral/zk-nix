@@ -16,8 +16,9 @@ _:
     '';
 
     shellAliases = {
-      # Route WOL through adeck (same LAN as nxiz) and send twice for reliability.
-      wake-nxiz = "ssh zk@adeck 'wakeonlan -i 192.168.0.255 -p 9 fc:34:97:3b:6e:99; sleep 1; wakeonlan -i 255.255.255.255 -p 9 fc:34:97:3b:6e:99'";
+      # Hermes TUI/CLI on adeck
+      herm = "ssh -t zk@adeck herm";
+      hermes = "ssh -t zk@adeck hermes";
     };
 
     functions = {

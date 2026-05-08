@@ -26,8 +26,9 @@ let
         alias deck-screen-on = ssh zk@adeck 'export NIRI_SOCKET="$(ls -1 /run/user/$(id -u)/niri.*.sock | head -n1)"; niri msg output eDP-1 on'
         alias deck-resume = ssh zk@adeck 'uid=$(id -u); sock=$(find /run/user/$uid -maxdepth 1 -type s -name "niri.*.sock" | head -n1); [ -n "$sock" ] || { echo "No Niri socket found"; exit 1; }; NIRI_SOCKET="$sock" niri msg action power-on-monitors'
 
-        # Wake-on-LAN helper routed through adeck (hardwired to zrrh)
-        alias wake-zrrh = ssh zk@adeck 'wakeonlan -i 10.77.0.255 60:cf:84:61:d8:00'
+        # Hermes TUI/CLI on adeck
+        alias herm = ssh -t zk@adeck herm
+        alias hermes = ssh -t zk@adeck hermes
 
         # Reboot all mesh workstations: remotes first, local last
         alias mesh-reboot = do {
@@ -36,25 +37,6 @@ let
           sudo reboot
         }
 
-        def build-nixos [
-          --dry  # Dry-build only, no activation
-        ] {
-          if $dry {
-            zcli rebuild --dry
-          } else {
-            zcli rebuild
-          }
-        }
-
-        def deploy-adeck [
-          --dry  # Dry-build only, no remote switch
-        ] {
-          if $dry {
-            zcli deploy adeck --dry
-          } else {
-            zcli deploy adeck
-          }
-        }
       '';
     };
 
@@ -67,15 +49,6 @@ let
       extraConfig = ''
         fastfetch
         echo ""
-
-        # Wake-on-LAN helpers (adeck -> zrrh/nxiz)
-        alias wake-zrrh = wakeonlan -i 10.77.0.255 60:cf:84:61:d8:00
-        alias wake-nxiz = wakeonlan -i 192.168.0.255 fc:34:97:3b:6e:99
-        def wake-mesh [] {
-          wake-zrrh
-          sleep 1sec
-          wake-nxiz
-        }
       '';
     };
 
@@ -88,9 +61,6 @@ let
       extraConfig = ''
         fastfetch
         echo ""
-
-        # Wake-on-LAN helper (zrrh -> nxiz)
-        alias wake-nxiz = wakeonlan -i 192.168.0.255 fc:34:97:3b:6e:99
       '';
     };
   };
