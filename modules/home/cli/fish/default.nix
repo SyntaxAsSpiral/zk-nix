@@ -8,11 +8,8 @@ _:
     interactiveShellInit = ''
       set -g fish_greeting
       set -gx PATH $HOME/.local/bin $PATH
-
-      if status is-interactive
-        fastfetch
-        echo
-      end
+      fastfetch
+      echo
     '';
 
     shellAliases = {
