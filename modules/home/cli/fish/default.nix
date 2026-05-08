@@ -38,10 +38,10 @@ _:
           set c2 FFA066
           set c3 C34043
         else if test $last_status -ne 0
-          # error: blood-sunset — arterial red → bruised grape → twilight indigo
-          set c1 C34043
-          set c2 7E3F9E
-          set c3 4A5BA8
+          # error: sanguis solix — cool arterial crimson → bruised violet → indigo extinction
+          set c1 B03060
+          set c2 6B2480
+          set c3 3A50C0
         end
 
         printf "\n"
