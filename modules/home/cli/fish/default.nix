@@ -27,30 +27,37 @@ _:
         set -l cwd (string replace -r "^$HOME" "~" (pwd))
         set -l last_status $status
 
-        set -l c1 8aadf4
-        set -l c2 c6a0f6
-        set -l c3 8bd5ca
-
         if test (id -u) -eq 0
-          set c1 eed49f
-          set c2 ee99a0
-          set c3 ed8796
-        else if test $last_status -ne 0
-          set c1 f5a97f
-          set c2 f5bde6
-          set c3 ed8796
-        end
+          set -l symbol "🧙"
+          printf "\n"
+          set_color eed49f
+          printf "%s " $cwd
+          set_color normal
+          printf "%s " $symbol
+        else
+          set -l hour (date "+%H")
+          if test $hour -lt 6
+            set -l symbol "🌙"
+          else if test $hour -lt 12
+            set -l symbol "🌅"
+          else if test $hour -lt 18
+            set -l symbol "🔮"
+          else if test $hour -lt 22
+            set -l symbol "🌆"
+          else
+            set -l symbol "🌌"
+          end
 
-        printf "\n"
-        set_color b7bdf8
-        printf "%s" $cwd
-        set_color $c1
-        printf "❱"
-        set_color $c2
-        printf "❱"
-        set_color $c3
-        printf "❱ "
-        set_color normal
+          printf "\n"
+          if test $last_status -ne 0
+            set_color ed8796
+          else
+            set_color b7bdf8
+          end
+          printf "%s " $cwd
+          set_color normal
+          printf "%s " $symbol
+        end
       '';
 
       fish_right_prompt = ''
