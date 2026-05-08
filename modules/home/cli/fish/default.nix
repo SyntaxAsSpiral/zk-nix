@@ -27,18 +27,21 @@ _:
         set -l cwd (string replace -r "^$HOME" "~" (pwd))
         set -l last_status $status
 
-        set -l c1 eba0ac
-        set -l c2 D27E99
-        set -l c3 eb6f92
+        # success: pink → teal → orange
+        set -l c1 eb6f92
+        set -l c2 9ccfd8
+        set -l c3 FFA066
 
         if test (id -u) -eq 0
+          # root: gold → orange → red
           set c1 E6C384
           set c2 FFA066
           set c3 C34043
         else if test $last_status -ne 0
-          set c1 f38ba8
-          set c2 E46876
-          set c3 C34043
+          # error: blood-sunset — red → violet → navy
+          set c1 E82424
+          set c2 938AA9
+          set c3 7E9CD8
         end
 
         printf "\n"
