@@ -24,8 +24,8 @@ _:
       crush = "npx --yes @charmland/crush@latest $argv";
 
       fish_prompt = ''
-        set -l cwd (string replace -r "^$HOME" "~" (pwd))
         set -l last_status $status
+        set -l cwd (string replace -r "^$HOME" "~" (pwd))
 
         # success: pink → teal → orange
         set -l c1 eb6f92
