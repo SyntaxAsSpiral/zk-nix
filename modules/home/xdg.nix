@@ -6,12 +6,8 @@ let
   home = config.home.homeDirectory;
 
   # ── Common directories (all hosts) ──
-  # Local dirs that every host gets regardless of role
   commonDirs = {
-    desktop = "${home}/Desktop";
     download = "${home}/Downloads";
-    publicShare = "${home}/Public";
-    templates = "${home}/Templates";
     extraConfig = {
       IMAGES = "${home}/Images";
       WALLPAPERS = "${home}/Images/wallpapers";
@@ -19,12 +15,19 @@ let
     };
   };
 
+  # ── Desktop-role XDG dirs ──
+  desktopDirs = {
+    desktop = "${home}/Desktop";
+    publicShare = "${home}/Public";
+    templates = "${home}/Templates";
+  };
+
   # ── Mesh directories ──
   # Only set XDG user dirs for paths that are local to the host.
   # Remote content is accessed via Taildrive bookmarks in Thunar.
   perHost = {
     nxiz = {
-      dirs = {
+      dirs = desktopDirs // {
         documents = "/mnt/repository/zk-docs";
         extraConfig = {
           ARCHIVE = "/mnt/archive";
@@ -33,6 +36,9 @@ let
         };
       };
       localDirs = [
+        "${home}/Desktop"
+        "${home}/Public"
+        "${home}/Templates"
         "${home}/Machines"
         "${home}/Notes"
       ];
@@ -70,7 +76,10 @@ let
       dirs = {
         extraConfig = {};
       };
-      localDirs = [];
+      localDirs = [
+        "${home}/Documents"
+        "${home}/Projects"
+      ];
       sessionVariables = {
         EDITOR = "nvim";
       };
@@ -78,13 +87,15 @@ let
     };
 
     zrrh = {
-      dirs = {
+      dirs = desktopDirs // {
         music = "/mnt/media/Music";
         pictures = "/mnt/media/Pictures";
         videos = "/mnt/media/Videos";
         extraConfig = {};
       };
-      localDirs = [];
+      localDirs = [
+        "${home}/Desktop"
+      ];
       sessionVariables = {
         BROWSER = "firefox";
         EDITOR = "nvim";
@@ -137,10 +148,7 @@ in {
     # Create only local dirs — remote content accessed via Taildrive
     activation.createLocalXdgDirs = config.lib.dag.entryAfter [ "writeBoundary" ] (
       ''
-        mkdir -p "${home}/Desktop"
         mkdir -p "${home}/Downloads"
-        mkdir -p "${home}/Public"
-        mkdir -p "${home}/Templates"
         mkdir -p "${home}/Images/wallpapers"
         mkdir -p "${home}/Images/screenshots"
       '' + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
