@@ -17,6 +17,22 @@
         "value": 0.5
       },
       {
+        "key": "ext.virtualModel.customField.qwen.qwen3.627b.preserveThinking",
+        "value": false
+      },
+      {
+        "key": "llm.prediction.speculativeDecoding.minContinueDraftingProbability",
+        "value": 0.74
+      },
+      {
+        "key": "llm.prediction.speculativeDecoding.minDraftLengthToConsider",
+        "value": 1
+      },
+      {
+        "key": "llm.prediction.speculativeDecoding.maxTokensToDraft",
+        "value": 22
+      },
+      {
         "key": "ext.virtualModel.customField.google.gemma431b.enableThinking",
         "value": true
       }
