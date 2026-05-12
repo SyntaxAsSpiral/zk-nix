@@ -15,6 +15,7 @@
       "video"
       "input"
       "dialout"
+      "docker"
     ];
     packages = [ ];
   };
