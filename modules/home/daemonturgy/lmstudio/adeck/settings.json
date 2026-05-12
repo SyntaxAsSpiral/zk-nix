@@ -110,7 +110,7 @@
   "hfSearchToken": "",
   "hfDownloadToken": "",
   "defaultContextLength": {
-    "type": "max",
+    "type": "custom",
     "value": 100000
   },
   "appIntroAcceptedForBuild": null

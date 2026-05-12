@@ -1,0 +1,28 @@
+{
+  "identifier": "@local:adeck-granite",
+  "name": "adeck-granite",
+  "changed": true,
+  "load": {
+    "fields": []
+  },
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.systemPrompt",
+        "value": "You are a pragmatic local assistant running on adeck. Prioritize concise, correct, tool-friendly answers. If uncertain, say what is unknown and suggest the next verification step."
+      },
+      {
+        "key": "llm.prediction.llama.cpuThreads",
+        "value": 8
+      },
+      {
+        "key": "llm.prediction.contextOverflowPolicy",
+        "value": "rollingWindow"
+      },
+      {
+        "key": "llm.prediction.temperature",
+        "value": 0.4
+      }
+    ]
+  }
+}

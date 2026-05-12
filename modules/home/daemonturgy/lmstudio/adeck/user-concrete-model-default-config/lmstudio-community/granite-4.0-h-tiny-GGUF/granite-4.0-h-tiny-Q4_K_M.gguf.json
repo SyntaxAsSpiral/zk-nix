@@ -1,0 +1,18 @@
+{
+  "preset": "@local:adeck-granite",
+  "operation": {
+    "fields": []
+  },
+  "load": {
+    "fields": [
+      {
+        "key": "llm.load.contextLength",
+        "value": 131072
+      },
+      {
+        "key": "llm.load.llama.flashAttention",
+        "value": true
+      }
+    ]
+  }
+}

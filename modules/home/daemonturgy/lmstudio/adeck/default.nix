@@ -30,6 +30,10 @@ in
     source = ./http-server-config.json;
     force = true;
   };
+  home.file.".lmstudio/.internal/user-concrete-model-default-config/lmstudio-community/granite-4.0-h-tiny-GGUF/granite-4.0-h-tiny-Q4_K_M.gguf.json" = {
+    source = ./user-concrete-model-default-config/lmstudio-community/granite-4.0-h-tiny-GGUF/granite-4.0-h-tiny-Q4_K_M.gguf.json;
+    force = true;
+  };
 
   # Start llmster daemon on boot.
   systemd.user.services.llmster = {
