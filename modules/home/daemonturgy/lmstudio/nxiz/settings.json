@@ -70,7 +70,7 @@
   "ui": {
     "missionControlFullscreen": false,
     "showModelFileNameInMyModels": false,
-    "configureLoadParamsBeforeLoad": false,
+    "configureLoadParamsBeforeLoad": true,
     "alwaysOpenModelLoaderFromPicker": true,
     "contextDisplayMode": "percentage",
     "appNavigationBarPosition": "left",
@@ -104,8 +104,8 @@
   "hfSearchToken": "",
   "hfDownloadToken": "",
   "defaultContextLength": {
-    "type": "max",
-    "value": 50000
+    "type": "custom",
+    "value": 100000
   },
   "appIntroAcceptedForBuild": null
 }

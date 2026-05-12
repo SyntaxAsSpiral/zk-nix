@@ -7,22 +7,28 @@
 
 let
   hermes = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  hermVersion = "1.2.1";
-  opentuiVersion = "0.2.2";
+  hermPackage = builtins.fromJSON (builtins.readFile inputs.herm-tui-npm);
+  opentuiNativeRegistry = builtins.fromJSON (builtins.readFile inputs.opentui-core-linux-x64-npm);
+  opentuiNativeName = "@opentui/core-linux-x64";
+  opentuiNativeVersion = hermPackage.optionalDependencies.${opentuiNativeName};
+  opentuiNativePackage = opentuiNativeRegistry.versions.${opentuiNativeVersion};
 
   hermTarball = pkgs.fetchurl {
-    url = "https://registry.npmjs.org/herm-tui/-/herm-tui-${hermVersion}.tgz";
-    hash = "sha512-lJm6VFvYJfvxbBKG1b53Mh9sEU6bioRgSSBa+ztu7zGOWvpfsax4QSvNayc9EnUAPZvRnApFtc+dlfBiQS19kA==";
+    url = hermPackage.dist.tarball;
+    hash = hermPackage.dist.integrity;
   };
 
-  opentuiNative = pkgs.fetchurl {
-    url = "https://registry.npmjs.org/@opentui/core-linux-x64/-/core-linux-x64-${opentuiVersion}.tgz";
-    hash = "sha512-ucVwUtUYeOYGVFPBLbPoxzbrPdhD0PDyKNQ2X4n1AJ9jlQX4gqBZRcXMEF8hiXDjFxsikZwef7De0ciCcWvAMg==";
-  };
+  opentuiNative =
+    assert opentuiNativePackage.name == opentuiNativeName;
+    assert opentuiNativePackage.version == opentuiNativeVersion;
+    pkgs.fetchurl {
+      url = opentuiNativePackage.dist.tarball;
+      hash = opentuiNativePackage.dist.integrity;
+    };
 
   herm = pkgs.stdenv.mkDerivation {
     pname = "herm-tui";
-    version = hermVersion;
+    version = hermPackage.version;
 
     dontUnpack = true;
 

@@ -444,6 +444,18 @@
         "type": "github"
       }
     },
+    "herm-tui-npm": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-krVpXHCMTuIgzDyeMI7ZW+ZtroHOQUhWt6RE1ztreSE=",
+        "type": "file",
+        "url": "https://registry.npmjs.org/herm-tui/latest"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://registry.npmjs.org/herm-tui/latest"
+      }
+    },
     "hermes-agent": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -935,6 +947,18 @@
         "type": "github"
       }
     },
+    "opentui-core-linux-x64-npm": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-CVsbNYJKwNomxaebkpOGfP/gFTK2Ba2BX/k3OCmixOk=",
+        "type": "file",
+        "url": "https://registry.npmjs.org/@opentui%2Fcore-linux-x64"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://registry.npmjs.org/@opentui%2Fcore-linux-x64"
+      }
+    },
     "otter-launcher": {
       "inputs": {
         "flake-parts": "flake-parts_5",
@@ -1073,6 +1097,7 @@
         "antigravity-nix": "antigravity-nix",
         "esotericons": "esotericons",
         "fsel": "fsel",
+        "herm-tui-npm": "herm-tui-npm",
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager_2",
         "jolt": "jolt",
@@ -1085,6 +1110,7 @@
         "nixvim": "nixvim",
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs",
+        "opentui-core-linux-x64-npm": "opentui-core-linux-x64-npm",
         "otter-launcher": "otter-launcher",
         "pia": "pia",
         "yazi-plugins": "yazi-plugins"

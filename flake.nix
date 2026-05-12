@@ -88,6 +88,16 @@
       url = "github:NousResearch/hermes-agent";
     };
 
+    herm-tui-npm = {
+      url = "file+https://registry.npmjs.org/herm-tui/latest";
+      flake = false;
+    };
+
+    opentui-core-linux-x64-npm = {
+      url = "file+https://registry.npmjs.org/@opentui%2fcore-linux-x64";
+      flake = false;
+    };
+
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
     };
