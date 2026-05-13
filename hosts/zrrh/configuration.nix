@@ -108,6 +108,10 @@
     qbittorrent
     xwayland-satellite
     llama-cpp
+    llm-agents.pi
+    llm-agents.codex
+    llm-agents.gemini-cli
+    llm-agents.crush
   ];
 
   system.stateVersion = "25.11";

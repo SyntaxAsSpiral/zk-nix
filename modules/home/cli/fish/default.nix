@@ -19,10 +19,6 @@ _:
     };
 
     functions = {
-      gemini = "npx --yes @google/gemini-cli@latest $argv";
-      codex = "npx --yes @openai/codex@latest $argv";
-      crush = "npx --yes @charmland/crush@latest $argv";
-
       fish_prompt = ''
         set -l last_status $status
         set -l cwd (string replace -r "^$HOME" "~" (pwd))

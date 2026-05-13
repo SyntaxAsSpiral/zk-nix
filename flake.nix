@@ -175,7 +175,10 @@
         modules = [
           {
             nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+            nixpkgs.overlays = [
+              inputs.nix-cachyos-kernel.overlays.pinned
+              inputs.llm-agents.overlays.default
+            ];
           }
           ./hosts/zrrh/configuration.nix
           agenix.nixosModules.default

@@ -80,16 +80,6 @@
       flakePath = "/etc/nixos";
     })
 
-    # pi wrapper (same behavior as nxiz)
-    (writeShellApplication {
-      name = "pi";
-      runtimeInputs = [ nodejs ];
-      text = ''
-        set -euo pipefail
-        exec npx --yes @mariozechner/pi-coding-agent "$@"
-      '';
-    })
-
     # Media key controls for Niri binds
     playerctl
     zathura
