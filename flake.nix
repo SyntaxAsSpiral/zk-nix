@@ -18,11 +18,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    yazi-plugins = {
-      url = "github:yazi-rs/plugins";
-      flake = false;
-    };
-
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";

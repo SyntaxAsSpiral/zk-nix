@@ -34,6 +34,9 @@
     # Hermes Agent
     ../../modules/home/daemonturgy/hermes/default.nix
 
+    # Honcho MCP Server
+    ../../modules/home/daemonturgy/honcho-mcp.nix
+
     # Herm TUI
     ../../modules/home/daemonturgy/herm/default.nix
 

@@ -1,5 +1,5 @@
 {
-  "autoStartOnLaunch": true,
+  "autoStartOnLaunch": false,
   "port": 1234,
   "cors": false,
   "logSensitiveData": true,
