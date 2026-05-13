@@ -1,0 +1,16 @@
+{
+  "identifier": "@local:adeck",
+  "name": "adeck",
+  "changed": true,
+  "operation": {
+    "fields": [
+      {
+        "key": "llm.prediction.llama.cpuThreads",
+        "value": 4
+      }
+    ]
+  },
+  "load": {
+    "fields": []
+  }
+}
