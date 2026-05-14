@@ -8,6 +8,7 @@
     ../../modules/boot.nix
     ../../modules/user.nix
     ../../modules/networking.nix
+    ../../modules/tailscale-pin.nix
     ../../modules/storage.nix
     ../../modules/nh.nix
     ../../modules/services.nix

@@ -14,6 +14,7 @@
     ../../modules/storage.nix
     ../../modules/packages.nix
     ../../modules/networking.nix
+    ../../modules/tailscale-pin.nix
     ../../modules/overlays.nix
     ../../modules/fonts.nix 
     ../../modules/nvidia.nix
