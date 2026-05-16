@@ -1,0 +1,77 @@
+# Bitburner — self-hosted hacking idle game served as a static web app
+# Builds from source via buildNpmPackage, served by miniserve on port 8090
+{ config, lib, pkgs, ... }:
+
+let
+  cfg = config.programs.bburner;
+
+  bburner-pkg = pkgs.buildNpmPackage {
+    pname = "bitburner";
+    version = "3.0.0";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "bitburner-official";
+      repo = "bitburner-src";
+      rev = "v3.0.0";
+      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    };
+
+    nodejs = pkgs.nodejs_24;
+
+    npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+
+    nativeBuildInputs = [ pkgs.git ];
+
+    # webpack calls `git rev-parse --short HEAD` for the build hash — satisfy it
+    preBuild = ''
+      git init
+      git config user.email "nix@build"
+      git config user.name "nix"
+      git commit --allow-empty -m "nix" --no-gpg-sign
+    '';
+
+    buildPhase = ''
+      npm run build
+    '';
+
+    installPhase = ''
+      mkdir -p $out
+      cp -r dist/. $out/
+    '';
+
+    meta = with lib; {
+      description = "Bitburner — a cyberpunk hacking idle game";
+      homepage = "https://github.com/bitburner-official/bitburner-src";
+      license = licenses.asl20;
+      platforms = platforms.linux;
+    };
+  };
+in
+{
+  options.programs.bburner = {
+    enable = lib.mkEnableOption "Bitburner web app";
+
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 8090;
+      description = "Port to serve Bitburner on";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [ pkgs.miniserve ];
+
+    systemd.user.services.bburner = {
+      Unit = {
+        Description = "Bitburner web app";
+        After = [ "network.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.miniserve}/bin/miniserve --port ${toString cfg.port} --index index.html ${bburner-pkg}";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+      Install.WantedBy = [ "default.target" ];
+    };
+  };
+}

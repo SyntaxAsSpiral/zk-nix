@@ -6,6 +6,9 @@
     # Daemon profile (transient tooling)
     ../../modules/home/daemon-profile.nix
 
+    # Bitburner
+    ../../modules/home/bburner.nix
+
     # Shell
     ../../modules/home/nushell.nix
 
@@ -87,6 +90,11 @@
 
   ];
 
+
+  programs.bburner = {
+    enable = true;
+    port = 8090;
+  };
 
   home.file = {
     ".face".source = ../../assets/adeck-face.png;
