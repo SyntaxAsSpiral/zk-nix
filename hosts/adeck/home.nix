@@ -6,8 +6,7 @@
     # Daemon profile (transient tooling)
     ../../modules/home/daemon-profile.nix
 
-    # Bitburner
-    ../../modules/home/bburner.nix
+    # bb-server (Bitburner WS sync + MCP)
     ../../modules/home/bb-server.nix
 
     # Shell
@@ -92,10 +91,6 @@
   ];
 
 
-  programs.bburner = {
-    enable = true;
-    port = 8090;
-  };
 
   home.file = {
     ".face".source = ../../assets/adeck-face.png;
