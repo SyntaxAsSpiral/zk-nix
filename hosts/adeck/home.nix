@@ -8,6 +8,7 @@
 
     # Bitburner
     ../../modules/home/bburner.nix
+    ../../modules/home/bb-server.nix
 
     # Shell
     ../../modules/home/nushell.nix
