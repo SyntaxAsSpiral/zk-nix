@@ -34,8 +34,8 @@ let
 
     installPhase = ''
       mkdir -p $out
-      cp -r dist/. $out/
       cp index.html $out/
+      cp -r dist $out/dist
     '';
 
     meta = with lib; {
