@@ -10,8 +10,8 @@
 
     Service = {
       Type = "simple";
-      WorkingDirectory = "%h/bb-server";
-      ExecStart = "${pkgs.nodejs_24}/bin/node %h/bb-server/server.js";
+      WorkingDirectory = "%h/bitburner/bb-server";
+      ExecStart = "${pkgs.nodejs_24}/bin/node %h/bitburner/bb-server/server.js";
       Restart = "on-failure";
       RestartSec = 5;
     };
