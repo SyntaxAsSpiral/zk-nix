@@ -13,24 +13,22 @@ let
       owner = "bitburner-official";
       repo = "bitburner-src";
       rev = "v3.0.0";
-      hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      hash = "sha256-unznH3H817eLEy5RMMYQEIVoH+wNUUZrR5nwV+e16ro=";
     };
 
     nodejs = pkgs.nodejs_24;
 
-    npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    npmDepsHash = "sha256-axFi78uXqEzon0wsUL0AuKQHvcvkyZhD3kOVMzv+P9c=";
 
     nativeBuildInputs = [ pkgs.git ];
 
-    # webpack calls `git rev-parse --short HEAD` for the build hash — satisfy it
-    preBuild = ''
+    ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
+
+    buildPhase = ''
       git init
       git config user.email "nix@build"
       git config user.name "nix"
       git commit --allow-empty -m "nix" --no-gpg-sign
-    '';
-
-    buildPhase = ''
       npm run build
     '';
 
