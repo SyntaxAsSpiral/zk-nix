@@ -6,6 +6,9 @@
     # Daemon profile (transient tooling)
     ../../modules/home/daemon-profile.nix
 
+    # bb-server (Bitburner WS sync + MCP)
+    ../../modules/home/bb-server.nix
+
     # Shell
     ../../modules/home/nushell.nix
 
@@ -86,6 +89,7 @@
     })
 
   ];
+
 
 
   home.file = {
