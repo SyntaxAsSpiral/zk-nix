@@ -99,6 +99,7 @@
   "appPostUpdateNotificationPending": false,
   "promptWhenCommittingUnsavedChangesWithNewFields": false,
   "enableLocalService": true,
+  "enableEngineProtocolRuntime": false,
   "cliInstalled": false,
   "useHFProxy": true,
   "hfSearchToken": "",

@@ -549,7 +549,7 @@
   "theme.bar.buttons.workspaces.smartHighlight": true,
   "bar.customModules.worldclock.divider": " ",
   "bar.customModules.worldclock.format": "%I:%M %p",
-  "bar.customModules.worldclock.formatDiffDate": "",
+  "bar.customModules.worldclock.formatDiffDate": "%I:%M %p",
   "bar.customModules.worldclock.icon": "󱑂",
   "bar.customModules.worldclock.tz": [
     "America/Los_Angeles"
@@ -577,5 +577,6 @@
   "theme.bar.buttons.workspaces.pill.radius": "1.9rem * 0.6",
   "theme.bar.buttons.workspaces.pill.active_width": "12em",
   "theme.bar.buttons.workspaces.fontSize": "1.3em",
-  "menus.dashboard.shortcuts.left.shortcut4.tooltip": "Search"
+  "menus.dashboard.shortcuts.left.shortcut4.tooltip": "Search",
+  "theme.bar.buttons.modules.worldclock.enableBorder": false
 }

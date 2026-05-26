@@ -63,6 +63,7 @@ in
   boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.systemd-boot.consoleMode = "max";
   boot.loader.efi.canTouchEfiVariables = h.canTouchEfiVariables;
+  boot.consoleLogLevel = 3;
   boot.kernelPackages =
     if config.my.host == "adeck" then
       pkgs.linuxPackages_latest

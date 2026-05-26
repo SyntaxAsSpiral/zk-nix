@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   # LM Studio config for nxiz.
@@ -10,4 +10,18 @@
     ln -sfT /mnt/repository/nix-os/modules/home/daemonturgy/lmstudio/config-presets ${config.home.homeDirectory}/.lmstudio/config-presets
     ln -sfT /mnt/repository/nix-os/modules/home/daemonturgy/lmstudio/nxiz/http-server-config.json ${config.home.homeDirectory}/.lmstudio/.internal/http-server-config.json
   '';
+
+  systemd.user.services.lmstudio = {
+    Unit = {
+      Description = "LM Studio";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.lmstudio}/bin/lm-studio";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
 }

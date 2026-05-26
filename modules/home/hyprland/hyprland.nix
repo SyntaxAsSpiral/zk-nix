@@ -50,12 +50,12 @@
         "HYPRCURSOR_SIZE,30"
         "XCURSOR_THEME,catppuccin-mocha-blue-cursors"
         "HYPRCURSOR_THEME,catppuccin-mocha-blue-cursors"
+        "TZDIR,/etc/zoneinfo"
       ];
 
       "exec-once" = [
         "gnome-keyring-daemon --start --components=secrets,ssh"
         "hyprpanel"
-        "lm-studio --no-sandbox --enable-features=UseOzonePlatform,WaylandWindowDecorations"
       ];
     };
   };
