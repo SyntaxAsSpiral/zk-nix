@@ -14,6 +14,7 @@ in {
 
   programs.nixvim = {
     enable = true;
+    nixpkgs.useGlobalPackages = true;
     viAlias = true;
     vimAlias = true;
 
