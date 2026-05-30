@@ -12,8 +12,11 @@ in {
   # Bring in Nixvim's Home Manager module so programs.nixvim options exist
   imports = [inputs.nixvim.homeModules.nixvim];
 
+  home.enableNixpkgsReleaseCheck = false;
+
   programs.nixvim = {
     enable = true;
+    version.enableNixpkgsReleaseCheck = false;
     nixpkgs.useGlobalPackages = true;
     viAlias = true;
     vimAlias = true;
