@@ -36,7 +36,6 @@ let
         # Hermes TUI/CLI on adeck
         alias bitburner = ssh -t zk@adeck 'cd bitburner/ && exec $SHELL -l'
         alias herm = ssh -t zk@adeck herm
-        alias hermes = ssh -t zk@adeck hermes
 
         # Reboot all mesh workstations: remotes first, local last
         alias mesh-reboot = do {
