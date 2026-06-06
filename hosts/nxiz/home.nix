@@ -42,6 +42,8 @@
     ../../modules/home/terminal/kitty.nix
     ../../modules/home/thunar.nix
     ../../modules/home/xdg.nix
+    # Hermes Agent
+    ../../modules/home/daemonturgy/hermes/default.nix
   ];
 
   home = {
@@ -58,16 +60,18 @@
       zathura
       lmstudio
       kiro
-      ((sonic-pi.override {
-        ruby = ruby_3_3;
-        boost = boost186;
-      }).overrideAttrs
+      (
+        (sonic-pi.override {
+          ruby = ruby_3_3;
+          boost = boost186;
+        }).overrideAttrs
         (old: {
           doCheck = false;
           meta = old.meta // {
             broken = false;
           };
-        }))
+        })
+      )
 
       # Dev Tools
       cargo
@@ -141,7 +145,7 @@
 
       ".face".source = ../../assets/nxiz-face.png;
 
-".config/monitors.xml".source = ./nxiz-monitors.xml;
+      ".config/monitors.xml".source = ./nxiz-monitors.xml;
     };
   };
 

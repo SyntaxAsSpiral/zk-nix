@@ -1,5 +1,11 @@
 # User environment for zrrh — inference/media/gaming workstation
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -49,8 +55,9 @@
     ../../modules/openrgb/home.nix
     ../../modules/home/thunar.nix
     ../../modules/home/xdg.nix
+    # Hermes Agent
+    ../../modules/home/daemonturgy/hermes/default.nix
   ];
-
 
   home.username = "zk";
   home.homeDirectory = "/home/zk";
@@ -71,8 +78,6 @@
   # Allow nwg-look/GTK to be managed dynamically by disabling declarative HM GTK
   gtk.enable = lib.mkForce false;
 
-
-
   home.packages = with pkgs; [
     # zcli — zrrh builds locally, flake path is local
     (import ../../modules/home/cli/zcli.nix {
@@ -88,7 +93,13 @@
     # Emoji picker (fzf + otter module, no rofi)
     (writeShellApplication {
       name = "fzf-emoji";
-      runtimeInputs = [ fzf jq wl-clipboard curl coreutils ];
+      runtimeInputs = [
+        fzf
+        jq
+        wl-clipboard
+        curl
+        coreutils
+      ];
       text = ''
         set -euo pipefail
 
