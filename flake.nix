@@ -46,12 +46,6 @@
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.noctalia-qs.follows = "noctalia-qs";
-    };
-
-    noctalia-qs = {
-      url = "github:noctalia-dev/noctalia-qs";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     pia = {
@@ -65,7 +59,7 @@
     };
 
     nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel/65eaf1492a6f0850ef2f08943c6bfc59b144e72a";
+      url = "github:xddxdd/nix-cachyos-kernel/26da04e24aef2993ea256917be42d18f83ce8e8b";
       # Do NOT follow nixpkgs — patches are pinned to flake's own nixpkgs
     };
 
