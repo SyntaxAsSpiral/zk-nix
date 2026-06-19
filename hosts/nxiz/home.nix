@@ -43,7 +43,7 @@
     ../../modules/home/thunar.nix
     ../../modules/home/xdg.nix
     # Hermes Agent
-    ../../modules/home/daemonturgy/hermes/default.nix
+    # ../../modules/home/daemonturgy/hermes/default.nix
   ];
 
   home = {
