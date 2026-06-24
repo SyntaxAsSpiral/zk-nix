@@ -446,7 +446,7 @@
     "herm-tui-npm": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-PRWsg/eZVphKRWH+tz4xICp93Bdc9/9AgK0FDKjlnVQ=",
+        "narHash": "sha256-R+Dw0juX3M/xTV34DA4Xy0GZ0TTnoao3aKx0FMoCK/U=",
         "type": "file",
         "url": "https://registry.npmjs.org/herm-tui/latest"
       },
@@ -924,7 +924,7 @@
     "opentui-core-linux-x64-npm": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-E+V1mrQi6rFDwV38OIDaBc9hFOoj349C4zLgO1eiPB8=",
+        "narHash": "sha256-SFrg1VGrJSJzhM9xMYDTokpVhQfcFDVJxBpXRC+90Z4=",
         "type": "file",
         "url": "https://registry.npmjs.org/@opentui%2Fcore-linux-x64"
       },
