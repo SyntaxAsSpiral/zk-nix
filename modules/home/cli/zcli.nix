@@ -195,7 +195,7 @@ EOF
       if [[ "$DEPLOY_DRY" == "true" ]]; then
         mode="dry-activate"
       else
-        mode="switch"
+        mode="boot"
       fi
 
       cmd=(
