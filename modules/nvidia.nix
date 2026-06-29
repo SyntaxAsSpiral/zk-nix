@@ -7,7 +7,7 @@
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = true;  # enables nvidia-suspend/resume/hibernate services
-    open = true;
+    open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
