@@ -1,6 +1,11 @@
 # XDG base directories, user-dirs, and MIME defaults
 # Shared across all hosts — remote content via Taildrive bookmarks
-{ config, lib, osConfig, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  ...
+}:
 
 let
   home = config.home.homeDirectory;
@@ -44,8 +49,8 @@ let
       ];
       sessionVariables = {
         BROWSER = "firefox";
-        EDITOR = "nvim";
-        VISUAL = "nvim";
+        EDITOR = "nano";
+        VISUAL = "zeditor";
         HYPRSHOT_DIR = "${home}/Images/screenshots";
       };
       mimeApps = {
@@ -58,11 +63,11 @@ let
         "audio/mp4" = "vlc.desktop";
         "audio/aac" = "vlc.desktop";
         "video/mp4" = "vlc.desktop";
-        "text/plain" = "kiro.desktop";
-        "text/x-shellscript" = "kiro.desktop";
-        "application/x-yaml" = "kiro.desktop";
-        "application/json" = "kiro.desktop";
-        "application/toml" = "kiro.desktop";
+        "text/plain" = "dev.zed.Zed.desktop";
+        "text/x-shellscript" = "dev.zed.Zed.desktop";
+        "application/x-yaml" = "dev.zed.Zed.desktop";
+        "application/json" = "dev.zed.Zed.desktop";
+        "application/toml" = "dev.zed.Zed.desktop";
         "application/pdf" = "org.pwmt.zathura.desktop";
         "x-scheme-handler/http" = "firefox.desktop";
         "x-scheme-handler/https" = "firefox.desktop";
@@ -74,16 +79,17 @@ let
 
     adeck = {
       dirs = {
-        extraConfig = {};
+        extraConfig = { };
       };
       localDirs = [
         "${home}/Documents"
         "${home}/Projects"
       ];
       sessionVariables = {
-        EDITOR = "nvim";
+        EDITOR = "nano";
+        VISUAL = "zeditor";
       };
-      mimeApps = {};
+      mimeApps = { };
     };
 
     zrrh = {
@@ -91,14 +97,15 @@ let
         music = "/mnt/media/Music";
         pictures = "/mnt/media/Pictures";
         videos = "/mnt/media/Videos";
-        extraConfig = {};
+        extraConfig = { };
       };
       localDirs = [
         "${home}/Desktop"
       ];
       sessionVariables = {
         BROWSER = "firefox";
-        EDITOR = "nvim";
+        EDITOR = "nano";
+        VISUAL = "zeditor";
       };
       mimeApps = {
         "inode/directory" = "thunar.desktop";
@@ -120,12 +127,13 @@ let
 
   # Per-host wallpaper source from repo assets
   wpSource = {
-    nxiz  = ../../assets/wallpapers/wp-nxiz;
+    nxiz = ../../assets/wallpapers/wp-nxiz;
     adeck = ../../assets/wallpapers/wp-adeck;
-    zrrh  = ../../assets/wallpapers/wp-zrrh;
+    zrrh = ../../assets/wallpapers/wp-zrrh;
   };
 
-in {
+in
+{
   xdg = {
     enable = true;
     mime.enable = true;
@@ -136,12 +144,15 @@ in {
     dataHome = "${home}/.local/share";
     cacheHome = "${home}/.cache";
 
-    userDirs = commonDirs // h.dirs // {
-      enable = true;
-      createDirectories = false;
-      setSessionVariables = true;  # Keep legacy (stateVersion < 26.05)
-      extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
-    };
+    userDirs =
+      commonDirs
+      // h.dirs
+      // {
+        enable = true;
+        createDirectories = false;
+        setSessionVariables = true; # Keep legacy (stateVersion < 26.05)
+        extraConfig = commonDirs.extraConfig // h.dirs.extraConfig;
+      };
   };
 
   home = {
@@ -151,7 +162,8 @@ in {
         mkdir -p "${home}/Downloads"
         mkdir -p "${home}/Images/wallpapers"
         mkdir -p "${home}/Images/screenshots"
-      '' + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
+      ''
+      + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
     );
 
     sessionVariables = h.sessionVariables;

@@ -2,9 +2,25 @@
 {
   config,
   pkgs,
-  # inputs,
+  inputs,
   ...
 }:
+
+let
+  pinnedSonicPiPkgs = inputs.nixpkgs-sonic-pi.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  sonicPiPinned = (
+    (pinnedSonicPiPkgs.sonic-pi.override {
+      ruby = pinnedSonicPiPkgs.ruby_3_3;
+      boost = pinnedSonicPiPkgs.boost186;
+    }).overrideAttrs
+      (old: {
+        doCheck = false;
+        meta = old.meta // {
+          broken = false;
+        };
+      })
+  );
+in
 
 {
   imports = [
@@ -21,9 +37,7 @@
     ../../modules/home/cli/git.nix
     ../../modules/home/cli/lazygit.nix
     ../../modules/home/cli/yazi/default.nix
-    ../../modules/home/editors/antigravity.nix
     ../../modules/home/editors/nano.nix
-    ../../modules/home/editors/nixvim.nix
     ../../modules/home/editors/obsidian.nix
     ../../modules/home/editors/zed.nix
     ../../modules/home/browser/firefox.nix
@@ -59,19 +73,7 @@
       vlc
       zathura
       lmstudio
-      kiro
-      (
-        (sonic-pi.override {
-          ruby = ruby_3_3;
-          boost = boost186;
-        }).overrideAttrs
-        (old: {
-          doCheck = false;
-          meta = old.meta // {
-            broken = false;
-          };
-        })
-      )
+      sonicPiPinned
 
       # Dev Tools
       cargo
@@ -137,8 +139,7 @@
     '';
 
     file = {
-      # Minimal zshrc for Electron app shell environment resolution
-      # (Kiro, Antigravity, etc. probe zsh to inherit PATH/env)
+      # Minimal zshrc for Electron app shell environment resolution.
       ".zshrc".text = ''
         export PATH="$HOME/.local/bin:$HOME/.nix-profile/bin:/etc/profiles/per-user/zk/bin:$PATH"
       '';

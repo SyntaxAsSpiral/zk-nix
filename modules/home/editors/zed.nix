@@ -4,7 +4,14 @@
   programs.zed-editor = {
     enable = true;
 
-    extensions = [ "nix" "toml" "elixir" "make" "catppuccin-icons" "catppuccin-blur" ];
+    extensions = [
+      "nix"
+      "toml"
+      "elixir"
+      "make"
+      "catppuccin-icons"
+      "catppuccin-blur"
+    ];
 
     extraPackages = with pkgs; [
       nixd
@@ -18,14 +25,22 @@
     userSettings = {
       lsp = {
         nixd = {
-          binary = { path = "nixd"; };
+          binary = {
+            path = "nixd";
+          };
         };
         rust-analyzer = {
-          binary = { path = "rust-analyzer"; };
+          binary = {
+            path = "rust-analyzer";
+          };
         };
         elixir-ls = {
-          binary = { path = "elixir-ls"; };
-          settings = { dialyzerEnabled = true; };
+          binary = {
+            path = "elixir-ls";
+          };
+          settings = {
+            dialyzerEnabled = true;
+          };
         };
       };
 
@@ -35,16 +50,28 @@
           formatter = "language_server";
         };
         Elixir = {
-          language_servers = [ "!lexical" "elixir-ls" "!next-ls" ];
+          language_servers = [
+            "!lexical"
+            "elixir-ls"
+            "!next-ls"
+          ];
           format_on_save = "on";
         };
         HEEX = {
-          language_servers = [ "!lexical" "elixir-ls" "!next-ls" ];
+          language_servers = [
+            "!lexical"
+            "elixir-ls"
+            "!next-ls"
+          ];
           format_on_save = "on";
         };
       };
-      outline_panel = { dock = "left"; };
-      collaboration_panel = { dock = "left"; };
+      outline_panel = {
+        dock = "left";
+      };
+      collaboration_panel = {
+        dock = "left";
+      };
 
       agent = {
         default_model = {
@@ -52,8 +79,8 @@
           model = "openai/gpt-oss-20b";
           enable_thinking = false;
         };
-        favorite_models = [];
-        model_parameters = [];
+        favorite_models = [ ];
+        model_parameters = [ ];
       };
 
       language_models = {
@@ -128,10 +155,14 @@
       };
 
       agent_servers = {
-        pi-acp = { type = "registry"; };
+        pi-acp = {
+          type = "registry";
+        };
       };
 
-      session = { trust_all_worktrees = true; };
+      session = {
+        trust_all_worktrees = true;
+      };
 
       auto_install_extensions = {
         elixir = true;

@@ -2,12 +2,14 @@
 {
   lib,
   ...
-}: let
+}:
+let
   # Catppuccin Frappe colors (manual)
   accent = "#8caaee"; # blue
   foreground = "#c6d0f5"; # text
   muted = "#737994"; # overlay0
-in {
+in
+{
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -28,7 +30,7 @@ in {
       "--prompt='/ '"
       "-i"
       "--no-bold"
-      "--bind='enter:execute(nvim {})'"
+      "--bind='enter:execute(nano {})'"
       "--preview='bat --style=numbers --color=always --line-range :500 {}'"
       "--preview-window=right:60%:wrap"
     ];

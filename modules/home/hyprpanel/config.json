@@ -480,11 +480,6 @@
   "bar.windowtitle.label": true,
   "bar.windowtitle.title_map": [
     [
-      "kiro",
-      "󰊠",
-      "Kiro"
-    ],
-    [
       "tui-float",
       "󰹙",
       "TUI"
@@ -500,10 +495,8 @@
   "bar.workspaces.applicationIconEmptyWorkspace": "❖",
   "bar.workspaces.applicationIconFallback": "󰣆",
   "bar.workspaces.applicationIconMap": {
-    "kiro": "󰊠",
     "tui-float": "󰹙",
     "zed": "",
-    "antigravity": "",
     "LM Studio": ""
   },
   "bar.workspaces.applicationIconOncePerWorkspace": false,

@@ -30,16 +30,17 @@
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
-      "$terminal"    = "kitty";
+      "$terminal" = "kitty";
       "$fileManager" = "kitty --class tui-float -e yazi";
-      "$menu"        = "kitty --class launcher -e fsel -d";
-      "$search"      = "kitty --class launcher -e otter-launcher";
-      "$browser"     = "firefox";
-      "$editor"      = "zeditor";
-      "$editor-alt"  = "antigravity";
-      "$notes"       = "obsidian";
-      "$mainMod"     = "SUPER";
-      "$screensaver" = "bash -c 'for ws in $(hyprctl monitors -j | jq -r \".[].activeWorkspace.id\"); do hyprctl dispatch exec \"[fullscreen;silent;workspace:$ws] kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\"; done'";
+      "$menu" = "kitty --class launcher -e fsel -d";
+      "$search" = "kitty --class launcher -e otter-launcher";
+      "$browser" = "firefox";
+      "$editor" = "zeditor";
+      "$editor-alt" = "kitty --class tui-float -e nano";
+      "$notes" = "obsidian";
+      "$mainMod" = "SUPER";
+      "$screensaver" =
+        "bash -c 'for ws in $(hyprctl monitors -j | jq -r \".[].activeWorkspace.id\"); do hyprctl dispatch exec \"[fullscreen;silent;workspace:$ws] kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\"; done'";
 
       cursor = {
         no_hardware_cursors = true;

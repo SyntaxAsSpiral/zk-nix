@@ -34,7 +34,7 @@
 
     # Editors
     ../../modules/home/editors/nano.nix
-    ../../modules/home/editors/nixvim.nix
+    ../../modules/home/editors/zed.nix
 
     # Browser
     ../../modules/home/browser/firefox.nix

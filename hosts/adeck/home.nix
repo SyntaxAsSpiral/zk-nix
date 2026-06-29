@@ -26,7 +26,7 @@
 
     # Editors
     ../../modules/home/editors/nano.nix
-    ../../modules/home/editors/nixvim.nix
+    ../../modules/home/editors/zed.nix
 
     # Dev
     ../../modules/home/python.nix
@@ -65,32 +65,18 @@
 
   programs.msgvault.enable = true;
 
-
-
   home.packages = with pkgs; [
     nerd-fonts.recursive-mono
     git-lfs
     nodejs_24
     lazydocker
     htop
-    ((sonic-pi.override {
-      ruby = ruby_3_3;
-      boost = boost186;
-    }).overrideAttrs
-      (old: {
-        doCheck = false;
-        meta = old.meta // {
-          broken = false;
-        };
-      }))
     (import ../../modules/home/cli/zcli.nix {
       inherit pkgs;
       flakePath = "/etc/nixos";
     })
 
   ];
-
-
 
   home.file = {
     ".face".source = ../../assets/adeck-face.png;

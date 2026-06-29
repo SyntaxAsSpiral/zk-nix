@@ -63,7 +63,7 @@ Each host's `configuration.nix` is responsible for setting `my.host = "<name>"` 
 - `modules/*.nix` — system-level modules. Current set: `boot.nix`, `fonts.nix`, `greetd.nix`, `ly.nix`, `networking.nix`, `nh.nix`, `nvidia.nix`, `openrgb/`, `overlays.nix`, `packages.nix`, `performance.nix`, `pulse-generator.nix`, `qbittorrent.nix`, `services.nix`, `steam.nix`, `storage.nix`, `system.nix`, `user.nix`. Not all are shared — desktop-only (fonts, nvidia, steam, greetd, ly, performance, openrgb) are imported only where needed.
 - `modules/home/` — Home-Manager modules grouped by concern. Hosts opt in by importing from `hosts/<host>/home.nix`.
   - `cli/` — bat, btop, eza, fastfetch, fish, fun, fzf, gh, git, jolt, lazygit, yazi, zcli
-  - `editors/` — antigravity, nano, neovim, nixvim, obsidian, zed
+  - `editors/` — nano, obsidian, zed
   - `browser/` — firefox
   - `terminal/` — alacritty, ghostty, kitty
   - `hyprland/` — nxiz-only: appearance, hypridle, hyprland, keybinds, monitors, waybar integration, windowrules

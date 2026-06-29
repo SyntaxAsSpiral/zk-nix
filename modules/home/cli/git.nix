@@ -16,14 +16,14 @@
       init.defaultBranch = "main";
       core = {
         autocrlf = "input";
-        editor = "nvim"; # follows $EDITOR convention
+        editor = "nano"; # follows $EDITOR convention
       };
-      
+
       # Workflow
       push.default = "simple";
       push.autoSetupRemote = true;
       pull.rebase = false;
-      
+
       # Diffs & Merge
       diff.colorMoved = "default";
       merge.conflictstyle = "diff3";

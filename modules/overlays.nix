@@ -1,8 +1,5 @@
-{inputs, ...}: {
+{ ... }: {
   nixpkgs.overlays = [
-    # Provide pkgs.google-antigravity via antigravity-nix overlay
-    inputs.antigravity-nix.overlays.default
-
     # Build tumbler without EPUB thumbnailer (libgepub) to avoid webkitgtk
     (_final: prev: {
       tumbler = prev.tumbler.overrideAttrs (old: {
@@ -17,12 +14,10 @@
     # nixpkgs PR #511533 (merged 2026-04-20).
     (_final: prev: {
       lmstudio = prev.lmstudio.overrideAttrs (old: {
-        nativeBuildInputs =
-          (old.nativeBuildInputs or [ ])
-          ++ [
-            prev.coreutils
-            prev.gnugrep
-          ];
+        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
+          prev.coreutils
+          prev.gnugrep
+        ];
 
         buildCommand = (old.buildCommand or "") + ''
           bwrap_target="$(readlink -f "$out/bin/lm-studio")"
