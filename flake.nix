@@ -96,6 +96,7 @@
     }:
     let
       system = "x86_64-linux";
+      meshOverlays = import ./overlays { inherit inputs; };
     in
     {
       nixosConfigurations.adeck = nixpkgs.lib.nixosSystem {
@@ -103,7 +104,7 @@
         modules = [
           {
             nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [ inputs.llm-agents.overlays.default ];
+            nixpkgs.overlays = meshOverlays.hosts.adeck;
           }
           ./hosts/adeck/configuration.nix
           jovian.nixosModules.default
@@ -132,7 +133,7 @@
         modules = [
           {
             nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+            nixpkgs.overlays = meshOverlays.hosts.nxiz;
           }
           ./hosts/nxiz/configuration.nix
           agenix.nixosModules.default
@@ -161,10 +162,7 @@
         modules = [
           {
             nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = [
-              inputs.nix-cachyos-kernel.overlays.pinned
-              inputs.llm-agents.overlays.default
-            ];
+            nixpkgs.overlays = meshOverlays.hosts.zrrh;
           }
           ./hosts/zrrh/configuration.nix
           agenix.nixosModules.default

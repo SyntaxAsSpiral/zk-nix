@@ -14,9 +14,7 @@
     ../../modules/storage.nix
     ../../modules/packages.nix
     ../../modules/networking.nix
-    ../../modules/tailscale-pin.nix
-    ../../modules/overlays.nix
-    ../../modules/fonts.nix 
+    ../../modules/fonts.nix
     ../../modules/nvidia.nix
     ../../modules/steam.nix
     ../../modules/performance.nix
@@ -91,10 +89,10 @@
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
-    extraPortals = [ 
+    extraPortals = [
       pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal-hyprland
-     ];
+    ];
   };
   programs.appimage = {
     enable = true;

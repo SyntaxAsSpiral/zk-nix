@@ -1,9 +1,9 @@
-{...}: {
-  nixpkgs.overlays = [
+{
+  tailscale = _final: prev: {
     # Pin away from Tailscale 1.98.0: upstream marked it test-only, and it
     # regressed MagicDNS resolver programming on systemd-resolved hosts.
-    (_final: prev: {
-      tailscale = prev.tailscale.overrideAttrs (finalAttrs: _previousAttrs: {
+    tailscale = prev.tailscale.overrideAttrs (
+      finalAttrs: _previousAttrs: {
         version = "1.96.5";
         src = prev.fetchFromGitHub {
           owner = "tailscale";
@@ -18,7 +18,7 @@
           "-X tailscale.com/version.longStamp=${finalAttrs.version}"
           "-X tailscale.com/version.shortStamp=${finalAttrs.version}"
         ];
-      });
-    })
-  ];
+      }
+    );
+  };
 }
