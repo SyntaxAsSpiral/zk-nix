@@ -97,92 +97,44 @@
     let
       system = "x86_64-linux";
       meshOverlays = import ./overlays { inherit inputs; };
+
+      # One host = one line below. Shared wiring (platform, overlays, agenix,
+      # Home-Manager) lives here; everything host-specific lives in hosts/<name>/.
+      mkHost =
+        name: extraModules:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules = [
+            {
+              nixpkgs.hostPlatform = system;
+              nixpkgs.overlays = meshOverlays.hosts.${name};
+            }
+            ./hosts/${name}/configuration.nix
+            agenix.nixosModules.default
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "hm-bak";
+                overwriteBackup = true;
+                extraSpecialArgs = { inherit inputs; };
+                users.zk.imports = [
+                  nix-colors.homeManagerModules.default
+                  agenix.homeManagerModules.default
+                  ./hosts/${name}/home.nix
+                ];
+              };
+            }
+          ]
+          ++ extraModules;
+        };
     in
     {
-      nixosConfigurations.adeck = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          {
-            nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = meshOverlays.hosts.adeck;
-          }
-          ./hosts/adeck/configuration.nix
-          jovian.nixosModules.default
-          agenix.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-bak";
-            home-manager.overwriteBackup = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-            home-manager.users.zk = {
-              imports = [
-                nix-colors.homeManagerModules.default
-                agenix.homeManagerModules.default
-                ./hosts/adeck/home.nix
-              ];
-            };
-          }
-        ];
-      };
-
-      nixosConfigurations.nxiz = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-
-        modules = [
-          {
-            nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = meshOverlays.hosts.nxiz;
-          }
-          ./hosts/nxiz/configuration.nix
-          agenix.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-bak";
-            home-manager.overwriteBackup = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-
-            home-manager.users.zk = {
-              imports = [
-                nix-colors.homeManagerModules.default
-                agenix.homeManagerModules.default
-                ./hosts/nxiz/home.nix
-              ];
-            };
-          }
-        ];
-      };
-
-      nixosConfigurations.zrrh = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-
-        modules = [
-          {
-            nixpkgs.hostPlatform = system;
-            nixpkgs.overlays = meshOverlays.hosts.zrrh;
-          }
-          ./hosts/zrrh/configuration.nix
-          agenix.nixosModules.default
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "hm-bak";
-            home-manager.overwriteBackup = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
-
-            home-manager.users.zk = {
-              imports = [
-                nix-colors.homeManagerModules.default
-                agenix.homeManagerModules.default
-                ./hosts/zrrh/home.nix
-              ];
-            };
-          }
-        ];
+      nixosConfigurations = {
+        nxiz = mkHost "nxiz" [ ];
+        zrrh = mkHost "zrrh" [ ];
+        adeck = mkHost "adeck" [ jovian.nixosModules.default ];
       };
 
       # 6. Formatter (nix fmt)

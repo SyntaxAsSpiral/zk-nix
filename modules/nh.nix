@@ -1,14 +1,6 @@
 # NH maintenance policy
 { config, pkgs, ... }:
 
-let
-  perHost = {
-    nxiz  = { flake = "/mnt/repository/nix-os"; };
-    adeck = { flake = "/etc/nixos"; };
-    zrrh  = { flake = "/etc/nixos"; };
-  };
-  h = perHost.${config.my.host};
-in
 {
   programs.nh = {
     enable = true;
@@ -17,7 +9,7 @@ in
       dates = "weekly";
       extraArgs = "--keep 5 --keep-since 7d";
     };
-    inherit (h) flake;
+    flake = config.my.flakePath;
   };
 
   environment.systemPackages = with pkgs; [

@@ -1,5 +1,5 @@
 # System-level configuration
-{ lib, ... }:
+{ config, lib, ... }:
 
 {
   options.my.host = lib.mkOption {
@@ -11,7 +11,20 @@
     description = "Host identifier — selects per-host blocks in shared modules";
   };
 
+  options.my.flakePath = lib.mkOption {
+    type = lib.types.str;
+    description = "Where this flake lives on the host — single source of truth for nh and zcli";
+  };
+
   config = {
+    my.flakePath =
+      {
+        nxiz = "/mnt/repository/nix-os";
+        adeck = "/etc/nixos";
+        zrrh = "/etc/nixos";
+      }
+      .${config.my.host};
+
     nix.settings = {
       experimental-features = [
         "nix-command"
@@ -37,15 +50,6 @@
       !include /etc/nixos/secrets/nix-access-tokens.conf
     '';
     nixpkgs.config.allowUnfree = true;
-
-    programs.nh = {
-      enable = true;
-      clean = {
-        enable = true;
-        dates = "weekly";
-        extraArgs = "--keep 5 --keep-since 7d";
-      };
-    };
 
     time.timeZone = "America/Los_Angeles";
     i18n.defaultLocale = "en_US.UTF-8";

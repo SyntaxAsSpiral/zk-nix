@@ -45,7 +45,7 @@ nix develop             # shell with nixd, nil, nixfmt, statix, deadnix
 
 ### Flake outputs (`flake.nix`)
 
-- `nixosConfigurations.{nxiz,zrrh,adeck}` — each composes `./hosts/<host>/configuration.nix`, `agenix.nixosModules.default`, and `home-manager.nixosModules.home-manager` with `home-manager.users.zk` importing `./hosts/<host>/home.nix` plus `nix-colors` + `agenix` HM modules.
+- `nixosConfigurations.{nxiz,zrrh,adeck}` — built by a `mkHost` helper in `flake.nix` that wires up `./hosts/<host>/configuration.nix`, overlays, `agenix.nixosModules.default`, and `home-manager.nixosModules.home-manager` with `home-manager.users.zk` importing `./hosts/<host>/home.nix` plus `nix-colors` + `agenix` HM modules. Host-specific flake inputs (e.g. jovian for adeck) go in the `extraModules` list argument.
 - `formatter.x86_64-linux = nixfmt`
 - `devShells.x86_64-linux.default` — the lint/dev shell above
 - `checks.x86_64-linux.{statix,deadnix}` — tree lints
@@ -54,13 +54,20 @@ Inputs follow `nixpkgs` (via `inputs.nixpkgs.follows`) except `nix-cachyos-kerne
 
 ### Per-host dispatch pattern
 
-`modules/system.nix` declares `options.my.host` as an enum of `nxiz | adeck | zrrh`. Shared modules that vary per host pick from a `perHost` attrset keyed on `config.my.host`. Current consumers: `boot.nix`, `networking.nix`, `storage.nix` (taildrive mounts), and similar. When adding host-specific behavior to a shared module, extend the `perHost` attrset rather than branching on `hostName`.
+`modules/system.nix` declares `options.my.host` as an enum of `nxiz | adeck | zrrh`, plus `options.my.flakePath` (where the flake lives on that host — single source of truth consumed by `nh.nix` and `zcli`). Shared modules that vary per host pick from a `perHost` attrset keyed on `config.my.host`. Current consumers: `boot.nix`, `networking.nix`, `storage.nix` (taildrive mounts), `ssh-identity.nix`, and similar. When adding host-specific behavior to a shared module, extend the `perHost` attrset rather than branching on `hostName`.
 
-Each host's `configuration.nix` is responsible for setting `my.host = "<name>"` and importing only the modules it actually uses — `modules/system.nix` deliberately does not import desktop-only modules (fonts/nvidia/steam). Desktop-only modules are imported directly by `hosts/nxiz/configuration.nix`.
+Each host's `configuration.nix` sets `my.host = "<name>"` and imports profiles plus only the modules unique to it:
+
+- `modules/profiles/core.nix` — baseline every host imports (system, boot, nh, user, services, storage, packages, networking, fonts, ssh-identity)
+- `modules/profiles/desktop.nix` — nxiz + zrrh only (nvidia, steam, performance, thunar, appimage); adeck deliberately does not import it
+- `modules/home/profiles/base.nix` — HM baseline every host imports (CLI set, nushell, xdg, nano/zed, hermes, zcli, daemon-profile, user identity)
+- `modules/home/profiles/desktop.nix` — HM for GUI hosts (catppuccin, firefox, gtk, icons, spotify, thunar, fzf-emoji); no catppuccin on adeck pending stylix migration
+
+Anything in a host's `configuration.nix`/`home.nix` beyond profile imports should be genuinely unique to that host.
 
 ### Module layout
 
-- `modules/*.nix` — system-level modules. Current set: `boot.nix`, `fonts.nix`, `greetd.nix`, `ly.nix`, `networking.nix`, `nh.nix`, `nvidia.nix`, `openrgb/`, `overlays.nix`, `packages.nix`, `performance.nix`, `pulse-generator.nix`, `qbittorrent.nix`, `services.nix`, `steam.nix`, `storage.nix`, `system.nix`, `user.nix`. Not all are shared — desktop-only (fonts, nvidia, steam, greetd, ly, performance, openrgb) are imported only where needed.
+- `modules/*.nix` — system-level modules. Current set: `boot.nix`, `fonts.nix`, `greetd.nix`, `ly.nix`, `networking.nix`, `nh.nix`, `nvidia.nix`, `openrgb/`, `packages.nix`, `performance.nix`, `profiles/`, `pulse-generator.nix`, `qbittorrent.nix`, `services.nix`, `ssh-identity.nix`, `steam.nix`, `storage.nix`, `system.nix`, `user.nix`. Membership in `profiles/{core,desktop}.nix` determines what is shared; greetd/ly/openrgb/pulse-generator/qbittorrent/sideriod-mcp are imported directly by the hosts that use them.
 - `modules/home/` — Home-Manager modules grouped by concern. Hosts opt in by importing from `hosts/<host>/home.nix`.
   - `cli/` — bat, btop, eza, fastfetch, fish, fun, fzf, gh, git, jolt, lazygit, yazi, zcli
   - `editors/` — nano, obsidian, zed
@@ -72,14 +79,15 @@ Each host's `configuration.nix` is responsible for setting `my.host = "<name>"` 
   - `noctalia/` — per-host: `zrrh/`
   - `otter-launcher/` — launcher configs: `zrrh/`
   - `waybar/` — `adeck.nix`
-  - Top-level HM modules: `awww.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `kaleidux.nix`, `msgvault.nix`, `nushell.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
-- `modules/home/cli/zcli.nix` — builds the `zcli` wrapper via `writeShellScriptBin`; kept here so updates ship with home activation.
+  - `profiles/` — `base.nix` (all hosts) and `desktop.nix` (nxiz + zrrh); see Per-host dispatch pattern above
+  - Top-level HM modules: `awww.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `kaleidux.nix`, `msgvault.nix`, `nushell.nix`, `openrgb.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
+- `modules/home/cli/zcli.nix` — HM module that builds the `zcli` wrapper via `writeShellScriptBin`, reading the flake path from `osConfig.my.flakePath`.
 - `hosts/<host>/hardware-configuration.nix` — host-specific hardware; do not share across hosts.
 
 ### Secrets
 
 - `secrets/` contains agenix-encrypted files (`*.age`) plus raw SSH host keys and a PIA config. `secrets/secrets.nix` lists recipients.
-- SSH host keys are deployed via an `activationScripts.sshHostKeys` block in each host's `configuration.nix` that copies from `/etc/nixos/secrets/hosts/<host>/` to `/etc/ssh/`.
+- SSH host keys are deployed via `modules/ssh-identity.nix` (part of `profiles/core.nix`), which copies from `/etc/nixos/secrets/hosts/<host>/` to `/etc/ssh/` on activation, keyed on `config.my.host`.
 - `nix.extraOptions` pulls `/etc/nixos/secrets/nix-access-tokens.conf` for private flake inputs. The file is expected to exist on every built host.
 
 ### Theming

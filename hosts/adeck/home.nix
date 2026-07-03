@@ -3,39 +3,17 @@
 
 {
   imports = [
-    # Daemon profile (transient tooling)
-    ../../modules/home/daemon-profile.nix
+    ../../modules/home/profiles/base.nix
 
+    # adeck-specific
     # bb-server (Bitburner WS sync + MCP)
     ../../modules/home/bb-server.nix
-
-    # Shell
-    ../../modules/home/nushell.nix
-
-    # CLI tools
-    ../../modules/home/cli/bat.nix
-    ../../modules/home/cli/btop.nix
-    ../../modules/home/cli/eza.nix
-    ../../modules/home/cli/fzf.nix
-    ../../modules/home/cli/fun.nix
-    ../../modules/home/cli/gh.nix
-    ../../modules/home/cli/git.nix
-    ../../modules/home/cli/lazygit.nix
-    ../../modules/home/cli/yazi/default.nix
-    ../../modules/home/cli/fastfetch/default.nix
-
-    # Editors
-    ../../modules/home/editors/nano.nix
-    ../../modules/home/editors/zed.nix
 
     # Dev
     ../../modules/home/python.nix
 
     # LM Studio (relay)
     ../../modules/home/daemonturgy/lmstudio/adeck/default.nix
-
-    # Hermes Agent
-    ../../modules/home/daemonturgy/hermes/default.nix
 
     # Honcho MCP Server
     ../../modules/home/daemonturgy/honcho-mcp.nix
@@ -54,31 +32,21 @@
     ../../modules/home/niri/adeck.nix
     ../../modules/home/waybar/adeck.nix
     ../../modules/home/terminal/alacritty.nix
-    ../../modules/home/xdg.nix
   ];
 
-  home.username = "zk";
-  home.homeDirectory = "/home/zk";
-  home.stateVersion = "24.11";
+  home = {
+    stateVersion = "24.11";
 
-  programs.home-manager.enable = true;
+    packages = with pkgs; [
+      nerd-fonts.recursive-mono
+      git-lfs
+      nodejs_24
+      lazydocker
+      htop
+    ];
+
+    file.".face".source = ../../assets/adeck-face.png;
+  };
 
   programs.msgvault.enable = true;
-
-  home.packages = with pkgs; [
-    nerd-fonts.recursive-mono
-    git-lfs
-    nodejs_24
-    lazydocker
-    htop
-    (import ../../modules/home/cli/zcli.nix {
-      inherit pkgs;
-      flakePath = "/etc/nixos";
-    })
-
-  ];
-
-  home.file = {
-    ".face".source = ../../assets/adeck-face.png;
-  };
 }

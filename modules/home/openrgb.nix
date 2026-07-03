@@ -6,7 +6,8 @@
 let
   repoPath = "/etc/nixos/modules/openrgb/config";
   confPath = "${config.home.homeDirectory}/.config/OpenRGB";
-in {
+in
+{
   home.activation.openrgbConfig = config.lib.dag.entryAfter [ "linkGeneration" ] ''
     # Ensure parent directories exist
     mkdir -p "${confPath}/plugins/settings"
