@@ -38,6 +38,9 @@
   # Force console to the NVIDIA card (card1) to ensure Plymouth visibility
   boot.kernelParams = [ "fbcon=map:1" ];
 
+  # Super I/O fan/RPM sensors (AIO pump + case fans on motherboard headers)
+  boot.kernelModules = [ "nct6775" ];
+
   # GPU Control (AMD/NVIDIA)
   # 4090 capped at 330W by default (inference is memory-bound; <7% tokens/s cost).
   # Gamemode-launched games auto-switch to the uncapped Gaming profile.

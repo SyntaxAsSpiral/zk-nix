@@ -17,6 +17,10 @@
 
   my.host = "nxiz";
 
+  # Super I/O fan/RPM sensors (case fans on motherboard headers);
+  # harmless no-op if the board's chip isn't Nuvoton
+  boot.kernelModules = [ "nct6775" ];
+
   # nxiz-only services
   services.gnome.gnome-keyring.enable = true;
 

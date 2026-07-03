@@ -63,6 +63,8 @@
     duf
     dust
     fastfetch
+    lm_sensors
+    nvtopPackages.full
     procs
 
     # Dev toolchains

@@ -66,7 +66,9 @@ in
   boot.consoleLogLevel = 3;
   boot.kernelPackages =
     if config.my.host == "adeck" then
-      pkgs.linuxPackages_latest
+      # Valve vendor kernel: steamdeck EC driver (battery charge limit,
+      # fan hwmon) is patched in; stock kernels lack it entirely
+      pkgs.linuxPackages_jovian
     else
       pkgs.cachyosKernels.linuxPackages-cachyos-latest;
   boot.kernelParams = h.kernelParams;
