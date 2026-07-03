@@ -5,6 +5,19 @@
     "d %h/.local/share/jolt 0755 - - -"
   ];
 
+  # Background recorder for battery/energy history (tracks the 80% charge
+  # cap behavior). `jolt daemon start` runs as a plain foreground process
+  # and never installs a unit on NixOS, so we own the unit here.
+  systemd.user.services.jolt-daemon = {
+    Unit.Description = "Jolt battery/energy history daemon";
+    Service = {
+      ExecStart = "/run/current-system/sw/bin/jolt daemon start";
+      Restart = "on-failure";
+      RestartSec = 10;
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
+
   xdg.configFile."jolt/config.toml".text = ''
     appearance = "dark"
     theme = "nord"
