@@ -39,7 +39,49 @@
   boot.kernelParams = [ "fbcon=map:1" ];
 
   # GPU Control (AMD/NVIDIA)
-  services.lact.enable = true;
+  # 4090 capped at 330W by default (inference is memory-bound; <7% tokens/s cost).
+  # Gamemode-launched games auto-switch to the uncapped Gaming profile.
+  # Steam does NOT trigger this by itself — per game, set Steam Launch Options to:
+  #   gamemoderun %command%
+  # Games launched without it simply run under the 330W cap.
+  services.lact = {
+    enable = true;
+    settings = {
+      version = 5;
+      daemon = {
+        log_level = "info";
+        admin_group = "wheel";
+        disable_clocks_cleanup = false;
+      };
+      apply_settings_timer = 5;
+      auto_switch_profiles = true;
+      gpus."10DE:2684-1458:40BF-0000:01:00.0".power_cap = 330.0;
+      profiles.Gaming = {
+        rule.type = "gamemode";
+        gpus."10DE:2684-1458:40BF-0000:01:00.0".power_cap = 450.0;
+      };
+    };
+  };
+
+  # lactd shells out to `sudo -u zk busctl --user` for gamemode detection;
+  # NixOS sudo lives in /run/wrappers/bin which is not in the unit's default PATH
+  systemd.services.lactd.path = [ "/run/wrappers" ];
+
+  # CPU: powersave governor + balance_performance EPP (amd-pstate-epp).
+  # Sustained all-core loads (nix builds) still reach full PPT-limited boost;
+  # saves ~20W package power at idle/light load vs the performance governor.
+  powerManagement.cpuFreqGovernor = "powersave";
+  systemd.services.amd-epp = {
+    description = "Set AMD pstate energy_performance_preference";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "cpufreq.service" ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      for f in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
+        echo balance_performance > "$f"
+      done
+    '';
+  };
 
   environment.systemPackages = with pkgs; [
     mangohud
