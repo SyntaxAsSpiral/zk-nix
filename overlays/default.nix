@@ -1,7 +1,8 @@
-{ inputs }:
+{ inputs, system ? "x86_64-linux" }:
 
 let
-  patches = import ./patches.nix;
+  nixpkgsFixes = import ./nixpkgs-fixes.nix;
+  flakePackages = import ./flake-packages.nix { inherit inputs system; };
   pins = import ./pins.nix;
 
   fromInputs = {
@@ -10,7 +11,7 @@ let
   };
 in
 {
-  inherit fromInputs patches pins;
+  inherit fromInputs nixpkgsFixes flakePackages pins;
 
   # Host overlay map. Edit this first when a package override/pin should apply
   # to one mesh host but not another.
@@ -18,19 +19,21 @@ in
     adeck = [
       fromInputs.llmAgents
       pins.tailscale
-    ];
+    ]
+    ++ flakePackages;
 
     nxiz = [
       fromInputs.cachyosKernel
       pins.tailscale
     ]
-    ++ patches;
+    ++ nixpkgsFixes
+    ++ flakePackages;
 
     zrrh = [
       fromInputs.cachyosKernel
       fromInputs.llmAgents
       pins.tailscale
     ]
-    ++ patches;
+    ++ nixpkgsFixes;
   };
 }

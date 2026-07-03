@@ -1,12 +1,8 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = [
-    (inputs.fsel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-      patches = (old.patches or [ ]) ++ [
-        ../../patches/fsel-disable-desktop-entry-cache.patch
-      ];
-    }))
+    pkgs.fsel
   ];
 
   xdg.configFile."fsel/config.toml".text = ''
