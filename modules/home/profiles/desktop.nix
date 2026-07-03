@@ -1,5 +1,6 @@
 # Desktop home profile — nxiz + zrrh (GUI hosts).
-# adeck theming is intentionally unset pending nix-colors/stylix migration.
+# adeck theming is intentionally unset; themed imperatively per-host
+# on a catppuccin base (operator's choice — no stylix, keep it organic).
 {
   imports = [
     ../catppuccin.nix

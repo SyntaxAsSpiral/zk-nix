@@ -1,6 +1,10 @@
 # Hyprland compositor core — variables, exec-once, and module imports
 { pkgs, ... }:
 {
+  # TODO(lua migration): configType="lua" is intended but blocked — the
+  # auto-translation mangles `$var` settings into invalid Lua (hl.$browser(...)).
+  # Port every $var to `_var` form first. Warning left unsilenced on purpose.
+
   imports = [
     ./keybinds.nix
     ./windowrules.nix

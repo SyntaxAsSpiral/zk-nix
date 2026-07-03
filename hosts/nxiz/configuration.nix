@@ -7,11 +7,8 @@
     ../../modules/profiles/core.nix
     ../../modules/profiles/desktop.nix
 
-    # Login manager playground modules (inert by default).
-    # Activate explicitly via one toggle at a time:
-    #   my.login.ly.enable = true;
-    #   my.login.greetd.enable = true;
-    ../../modules/ly.nix
+    # Login manager playground (inert by default).
+    # Activate explicitly: my.login.greetd.enable = true;
     ../../modules/greetd.nix
   ];
 

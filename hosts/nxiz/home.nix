@@ -35,10 +35,13 @@ in
     ../../modules/home/awww.nix
     ../../modules/home/daemonturgy/mods/mods.nix
     ../../modules/home/daemonturgy/lmstudio/nxiz/default.nix
-    ../../modules/home/msgvault.nix # INERT: programs.msgvault.enable = false (default)
+    ../../modules/home/msgvault.nix
     ../../modules/home/python.nix
     ../../modules/home/terminal/kitty.nix
   ];
+
+  # Vault archiver on both vault hosts (headless-by-design; see adeck)
+  programs.msgvault.enable = true;
 
   home = {
     stateVersion = "25.11";
