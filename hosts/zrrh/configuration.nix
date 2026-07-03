@@ -1,6 +1,20 @@
 # NixOS configuration for zrrh — local inference + media/gaming workstation
 { pkgs, inputs, ... }:
 
+let
+  # CUDA inference packages from the dedicated pinned input (see flake.nix:
+  # nixpkgs-llm) — insulated from routine nixpkgs bumps.
+  pkgsLlm = import inputs.nixpkgs-llm {
+    system = "x86_64-linux";
+    config = {
+      allowUnfree = true;
+      cudaSupport = true;
+      # Only compile kernels for the 4090 (Ada, sm_89) — several-fold
+      # faster builds than the default all-architectures fatbin
+      cudaCapabilities = [ "8.9" ];
+    };
+  };
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -76,7 +90,7 @@
     vlc
     qbittorrent
     xwayland-satellite
-    llama-cpp
+    pkgsLlm.llama-cpp
     llm-agents.pi
     llm-agents.codex
     llm-agents.gemini-cli

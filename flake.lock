@@ -734,6 +734,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-llm": {
+      "locked": {
+        "lastModified": 1782467914,
+        "narHash": "sha256-pGvFkM8N0xEkIIXDe5YYfbEAvHrk4IxBrjB/x8OomhE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e73de5be04e0eff4190a1432b946d469c794e7b4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e73de5be04e0eff4190a1432b946d469c794e7b4",
+        "type": "github"
+      }
+    },
     "nixpkgs-sonic-pi": {
       "locked": {
         "lastModified": 1782467914,
@@ -1039,6 +1055,7 @@
         "nix-cachyos-kernel": "nix-cachyos-kernel",
         "nix-colors": "nix-colors",
         "nixpkgs": "nixpkgs_5",
+        "nixpkgs-llm": "nixpkgs-llm",
         "nixpkgs-sonic-pi": "nixpkgs-sonic-pi",
         "noctalia": "noctalia",
         "opentui-core-linux-x64-npm": "opentui-core-linux-x64-npm",

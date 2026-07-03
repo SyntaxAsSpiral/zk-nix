@@ -6,6 +6,11 @@
 
     nixpkgs-sonic-pi.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
 
+    # LLM inference stack (llama-cpp, vllm) with CUDA — deliberately pinned
+    # so routine `nix flake update` never rebuilds the CUDA world.
+    # Bump explicitly with: nix flake update nixpkgs-llm
+    nixpkgs-llm.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
