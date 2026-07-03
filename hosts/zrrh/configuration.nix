@@ -70,22 +70,6 @@
   # NixOS sudo lives in /run/wrappers/bin which is not in the unit's default PATH
   systemd.services.lactd.path = [ "/run/wrappers" ];
 
-  # CPU: powersave governor + balance_performance EPP (amd-pstate-epp).
-  # Sustained all-core loads (nix builds) still reach full PPT-limited boost;
-  # saves ~20W package power at idle/light load vs the performance governor.
-  powerManagement.cpuFreqGovernor = "powersave";
-  systemd.services.amd-epp = {
-    description = "Set AMD pstate energy_performance_preference";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "cpufreq.service" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      for f in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
-        echo balance_performance > "$f"
-      done
-    '';
-  };
-
   environment.systemPackages = with pkgs; [
     mangohud
     vkbasalt

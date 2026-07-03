@@ -30,9 +30,22 @@
       ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
     '';
 
-    # 4. CPU Governor: performance
-    # Only if host is zrrh or nxiz (always plugged in desktops)
-    powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+    # 4. CPU Governor: powersave + balance_performance EPP (amd-pstate-epp)
+    # Sustained all-core loads still reach full PPT-limited boost; saves
+    # ~20W package power at idle/light load vs the performance governor.
+    # (Measured on zrrh 7950X: 74W -> 51W idle; build clocks unchanged.)
+    powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+    systemd.services.amd-epp = {
+      description = "Set AMD pstate energy_performance_preference";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "cpufreq.service" ];
+      serviceConfig.Type = "oneshot";
+      script = ''
+        for f in /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference; do
+          echo balance_performance > "$f"
+        done
+      '';
+    };
 
     # 5. Memory Management: zram + oomd
     # Better behavior under high load/low memory.
