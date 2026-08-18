@@ -18,6 +18,9 @@
     # Honcho MCP Server
     ../../modules/home/daemonturgy/honcho-mcp.nix
 
+    # Hermes Agent (adeck only — gateway + dashboard bind 100.89.32.9)
+    ../../modules/home/daemonturgy/hermes/default.nix
+
     # Herm TUI
     ../../modules/home/daemonturgy/herm/default.nix
 

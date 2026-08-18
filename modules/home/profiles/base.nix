@@ -21,9 +21,6 @@
     # Editors
     ../editors/nano.nix
     ../editors/zed.nix
-
-    # Hermes Agent
-    ../daemonturgy/hermes/default.nix
   ];
 
   home.username = "zk";
