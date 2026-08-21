@@ -55,6 +55,7 @@ in
       zathura
       lmstudio
       sonicPiPinned
+      libreoffice
 
       # Dev Tools
       cargo

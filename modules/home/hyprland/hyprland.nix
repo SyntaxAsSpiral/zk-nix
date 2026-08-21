@@ -1,40 +1,10 @@
 # Hyprland compositor core — variables, exec-once, and module imports
-{ pkgs, lib, ... }:
-let
-  # Hyprlang $variable definitions. Emitted as raw `hl["$name"](value)` calls
-  # via extraLuaFiles (see below) instead of `wayland.windowManager.hyprland.settings`,
-  # because the settings->Lua auto-translation renders "$name" attrs as
-  # `hl.$name(...)`, which is invalid Lua ($ illegal in identifiers). Routing
-  # them through hl's string-indexed call form keeps the engine-side $name
-  # semantics intact, so every bind/rule string below is untouched.
-  hyprVars = {
-    "$terminal" = "kitty";
-    "$fileManager" = "kitty --class tui-float -e yazi";
-    "$menu" = "kitty --class launcher -e fsel -d";
-    "$search" = "kitty --class launcher -e otter-launcher";
-    "$browser" = "firefox";
-    "$editor" = "zeditor";
-    "$editor-alt" = "kitty --class tui-float -e nano";
-    "$notes" = "obsidian";
-    "$mainMod" = "SUPER";
-    "$screensaver" =
-      "bash -c 'for ws in $(hyprctl monitors -j | jq -r \".[].activeWorkspace.id\"); do hyprctl dispatch exec \"[fullscreen;silent;workspace:$ws] kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\"; done'";
-  };
-
-  # Same illegal-identifier problem hits `settings."exec-once"` (the dash isn't
-  # legal in a bare `hl.exec-once(...)` call either) — and that key is *also*
-  # populated by ../awww.nix ("awww-daemon"), out of scope for this port. We
-  # force the merged key empty so it never renders via the broken path, and
-  # replay every known exec-once command (ours + awww.nix's) through the
-  # documented Lua startup idiom (hl.on("hyprland.start", ...)). If awww.nix's
-  # exec-once command ever changes, this list must be updated to match.
-  execOnceCmds = [
-    "gnome-keyring-daemon --start --components=secrets,ssh"
-    "hyprpanel"
-    "awww-daemon" # sourced from ../awww.nix
-  ];
-in
+{ pkgs, ... }:
 {
+  # Lua auto-translation is still wrong (hl.animations / hl["$var"] are nil).
+  # Pin hyprlang until a real Lua port exists; see LUA-MIGRATION.md.
+  # 2262afa inverted a "revert" and shipped configType=lua — this undoes that.
+
   imports = [
     ./keybinds.nix
     ./windowrules.nix
@@ -63,18 +33,20 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "lua";
-
-    extraLuaFiles."vars" = lib.concatStrings (
-      lib.mapAttrsToList (name: value: "hl[${builtins.toJSON name}](${builtins.toJSON value})\n") hyprVars
-    );
-
-    extraLuaFiles."startup" =
-      "hl.on(\"hyprland.start\", function()\n"
-      + lib.concatStrings (map (cmd: "  hl.exec_cmd(${builtins.toJSON cmd})\n") execOnceCmds)
-      + "end)\n";
-
+    configType = "hyprlang";
     settings = {
+      "$terminal" = "kitty";
+      "$fileManager" = "kitty --class tui-float -e yazi";
+      "$menu" = "kitty --class launcher -e fsel -d";
+      "$search" = "kitty --class launcher -e otter-launcher";
+      "$browser" = "firefox";
+      "$editor" = "zeditor";
+      "$editor-alt" = "kitty --class tui-float -e nano";
+      "$notes" = "obsidian";
+      "$mainMod" = "SUPER";
+      "$screensaver" =
+        "bash -c 'for ws in $(hyprctl monitors -j | jq -r \".[].activeWorkspace.id\"); do hyprctl dispatch exec \"[fullscreen;silent;workspace:$ws] kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\"; done'";
+
       cursor = {
         no_hardware_cursors = true;
       };
@@ -87,9 +59,10 @@ in
         "TZDIR,/etc/zoneinfo"
       ];
 
-      # Forced empty: suppresses the merged key (see execOnceCmds above) so it
-      # never renders as the syntactically-invalid `hl.exec-once(...)`.
-      "exec-once" = lib.mkForce [ ];
+      "exec-once" = [
+        "gnome-keyring-daemon --start --components=secrets,ssh"
+        "hyprpanel"
+      ];
     };
   };
 
