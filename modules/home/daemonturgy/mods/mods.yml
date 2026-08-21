@@ -4,8 +4,8 @@ default-api: zrrh
 default-model: gpt-oss-20b-heretic
 # Text to append when using the -f flag
 format-text:
-  markdown: 'Format the response as markdown without enclosing backticks.'
-  json: 'Format the response as json without enclosing backticks.'
+  markdown: "Format the response as markdown without enclosing backticks."
+  json: "Format the response as json without enclosing backticks."
 # MCP Servers configurations
 mcp-servers:
   # Example: GitHub MCP via Docker:
@@ -62,11 +62,11 @@ status-text: Generating
 # Theme to use in the forms; valid choices are charm, catppuccin, dracula, and base16
 theme: charm
 # Default character limit on input to model
-max-input-chars: 12250
+#max-input-chars: 12250
 # Maximum number of tokens in response
 # max-tokens: 100
-# 
-max-completion-tokens: 100
+#
+# max-completion-tokens: 100
 # Aliases and endpoints for OpenAI compatible REST API
 apis:
   openai:
