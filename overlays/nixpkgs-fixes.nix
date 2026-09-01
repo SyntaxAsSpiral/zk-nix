@@ -1,4 +1,10 @@
 [
+  # nixpkgs 2026-07-21: hyprpanel alias throws (upstream archived for wayle).
+  # Keep the last packaged revision so nxiz's existing panel/config still builds.
+  (_final: prev: {
+    hyprpanel = prev.callPackage ./hyprpanel-package.nix { };
+  })
+
   # Build tumbler without EPUB thumbnailer (libgepub) to avoid webkitgtk
   (_final: prev: {
     tumbler = prev.tumbler.overrideAttrs (old: {
