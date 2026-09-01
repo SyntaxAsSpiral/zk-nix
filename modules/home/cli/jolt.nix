@@ -11,8 +11,10 @@
   systemd.user.services.jolt-daemon = {
     Unit.Description = "Jolt battery/energy history daemon";
     Service = {
-      ExecStart = "/run/current-system/sw/bin/jolt daemon start";
-      Restart = "on-failure";
+      # `jolt daemon start` forks and exits 0; systemd then marks the
+      # unit dead. --foreground is the actual recorder.
+      ExecStart = "/run/current-system/sw/bin/jolt daemon start --foreground";
+      Restart = "always";
       RestartSec = 10;
     };
     Install.WantedBy = [ "default.target" ];
