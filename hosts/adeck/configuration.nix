@@ -34,6 +34,10 @@
     upower.enable = true;
     power-profiles-daemon.enable = true;
     fwupd.enable = true;
+    # Apply as soon as the Steam Deck EC hwmon shows up (boot/rebind).
+    udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="hwmon", ATTR{name}=="steamdeck_hwmon", ATTR{max_battery_charge_level}="80"
+    '';
   };
   security.polkit.enable = true;
 
@@ -60,17 +64,42 @@
     services.jupiter-fan-control.enable = lib.mkForce false;
 
     # Battery longevity: always plugged in, so cap charge at 80% (like SteamOS).
-    # The max_battery_charge_level knob comes from the steamdeck EC driver
-    # in the jovian kernel; silently no-ops if the driver is absent.
+    # The knob is steamdeck_hwmon from the jovian kernel. Fail if it's missing
+    # instead of silently no-op'ing — that was how the cap drifted past 80.
     services.battery-charge-limit = {
       description = "Cap battery charge at 80%";
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = [
+        "multi-user.target"
+        "suspend.target"
+        "hibernate.target"
+      ];
+      after = [
+        "suspend.target"
+        "hibernate.target"
+      ];
       serviceConfig.Type = "oneshot";
       script = ''
+        set -eu
+        found=
         for f in /sys/class/hwmon/hwmon*/max_battery_charge_level; do
-          [ -e "$f" ] && echo 80 > "$f"
+          [ -e "$f" ] || continue
+          echo 80 > "$f"
+          echo "set $f to 80"
+          found=1
         done
+        if [ -z "$found" ]; then
+          echo "steamdeck max_battery_charge_level sysfs missing" >&2
+          exit 1
+        fi
       '';
+    };
+    timers.battery-charge-limit = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnBootSec = "15s";
+        OnUnitActiveSec = "10min";
+        Persistent = true;
+      };
     };
 
     # Prevent screen dimming during stage 2 boot by forcing it to 100%

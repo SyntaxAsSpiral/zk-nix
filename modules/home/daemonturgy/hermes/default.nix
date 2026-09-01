@@ -44,9 +44,7 @@ in
       After = [ "llmster.service" ];
       Wants = [ "llmster.service" ];
     };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
+    Install.WantedBy = [ "default.target" ];
     Service = {
       ExecStart = "${hermes}/bin/hermes gateway run --replace --accept-hooks";
       Restart = "always";
@@ -65,11 +63,13 @@ in
       After = [ "hermes-gateway.service" ];
       Wants = [ "hermes-gateway.service" ];
     };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
+    # Loopback bind: --insecure is a no-op since June 2026, and binding
+    # 100.89.32.9 without auth crash-loops. Mesh access is tailscale serve.
+    Install.WantedBy = [ "default.target" ];
     Service = {
-      ExecStart = "${hermes}/bin/hermes dashboard --host 100.89.32.9 --port 9119 --no-open --insecure";
+      ExecStart = "${hermes}/bin/hermes dashboard --host 127.0.0.1 --port 9119 --no-open";
+      ExecStartPost = "-${pkgs.tailscale}/bin/tailscale serve --bg --https=9119 http://127.0.0.1:9119";
+      ExecStopPost = "-${pkgs.tailscale}/bin/tailscale serve --https=9119 off";
       Restart = "always";
       RestartSec = "10";
       Environment = [

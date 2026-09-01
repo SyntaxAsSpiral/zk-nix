@@ -136,6 +136,7 @@ in
       "--exit-node=auto:any"
       "--exit-node-allow-lan-access=true"
       "--accept-dns=false"
+      "--operator=zk"
     ];
 
     systemd.services.qbt-mullvad-policy = {
