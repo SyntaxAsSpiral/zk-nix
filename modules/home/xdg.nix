@@ -69,6 +69,21 @@ let
         "application/json" = "dev.zed.Zed.desktop";
         "application/toml" = "dev.zed.Zed.desktop";
         "application/pdf" = "org.pwmt.zathura.desktop";
+
+        # LibreOffice documents
+        "application/msword" = "writer.desktop";
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = "writer.desktop";
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.template" = "writer.desktop";
+        "application/vnd.ms-word.document.macroEnabled.12" = "writer.desktop";
+        "application/rtf" = "writer.desktop";
+        "application/vnd.oasis.opendocument.text" = "writer.desktop";
+        "application/vnd.ms-excel" = "calc.desktop";
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = "calc.desktop";
+        "application/vnd.oasis.opendocument.spreadsheet" = "calc.desktop";
+        "application/vnd.ms-powerpoint" = "impress.desktop";
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation" = "impress.desktop";
+        "application/vnd.oasis.opendocument.presentation" = "impress.desktop";
+
         "x-scheme-handler/http" = "firefox.desktop";
         "x-scheme-handler/https" = "firefox.desktop";
         "x-scheme-handler/ftp" = "firefox.desktop";
