@@ -7,7 +7,8 @@ let
 
   fromInputs = {
     cachyosKernel = inputs.nix-cachyos-kernel.overlays.pinned;
-    llmAgents = inputs.llm-agents.overlays.default;
+    # Upstream dropped overlays.default; shared-nixpkgs is pkgs.llm-agents.*.
+    llmAgents = inputs.llm-agents.overlays.shared-nixpkgs;
   };
 in
 {
