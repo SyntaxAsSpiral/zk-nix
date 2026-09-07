@@ -95,6 +95,7 @@ in
     llm-agents.codex
     llm-agents.gemini-cli
     llm-agents.crush
+    llm-agents.grok
   ];
 
   system.stateVersion = "25.11";
