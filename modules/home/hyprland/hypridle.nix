@@ -6,8 +6,10 @@
       general = {
         # Turn off display before suspend (critical for NVIDIA)
         before_sleep_cmd = "hyprctl dispatch dpms off";
-        # Restore display and clean up after wake
-        after_sleep_cmd = "hyprctl dispatch dpms on; pkill -x neo 2>/dev/null; true";
+        # A remote/RTC wake may produce no seat input. Already-fired Wayland
+        # idle listeners then stay idled and never fire again. Reconnect after
+        # wake so each listener gets a fresh timeout from this configuration.
+        after_sleep_cmd = "hyprctl dispatch dpms on; pkill -x neo 2>/dev/null; ${pkgs.systemd}/bin/systemctl --user --no-block restart hypridle.service";
       };
       listener = [
         {
