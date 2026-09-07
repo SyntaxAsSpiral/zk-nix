@@ -896,7 +896,7 @@
     "opentui-core-linux-x64-npm": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-fAq2kDJvVxB7j/nrsWgtJ3ADa7ni1yg0PVODoUFgQWo=",
+        "narHash": "sha256-BpwBMXns/duHWMBo5zGa27vPuoYONMh285fhScHFCTs=",
         "type": "file",
         "url": "https://registry.npmjs.org/@opentui%2Fcore-linux-x64"
       },
