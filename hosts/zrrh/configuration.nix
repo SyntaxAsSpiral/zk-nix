@@ -64,7 +64,7 @@ in
   services.lact = {
     enable = true;
     settings = {
-      version = 5;
+      version = 7;
       daemon = {
         log_level = "info";
         admin_group = "wheel";
