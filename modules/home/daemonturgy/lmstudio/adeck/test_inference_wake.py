@@ -21,6 +21,13 @@ class Tests(unittest.IsolatedAsyncioTestCase):
         wake.send.assert_called_once()
         self.assertEqual(wake.connected.await_count, 2)
 
+    async def test_stale_link_without_lan_is_disconnected(self):
+        wake = relay.Wake()
+        wake.reachable = AsyncMock(return_value=False)
+        with patch.object(relay.asyncio, 'create_subprocess_exec') as spawn:
+            self.assertFalse(await wake.connected())
+            spawn.assert_not_called()
+
     async def test_gate_stream_and_metadata(self):
         gate = asyncio.Event()
         received = []

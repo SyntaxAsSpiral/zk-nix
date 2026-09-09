@@ -21,7 +21,22 @@ class Wake:
         self.lock = asyncio.Lock()
         self.checked = 0
 
+    async def reachable(self):
+        try:
+            _, writer = await asyncio.wait_for(
+                asyncio.open_connection('192.168.0.110', 22), 1)
+        except (OSError, asyncio.TimeoutError):
+            return False
+        writer.close()
+        try:
+            await writer.wait_closed()
+        except OSError:
+            pass
+        return True
+
     async def connected(self):
+        if not await self.reachable():
+            return False
         process = await asyncio.create_subprocess_exec(
             os.environ['LMS'], 'link', 'status', '--json',
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
