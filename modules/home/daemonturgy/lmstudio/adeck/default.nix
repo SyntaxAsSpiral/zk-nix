@@ -54,4 +54,20 @@ in
       WantedBy = [ "default.target" ];
     };
   };
+
+  # Keep the public API stable; gate inference on the router-LAN WoL relay.
+  systemd.user.services.inference-wake = {
+    Unit = {
+      Description = "Wake zrrh before local inference";
+      After = [ "network-online.target" "llmster.service" ];
+      Requires = [ "llmster.service" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.python3.withPackages (p: [ p.aiohttp ])}/bin/python ${./inference-wake.py}";
+      Environment = [ "LMS=${lms}/bin/lms" ];
+      Restart = "on-failure";
+      RestartSec = 3;
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
 }

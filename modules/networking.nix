@@ -56,6 +56,8 @@ let
       hostName = "zrrh";
       resolvedDns = true;
       postResumeDnsFlush = true;
+      # Apply to the existing DHCP profile without replacing its connection.
+      nmWake = true;
     };
   };
   h = perHost.${config.my.host};
@@ -68,6 +70,10 @@ in
     networkmanager.ensureProfiles.environmentFiles = h.nmEnvironmentFiles or [ ];
     networkmanager.ensureProfiles.profiles = h.nmProfiles or { };
     networkmanager.settings.main.no-auto-default = lib.mkIf ((h.nmProfiles or { }) != { }) "*";
+    networkmanager.settings."connection-zrrh-wol" = lib.mkIf (h.nmWake or false) {
+      match-device = "mac:60:cf:84:61:d8:00";
+      "ethernet.wake-on-lan" = "magic";
+    };
     firewall = {
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
