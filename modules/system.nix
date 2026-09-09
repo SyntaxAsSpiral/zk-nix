@@ -49,6 +49,9 @@
     nix.extraOptions = ''
       !include /etc/nixos/secrets/nix-access-tokens.conf
     '';
+    # crates.io/Fastly 403s User-Agents that start with "curl/".
+    # nixpkgs fetchurl sends "curl/$version Nixpkgs/$version"; last --user-agent wins.
+    systemd.services.nix-daemon.environment.NIX_CURL_FLAGS = "--user-agent Nixpkgs";
     nixpkgs.config.allowUnfree = true;
 
     time.timeZone = "America/Los_Angeles";
