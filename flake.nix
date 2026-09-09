@@ -60,11 +60,6 @@
       # Do NOT follow nixpkgs — patches are pinned to flake's own nixpkgs
     };
 
-    kaleidux = {
-      url = "github:Mjoyufull/Kaleidux";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
