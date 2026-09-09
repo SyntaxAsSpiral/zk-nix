@@ -72,7 +72,7 @@ in
     networkmanager.settings.main.no-auto-default = lib.mkIf ((h.nmProfiles or { }) != { }) "*";
     networkmanager.settings."connection-zrrh-wol" = lib.mkIf (h.nmWake or false) {
       match-device = "mac:60:cf:84:61:d8:00";
-      "ethernet.wake-on-lan" = "magic";
+      "ethernet.wake-on-lan" = 64; # NM config uses the numeric magic-packet flag.
     };
     firewall = {
       enable = true;
