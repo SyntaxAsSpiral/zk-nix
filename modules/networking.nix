@@ -1,5 +1,10 @@
 # Network configuration
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   perHost = {
@@ -34,7 +39,10 @@ let
     };
     adeck = {
       hostName = "adeck";
-      resolvedDns = false;
+      resolvedDns = true;
+      # qBittorrent keeps --accept-dns=false so Mullvad does not eat host DNS.
+      # Split MagicDNS into resolved ourselves.
+      magicDnsSplit = true;
       postResumeDnsFlush = false;
       # Dock ethernet used to be a static 10.77 WOL link; it is the LAN drop now.
       nmProfiles = {
@@ -78,15 +86,26 @@ in
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
       allowedUDPPorts = [ 41641 ];
-      allowedUDPPortRanges = [{ from = 60000; to = 61000; }];
+      allowedUDPPortRanges = [
+        {
+          from = 60000;
+          to = 61000;
+        }
+      ];
     };
   };
 
   services = {
     resolved.enable = h.resolvedDns;
     resolved.settings = lib.mkIf h.resolvedDns {
-      Resolve.DNS = [ "1.1.1.1" "9.9.9.9" ];
-      Resolve.FallbackDNS = [ "1.1.1.1" "9.9.9.9" ];
+      Resolve.DNS = [
+        "1.1.1.1"
+        "9.9.9.9"
+      ];
+      Resolve.FallbackDNS = [
+        "1.1.1.1"
+        "9.9.9.9"
+      ];
     };
     tailscale = {
       enable = true;
@@ -99,6 +118,36 @@ in
     text = lib.concatMapStrings (f: ''
       rm -f /etc/NetworkManager/system-connections/${lib.escapeShellArg f}
     '') h.dropNmFiles;
+  };
+
+  systemd.services.adeck-magicdns = lib.mkIf (h.magicDnsSplit or false) {
+    description = "Split Tailscale MagicDNS into systemd-resolved";
+    after = [
+      "tailscaled.service"
+      "tailscaled-set.service"
+      "systemd-resolved.service"
+      "network-online.target"
+    ];
+    wants = [ "tailscaled.service" ];
+    requires = [ "systemd-resolved.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = "2s";
+    };
+    script = ''
+      set -eu
+      for _ in $(seq 1 30); do
+        ${pkgs.iproute2}/bin/ip link show tailscale0 >/dev/null 2>&1 && break
+        sleep 1
+      done
+      sleep 3
+      ${pkgs.systemd}/bin/resolvectl dns tailscale0 100.100.100.100
+      ${pkgs.systemd}/bin/resolvectl domain tailscale0 tail293e98.ts.net '~ts.net'
+      ${pkgs.systemd}/bin/resolvectl default-route tailscale0 no
+    '';
   };
 
   environment.etc."systemd/system-sleep/10-dns-resume" = lib.mkIf h.postResumeDnsFlush {
