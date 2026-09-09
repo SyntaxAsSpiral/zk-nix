@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 {
   # LM Studio config for zrrh.
@@ -11,4 +11,20 @@
     ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/config-presets ${config.home.homeDirectory}/.lmstudio/config-presets
     ln -sfT /etc/nixos/modules/home/daemonturgy/lmstudio/zrrh/http-server-config.json ${config.home.homeDirectory}/.lmstudio/.internal/http-server-config.json
   '';
+
+  # Full GUI install: CUDA detection and `lms` CLI attach to this process.
+  # niri spawn-at-startup is fire-and-forget and misses some boots.
+  systemd.user.services.lmstudio = {
+    Unit = {
+      Description = "LM Studio";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.lmstudio}/bin/lm-studio --hidden";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 }

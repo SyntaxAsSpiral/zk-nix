@@ -263,9 +263,8 @@ spawn-at-startup "noctalia-shell"
 // Start OpenRGB to tray.
 spawn-at-startup "openrgb" "--startminimized"
 
-// Start LM Studio minimized to system tray.
-// (Note: LM Studio relies on its internal settings for tray behavior, but --hidden may work for the Electron wrapper)
-spawn-at-startup "lm-studio" "--hidden"
+// LM Studio starts from the user systemd unit in
+// modules/home/daemonturgy/lmstudio/zrrh/default.nix.
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 //spawn-sh-at-startup "ls"
