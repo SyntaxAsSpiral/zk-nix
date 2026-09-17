@@ -12,7 +12,6 @@
     ../../modules/profiles/core.nix
     ../../modules/pulse-generator.nix
     ../../modules/qbittorrent.nix
-    ../../modules/sideriod-mcp.nix
   ];
 
   my.host = "adeck";
