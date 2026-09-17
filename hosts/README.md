@@ -2,6 +2,8 @@
 
 Host files are the table of contents for each machine.
 
+`tm20` is the Pi 3B+ print-host appliance: it does **not** import `profiles/core.nix` or Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
+
 Start here when asking:
 
 - What is enabled on this host?

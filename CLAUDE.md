@@ -4,15 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository purpose
 
-NixOS flake for the `zk` Tailscale mesh. Three hosts share modules from `modules/` and override per-host concerns under `hosts/<host>/`. Home-Manager is wired into each `nixosConfigurations.<host>` entry in `flake.nix` rather than running standalone.
+NixOS flake for the `zk` Tailscale mesh. Desktop hosts share modules from `modules/` and override per-host concerns under `hosts/<host>/`. Home-Manager is wired into `nixosConfigurations.{nxiz,zrrh,adeck}` in `flake.nix` rather than running standalone. `tm20` is an aarch64 appliance and skips Home-Manager.
 
 ## Hosts
 
 | Host  | Role                                 | Notable                                                       |
 |-------|--------------------------------------|---------------------------------------------------------------|
 | nxiz  | Primary workstation, Hyprland, NVIDIA RTX 3070 | `stateVersion = "25.11"`, uses `nix-cachyos-kernel` overlay  |
-| zrrh  | Daemon Forge / central builder, Niri compositor, NVIDIA RTX 4090 | `stateVersion = "25.11"`, uses `nix-cachyos-kernel` overlay |
+| zrrh  | Daemon Forge / central builder, Niri compositor, NVIDIA RTX 4090 | `stateVersion = "25.11"`, cachyos; binfmt aarch64 (you deploy zrrh once) |
 | adeck | Agentic server on Steam Deck hardware, Niri compositor | Jovian module, `stateVersion = "24.11"`, `canTouchEfiVariables = false` |
+| tm20  | Pi 3B+ print-host appliance (replaces quita USB cottage) | `aarch64-linux`, no HM, `sd-image-aarch64`, `stateVersion = "25.11"` |
 
 ## Build / deploy
 
@@ -21,7 +22,10 @@ Primary entrypoint is `zcli` (defined in `modules/home/cli/zcli.nix`). It wraps 
 ```bash
 zcli build  <host|all> [--dry]   # eval local, build on zrrh when remote
 zcli deploy <host|all> [--dry]   # build + switch; --dry = dry-activate
+zcli image  tm20 [--dry]         # aarch64 sdImage, built on zrrh
 ```
+
+`zcli deploy all` is nxiz/adeck/zrrh only — tm20 is not in that set. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
 
 Behavior:
 - `zcli` runs `git -C /mnt/repository/nix-os add -A` before every invocation so new files are included.
@@ -45,7 +49,7 @@ nix develop             # shell with nixd, nil, nixfmt, statix, deadnix
 
 ### Flake outputs (`flake.nix`)
 
-- `nixosConfigurations.{nxiz,zrrh,adeck}` — built by a `mkHost` helper in `flake.nix` that wires up `./hosts/<host>/configuration.nix`, overlays, `agenix.nixosModules.default`, and `home-manager.nixosModules.home-manager` with `home-manager.users.zk` importing `./hosts/<host>/home.nix` plus `nix-colors` + `agenix` HM modules. Host-specific flake inputs (e.g. jovian for adeck) go in the `extraModules` list argument.
+- `nixosConfigurations.{nxiz,zrrh,adeck,tm20}` — built by `mkHost` in `flake.nix`. Desktop hosts get overlays, `agenix.nixosModules.default`, and Home-Manager (`./hosts/<host>/home.nix` plus `nix-colors` + `agenix` HM modules). `tm20` is `{ hostPlatform = "aarch64-linux"; homeManager = false; }`. Host-specific flake inputs (e.g. jovian for adeck) go in `extraModules`.
 - `formatter.x86_64-linux = nixfmt`
 - `devShells.x86_64-linux.default` — the lint/dev shell above
 - `checks.x86_64-linux.{statix,deadnix}` — tree lints

@@ -67,6 +67,43 @@ let
       # Apply to the existing DHCP profile without replacing its connection.
       nmWake = true;
     };
+    tm20 = {
+      hostName = "tm20";
+      resolvedDns = true;
+      postResumeDnsFlush = false;
+      nmEnvironmentFiles = [ config.age.secrets.wifi-password.path ];
+      nmProfiles = {
+        gbz = {
+          connection = {
+            id = "GBZ";
+            type = "wifi";
+            autoconnect = true;
+            autoconnect-priority = 50;
+          };
+          wifi = {
+            mode = "infrastructure";
+            ssid = "GBZ";
+          };
+          wifi-security = {
+            auth-alg = "open";
+            key-mgmt = "wpa-psk";
+            psk = "$GBZ_PSK";
+          };
+          ipv4.method = "auto";
+          ipv6.method = "auto";
+        };
+        lan = {
+          connection = {
+            id = "lan";
+            type = "ethernet";
+            autoconnect = true;
+            autoconnect-priority = 100;
+          };
+          ipv4.method = "auto";
+          ipv6.method = "auto";
+        };
+      };
+    };
   };
   h = perHost.${config.my.host};
 in

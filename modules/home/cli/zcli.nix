@@ -8,7 +8,7 @@
           #!${pkgs.bash}/bin/bash
           set -euo pipefail
 
-          VERSION="0.3.0"
+          VERSION="0.4.0"
           HOSTNAME="$(${pkgs.nettools}/bin/hostname)"
           CONTROL_HOST="zrrh"
           FLAKE_PATH="${osConfig.my.flakePath}"
@@ -20,6 +20,7 @@
       Usage:
         zcli build <host|all> [host ...] [--dry]
         zcli deploy <host|all> [host ...] [--dry]
+        zcli image tm20 [--dry]
 
       Behavior:
         - on nxiz/adeck: evaluation happens locally, builds happen on zrrh
@@ -33,6 +34,7 @@
         zcli deploy nxiz
         zcli deploy nxiz --dry
         zcli deploy all
+        zcli image tm20 --dry
       EOF
           }
 
@@ -55,8 +57,8 @@
 
           validate_host() {
             case "$1" in
-              nxiz|zrrh|adeck) ;;
-              *) fail "unknown host: $1 (valid: nxiz zrrh adeck all)" ;;
+              nxiz|zrrh|adeck|tm20) ;;
+              *) fail "unknown host: $1 (valid: nxiz zrrh adeck tm20 all)" ;;
             esac
           }
 
@@ -238,6 +240,71 @@
             "''${cmd[@]}"
           }
 
+          parse_image_args() {
+            IMAGE_DRY=false
+            IMAGE_HOSTS=()
+
+            while [[ $# -gt 0 ]]; do
+              case "$1" in
+                --dry)
+                  IMAGE_DRY=true
+                  shift ;;
+                -h|--help)
+                  usage
+                  exit 0 ;;
+                -*)
+                  fail "unknown flag for image: $1" ;;
+                *)
+                  IMAGE_HOSTS+=("$1")
+                  shift ;;
+              esac
+            done
+
+            [[ ''${#IMAGE_HOSTS[@]} -gt 0 ]] || fail "image requires at least one host"
+          }
+
+          validate_image_host() {
+            case "$1" in
+              tm20) ;;
+              *) fail "sd image is only defined for tm20 (got: $1)" ;;
+            esac
+          }
+
+          run_image() {
+            local target="$1"
+            local -a cmd
+
+            validate_image_host "$target"
+
+            cmd=(
+              ${pkgs.nix}/bin/nix
+              build
+              "$FLAKE_PATH#nixosConfigurations.$target.config.system.build.sdImage"
+              --out-link "$FLAKE_PATH/result-sd-$target"
+            )
+
+            if [[ "$IMAGE_DRY" == "true" ]]; then
+              cmd+=(--dry-run)
+            fi
+
+            if [[ "$HOSTNAME" != "$CONTROL_HOST" ]]; then
+              cmd+=(
+                --builders "ssh://zk@$CONTROL_HOST aarch64-linux,x86_64-linux - 8 1 kvm,nixos-test,benchmark,big-parallel"
+                --max-jobs 0
+              )
+            fi
+
+            echo "==> sd-image $target"
+            if [[ "$HOSTNAME" == "$CONTROL_HOST" ]]; then
+              echo "    eval/build host: local ($CONTROL_HOST)"
+            else
+              echo "    eval host: $HOSTNAME"
+              echo "    build host: $CONTROL_HOST (aarch64 via binfmt)"
+            fi
+            echo "    flake: $FLAKE_PATH#nixosConfigurations.$target.config.system.build.sdImage"
+            "''${cmd[@]}"
+          }
+
           require_cmd sudo
           require_cmd ${pkgs.nixos-rebuild}/bin/nixos-rebuild
           require_cmd ${pkgs.git}/bin/git
@@ -269,6 +336,16 @@
               for host in "''${hosts[@]}"; do
                 ensure_target_reachable_if_remote "$host"
                 run_deploy "$host"
+              done
+              ;;
+            image)
+              shift
+              parse_image_args "$@"
+              mapfile -t hosts < <(expand_hosts build "''${IMAGE_HOSTS[@]}")
+              ensure_builder_reachable_if_needed
+              stage_flake
+              for host in "''${hosts[@]}"; do
+                run_image "$host"
               done
               ;;
             help|--help|-h)

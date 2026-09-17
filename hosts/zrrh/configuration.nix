@@ -26,6 +26,10 @@ in
 
   my.host = "zrrh";
 
+  # qemu-user so this builder can realize aarch64 closures (tm20 / Pi 3B+).
+  # One-time: zcli deploy zrrh. After that, image/build tm20 does not rebuild the kernel.
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   programs = {
     # Compositor
     niri.enable = true;

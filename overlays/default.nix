@@ -1,4 +1,7 @@
-{ inputs, system ? "x86_64-linux" }:
+{
+  inputs,
+  system ? "x86_64-linux",
+}:
 
 let
   nixpkgsFixes = import ./nixpkgs-fixes.nix;
@@ -12,7 +15,12 @@ let
   };
 in
 {
-  inherit fromInputs nixpkgsFixes flakePackages pins;
+  inherit
+    fromInputs
+    nixpkgsFixes
+    flakePackages
+    pins
+    ;
 
   # Host overlay map. Edit this first when a package override/pin should apply
   # to one mesh host but not another.
@@ -36,5 +44,9 @@ in
       pins.tailscale
     ]
     ++ nixpkgsFixes;
+
+    tm20 = [
+      pins.tailscale
+    ];
   };
 }

@@ -7,6 +7,7 @@
       "nxiz"
       "adeck"
       "zrrh"
+      "tm20"
     ];
     description = "Host identifier — selects per-host blocks in shared modules";
   };
@@ -22,6 +23,7 @@
         nxiz = "/mnt/repository/nix-os";
         adeck = "/etc/nixos";
         zrrh = "/etc/nixos";
+        tm20 = "/etc/nixos";
       }
       .${config.my.host};
 

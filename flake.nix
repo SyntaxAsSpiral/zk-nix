@@ -101,16 +101,23 @@
       # One host = one line below. Shared wiring (platform, overlays, agenix,
       # Home-Manager) lives here; everything host-specific lives in hosts/<name>/.
       mkHost =
-        name: extraModules:
+        name:
+        {
+          extraModules ? [ ],
+          hostPlatform ? system,
+          homeManager ? true,
+        }:
         nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           modules = [
             {
-              nixpkgs.hostPlatform = system;
+              nixpkgs.hostPlatform = hostPlatform;
               nixpkgs.overlays = meshOverlays.hosts.${name};
             }
             ./hosts/${name}/configuration.nix
             agenix.nixosModules.default
+          ]
+          ++ nixpkgs.lib.optionals homeManager [
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -132,9 +139,13 @@
     in
     {
       nixosConfigurations = {
-        nxiz = mkHost "nxiz" [ ];
-        zrrh = mkHost "zrrh" [ ];
-        adeck = mkHost "adeck" [ jovian.nixosModules.default ];
+        nxiz = mkHost "nxiz" { };
+        zrrh = mkHost "zrrh" { };
+        adeck = mkHost "adeck" { extraModules = [ jovian.nixosModules.default ]; };
+        tm20 = mkHost "tm20" {
+          hostPlatform = "aarch64-linux";
+          homeManager = false;
+        };
       };
 
       # 6. Formatter (nix fmt)
