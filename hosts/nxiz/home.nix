@@ -76,7 +76,7 @@ in
         runtimeInputs = [ nodejs ];
         text = ''
           set -euo pipefail
-          exec npx --yes @mariozechner/pi-coding-agent "$@"
+          exec npx --yes @earendil-works/pi-coding-agent "$@"
         '';
       })
     ];
