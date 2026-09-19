@@ -37,14 +37,17 @@
         "zk"
       ];
       auto-optimise-store = true;
-      substituters = [
-        "https://cache.nixos.org"
-        "https://cuda-maintainers.cachix.org"
-        "https://cache.numtide.com"
+      builders-use-substitutes = true;
+      # CUDA cache left Cachix (cuda-maintainers now 401s). numtide advertises
+      # priority 30, which would beat cache.nixos.org — pin it last.
+      extra-substituters = [
+        "https://cache.nixos-cuda.org"
+        "https://jovian-nixos.cachix.org"
+        "https://cache.numtide.com?priority=100"
       ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
+      extra-trusted-public-keys = [
+        "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
+        "jovian-nixos.cachix.org-1:mAWLjAxLNgObL1rkdS5zOzYREBSLFLnw4JYWG9l0tEU="
         "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       ];
     };
