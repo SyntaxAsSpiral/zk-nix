@@ -176,6 +176,7 @@
               sudo
               ${pkgs.nixos-rebuild}/bin/nixos-rebuild "$mode"
               --flake "$FLAKE_PATH#$target"
+              --use-substitutes
             )
 
             if [[ "$HOSTNAME" != "$CONTROL_HOST" ]]; then
@@ -209,6 +210,7 @@
               sudo
               ${pkgs.nixos-rebuild}/bin/nixos-rebuild "$mode"
               --flake "$FLAKE_PATH#$target"
+              --use-substitutes
             )
 
             if [[ "$HOSTNAME" != "$CONTROL_HOST" ]]; then
@@ -217,6 +219,13 @@
 
             if [[ "$target" != "$HOSTNAME" ]]; then
               cmd+=(--target-host "zk@$target" --sudo)
+            fi
+
+            # nixos-rebuild-ng re-execs the target's nixos-rebuild. For aarch64
+            # tm20 that is a qemu binary on x86_64 and nix sandbox then dies:
+            # "this system does not support the kernel namespaces".
+            if [[ "$target" == "tm20" ]]; then
+              cmd+=(--no-reexec)
             fi
 
             if [[ "$DEPLOY_DRY" == "true" ]]; then

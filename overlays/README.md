@@ -13,3 +13,4 @@ Current host policy:
 - `adeck`: LLM agent overlay, Tailscale pin, flake-input package patches.
 - `nxiz`: CachyOS kernel overlay, Tailscale pin, nixpkgs fixes, flake-input package patches.
 - `zrrh`: CachyOS kernel overlay, LLM agent overlay, Tailscale pin, nixpkgs fixes.
+- `tm20`: Tailscale pin, tm20-cli from github:bjornpagen/tm20.

@@ -1,8 +1,9 @@
 # NixOS configuration for tm20 — Pi 3B+ print-host appliance.
 # Minimal: firmware, NM, Tailscale, SSH, Epson USB. No desktop, no HM, no core profile.
-# tm20/tm20-set and print-receiver are a later layer.
 {
   pkgs,
+  lib,
+  config,
   modulesPath,
   ...
 }:
@@ -13,12 +14,33 @@
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/ssh-identity.nix
+    ./print-receiver.nix
   ];
 
   my.host = "tm20";
 
   sdImage.compressImage = false;
+  # Bake tm20 host keys so first boot can decrypt wifi-password.age (GBZ).
+  # Replaces the aarch64 default; keep the extlinux populate.
+  sdImage.populateRootCommands = lib.mkForce ''
+    mkdir -p ./files/boot
+    ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
+    mkdir -p ./files/etc/ssh
+    install -m 0600 ${../../secrets/hosts/tm20/ssh_host_ed25519_key} ./files/etc/ssh/ssh_host_ed25519_key
+    install -m 0644 ${../../secrets/hosts/tm20/ssh_host_ed25519_key.pub} ./files/etc/ssh/ssh_host_ed25519_key.pub
+    install -m 0600 ${../../secrets/hosts/tm20/ssh_host_rsa_key} ./files/etc/ssh/ssh_host_rsa_key
+    install -m 0644 ${../../secrets/hosts/tm20/ssh_host_rsa_key.pub} ./files/etc/ssh/ssh_host_rsa_key.pub
+  '';
   boot.zfs.forceImportRoot = false;
+  # Pi 3B+ onboard BT shares the WiFi chip. We do not run BlueZ; the
+  # kernel still probes hci_uart and times out on the console.
+  boot.blacklistedKernelModules = [
+    "bluetooth"
+    "btbcm"
+    "btqca"
+    "btsdio"
+    "hci_uart"
+  ];
 
   hardware.enableRedistributableFirmware = true;
 
@@ -36,9 +58,13 @@
       "dialout"
     ];
     linger = true;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfoVdWpimtBi0htouhMDsD1NXuKbIAusgzB1dxYDW4z"
+    ];
   };
   security.sudo.wheelNeedsPassword = false;
 
+  services.getty.autologinUser = "zk";
   services.openssh.enable = true;
   programs.mosh.enable = true;
 
@@ -52,6 +78,13 @@
     group = "users";
     mode = "0400";
     path = "/run/secrets/wifi-password";
+  };
+  age.secrets.print-token = {
+    file = ../../secrets/print-token.age;
+    owner = "zk";
+    group = "plugdev";
+    mode = "0400";
+    path = "/run/secrets/print-token";
   };
 
   # system.nix includes this file; empty is enough for nix-daemon to start.
@@ -69,6 +102,7 @@
     usbutils
     libusb1
     liberation_ttf
+    tm20-cli
   ];
 
   services.udev.extraRules = ''

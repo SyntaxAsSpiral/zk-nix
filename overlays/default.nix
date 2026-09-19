@@ -47,6 +47,7 @@ in
 
     tm20 = [
       pins.tailscale
+      (import ./tm20-cli.nix)
     ];
   };
 }
