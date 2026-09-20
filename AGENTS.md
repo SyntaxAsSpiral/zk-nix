@@ -103,7 +103,5 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 `scripts/` contains mesh utility scripts: `check-nix-updates.sh` (nixpkgs update checker), `git-review.sh` (pre-deploy diff helper), `qbt-sync-zrrh.sh` (qBittorrent sync between adeck and zrrh), `watch-pkgs.conf` (watchexec config). These are invoked directly or via host services/aliases — not through a compositor panel.
 
 ## Conventions
-
-- `.codex/` is reserved for agent state and is not tracked as a module root.
 - `docs/` is edit-on-request only (per global covenant); it does not currently exist in this repo, but do not create it without an explicit ask.
 - The flake directory is used directly by `zcli`; there is no "push to remote, then build" step — local changes go live on the next `zcli deploy`. Keep that in mind when committing: an unfinished edit will be deployed if someone runs `zcli deploy` while it is staged.
