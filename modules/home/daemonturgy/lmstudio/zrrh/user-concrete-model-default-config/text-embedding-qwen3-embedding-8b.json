@@ -1,0 +1,26 @@
+{
+  "preset": "@local:qwen3-embed",
+  "operation": {
+    "fields": []
+  },
+  "load": {
+    "fields": [
+      {
+        "key": "llm.load.contextLength",
+        "value": 8192
+      },
+      {
+        "key": "llm.load.llama.evalBatchSize",
+        "value": 512
+      },
+      {
+        "key": "llm.load.llama.cpuThreadPoolSize",
+        "value": 16
+      },
+      {
+        "key": "llm.load.offloadKVCacheToGpu",
+        "value": true
+      }
+    ]
+  }
+}
