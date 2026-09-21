@@ -14,6 +14,7 @@
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/ssh-identity.nix
+    ../../modules/nh.nix
     ./print-receiver.nix
   ];
 
