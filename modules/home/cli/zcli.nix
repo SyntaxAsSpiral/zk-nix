@@ -193,6 +193,7 @@
             fi
             echo "    flake: $FLAKE_PATH#$target"
             "''${cmd[@]}"
+
           }
 
           run_deploy() {
@@ -247,6 +248,16 @@
             fi
             echo "    flake: $FLAKE_PATH#$target"
             "''${cmd[@]}"
+
+            if [[ "$DEPLOY_DRY" != "true" && "$target" != "$HOSTNAME" ]]; then
+              local system_path
+              system_path="$(${pkgs.nix}/bin/nix eval --raw "$FLAKE_PATH#nixosConfigurations.$target.config.system.build.toplevel.outPath")"
+              if [[ "$HOSTNAME" == "$CONTROL_HOST" ]]; then
+                sudo ${pkgs.nix}/bin/nix-store --realise "$system_path" --add-root "/nix/var/nix/gcroots/zcli-$target"
+              else
+                ${pkgs.openssh}/bin/ssh "zk@$CONTROL_HOST" sudo nix-store --realise "$system_path" --add-root "/nix/var/nix/gcroots/zcli-$target"
+              fi
+            fi
           }
 
           parse_image_args() {

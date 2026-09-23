@@ -10,6 +10,9 @@ let
 
   fromInputs = {
     cachyosKernel = inputs.nix-cachyos-kernel.overlays.pinned;
+    hyprland = _final: _prev: {
+      hyprland = inputs.nixpkgs-hyprland.legacyPackages.${system}.hyprland;
+    };
     # Upstream dropped overlays.default; shared-nixpkgs is pkgs.llm-agents.*.
     llmAgents = inputs.llm-agents.overlays.shared-nixpkgs;
   };
@@ -33,6 +36,7 @@ in
 
     nxiz = [
       fromInputs.cachyosKernel
+      fromInputs.hyprland
       pins.tailscale
     ]
     ++ nixpkgsFixes
@@ -47,7 +51,7 @@ in
 
     tm20 = [
       pins.tailscale
-      (import ./tm20-cli.nix)
+      (import ./tm20-cli.nix { inherit inputs; })
     ];
   };
 }

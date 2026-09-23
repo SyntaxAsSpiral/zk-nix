@@ -1,13 +1,20 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 let
   pythonEnv = pkgs.python3.withPackages (ps: with ps; [ mcp ]);
-in {
+in
+{
   systemd.services.sideriod-mcp = {
     description = "Sideriod MCP Server";
-    after = [ "network.target" "tailscaled.service" ];
+    after = [
+      "network.target"
+      "tailscaled.service"
+    ];
     wantedBy = [ "multi-user.target" ];
 
-    path = [ pkgs.nix pkgs.git ];
+    path = [
+      pkgs.nix
+      pkgs.git
+    ];
 
     environment = {
       SIDERIOD_MCP_TRANSPORT = "http";

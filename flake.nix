@@ -4,6 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # nxiz keeps Hyprland 0.56.2 while its configuration is still hyprlang.
+    nixpkgs-hyprland.url = "github:NixOS/nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
+
     nixpkgs-sonic-pi.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
 
     # LLM inference stack (llama-cpp, vllm) with CUDA — deliberately pinned
@@ -45,6 +48,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    tm20-source = {
+      url = "github:bjornpagen/tm20";
+      flake = false;
+    };
+
     pia = {
       url = "github:mrehanabbasi/pia.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -69,14 +77,14 @@
       url = "github:NousResearch/hermes-agent";
     };
 
-    herm-tui-npm = {
-      url = "file+https://registry.npmjs.org/herm-tui/latest";
+    herm-source = {
+      url = "github:liftaris/herm/main";
       flake = false;
     };
 
-    opentui-core-linux-x64-npm = {
-      url = "file+https://registry.npmjs.org/@opentui%2fcore-linux-x64";
-      flake = false;
+    bun2nix = {
+      url = "github:nix-community/bun2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     llm-agents = {

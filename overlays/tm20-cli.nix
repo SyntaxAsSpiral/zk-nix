@@ -1,18 +1,16 @@
 # tm20-cli from https://github.com/bjornpagen/tm20 — tm20 + tm20-set.
 # Only on the tm20 host overlay. Do not install on other mesh boxes.
+{ inputs }:
 _final: prev: {
-  tm20-cli = prev.rustPlatform.buildRustPackage rec {
+  tm20-cli = prev.rustPlatform.buildRustPackage {
     pname = "tm20-cli";
-    version = "1.0.0";
+    version =
+      (builtins.fromTOML (builtins.readFile "${inputs.tm20-source}/Cargo.toml"))
+      .workspace.package.version;
 
-    src = prev.fetchFromGitHub {
-      owner = "bjornpagen";
-      repo = "tm20";
-      rev = "2fa493f0b1f3985c3bd552bfd147b452b9ef3166";
-      hash = "sha256-Qs3UiBpjoOulQ1lrsZNj/tZKvaOyGBl08lZ6kBYZjx8=";
-    };
+    src = inputs.tm20-source;
 
-    cargoLock.lockFile = "${src}/Cargo.lock";
+    cargoLock.lockFile = "${inputs.tm20-source}/Cargo.lock";
 
     cargoBuildFlags = [
       "-p"
