@@ -14,7 +14,7 @@ _:
 
     shellAliases = {
       # Hermes TUI/CLI on adeck
-      bitburner = "ssh -t zk@adeck 'cd bitburner/ && exec $SHELL -l'";
+      bitburner = "ssh -t zk@adeck 'cd /mnt/echo/bitburner/ && exec $SHELL -l'";
       herm = "ssh -t zk@adeck herm";
       hermes = "ssh -t zk@adeck hermes";
     };

@@ -288,7 +288,6 @@ skills:
   inline_shell_timeout: 10
   guard_agent_created: false
   creation_nudge_interval: 15
-honcho: {}
 timezone: ''
 discord:
   require_mention: true

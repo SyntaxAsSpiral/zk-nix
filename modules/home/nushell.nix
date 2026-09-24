@@ -34,7 +34,7 @@ let
         alias deck-resume = ssh zk@adeck 'uid=$(id -u); sock=$(find /run/user/$uid -maxdepth 1 -type s -name "niri.*.sock" | head -n1); [ -n "$sock" ] || { echo "No Niri socket found"; exit 1; }; NIRI_SOCKET="$sock" niri msg action power-on-monitors'
 
         # Hermes TUI/CLI on adeck
-        alias bitburner = ssh -t zk@adeck 'cd bitburner/ && exec $SHELL -l'
+        alias bitburner = ssh -t zk@adeck 'cd /mnt/echo/bitburner/ && exec $SHELL -l'
         alias herm = ssh -t zk@adeck herm
 
         # Reboot all mesh workstations: remotes first, local last
