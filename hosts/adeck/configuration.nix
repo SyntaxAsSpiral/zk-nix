@@ -10,6 +10,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/profiles/core.nix
+    ../../modules/llama-tts.nix
     ../../modules/pulse-generator.nix
     ../../modules/qbittorrent.nix
   ];
@@ -49,7 +50,6 @@
     pavucontrol
     playerctl
     swayidle
-    (pkgs.callPackage ../../packages/llama-tts-bin.nix { })
     inputs.jolt.packages.${pkgs.stdenv.hostPlatform.system}.default
     llm-agents.pi
     llm-agents.codex
