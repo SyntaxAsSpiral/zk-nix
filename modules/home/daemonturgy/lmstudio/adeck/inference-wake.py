@@ -151,4 +151,7 @@ def make_app(wake=None, upstream='http://127.0.0.1:1235'):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    web.run_app(make_app(), host='0.0.0.0', port=1234, access_log=None)
+    # A caller timeout must cancel this handler. Otherwise the upstream
+    # prediction keeps its LM Studio slot and the next request opens another.
+    web.run_app(make_app(), host='0.0.0.0', port=1234, access_log=None,
+                handler_cancellation=True)

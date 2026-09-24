@@ -56,6 +56,34 @@ class Tests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(await result.read(), b'data: first\n\ndata: [DONE]\n\n')
                 self.assertEqual(received[-1], b'{"model":"test"}')
 
+    async def test_client_disconnect_aborts_upstream(self):
+        started = asyncio.Event()
+        aborted = asyncio.Event()
+
+        class Wake:
+            async def ready(self):
+                pass
+
+        async def upstream(request):
+            started.set()
+            try:
+                await asyncio.Event().wait()
+            except asyncio.CancelledError:
+                aborted.set()
+                raise
+
+        app = web.Application()
+        app.router.add_route('*', '/{path:.*}', upstream)
+        async with TestServer(app) as server:
+            proxy = TestServer(relay.make_app(Wake(), str(server.make_url('')).rstrip('/')))
+            async with TestClient(proxy) as client:
+                pending = asyncio.create_task(client.post('/v1/chat/completions', data=b'{}'))
+                await asyncio.wait_for(started.wait(), 2)
+                pending.cancel()
+                with self.assertRaises(asyncio.CancelledError):
+                    await pending
+                await asyncio.wait_for(aborted.wait(), 2)
+
     async def test_wake_timeout_does_not_forward(self):
         class Wake:
             async def ready(self):
