@@ -2,8 +2,6 @@
 # Minimal: firmware, NM, Tailscale, SSH, Epson USB. No desktop, no HM, no core profile.
 {
   pkgs,
-  lib,
-  config,
   modulesPath,
   ...
 }:
@@ -14,6 +12,7 @@
     ../../modules/system.nix
     ../../modules/networking.nix
     ../../modules/ssh-identity.nix
+    ../../modules/secrets.nix
     ../../modules/nh.nix
     ./print-receiver.nix
   ];
@@ -21,17 +20,8 @@
   my.host = "tm20";
 
   sdImage.compressImage = false;
-  # Bake tm20 host keys so first boot can decrypt wifi-password.age (GBZ).
-  # Replaces the aarch64 default; keep the extlinux populate.
-  sdImage.populateRootCommands = lib.mkForce ''
-    mkdir -p ./files/boot
-    ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
-    mkdir -p ./files/etc/ssh
-    install -m 0600 ${../../secrets/hosts/tm20/ssh_host_ed25519_key} ./files/etc/ssh/ssh_host_ed25519_key
-    install -m 0644 ${../../secrets/hosts/tm20/ssh_host_ed25519_key.pub} ./files/etc/ssh/ssh_host_ed25519_key.pub
-    install -m 0600 ${../../secrets/hosts/tm20/ssh_host_rsa_key} ./files/etc/ssh/ssh_host_rsa_key
-    install -m 0644 ${../../secrets/hosts/tm20/ssh_host_rsa_key.pub} ./files/etc/ssh/ssh_host_rsa_key.pub
-  '';
+  # After flashing, copy secrets/ to /etc/nixos/secrets on the mounted root
+  # partition before first boot. Activation installs host keys and credentials.
   boot.zfs.forceImportRoot = false;
   # Pi 3B+ onboard BT shares the WiFi chip. We do not run BlueZ; the
   # kernel still probes hci_uart and times out on the console.
@@ -68,25 +58,6 @@
   services.getty.autologinUser = "zk";
   services.openssh.enable = true;
   programs.mosh.enable = true;
-
-  age.identityPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
-    "/home/zk/.ssh/id_ed25519"
-  ];
-  age.secrets.wifi-password = {
-    file = ../../secrets/wifi-password.age;
-    owner = "zk";
-    group = "users";
-    mode = "0400";
-    path = "/run/secrets/wifi-password";
-  };
-  age.secrets.print-token = {
-    file = ../../secrets/print-token.age;
-    owner = "zk";
-    group = "plugdev";
-    mode = "0400";
-    path = "/run/secrets/print-token";
-  };
 
   # system.nix includes this file; empty is enough for nix-daemon to start.
   environment.etc."nixos/secrets/nix-access-tokens.conf" = {

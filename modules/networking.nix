@@ -12,7 +12,7 @@ let
       hostName = "nxiz";
       resolvedDns = true;
       postResumeDnsFlush = true;
-      nmEnvironmentFiles = [ config.age.secrets.wifi-password.path ];
+      nmEnvironmentFiles = [ "/run/secrets/wifi-password" ];
       nmProfiles = {
         gbz = {
           connection = {
@@ -71,7 +71,7 @@ let
       hostName = "tm20";
       resolvedDns = true;
       postResumeDnsFlush = false;
-      nmEnvironmentFiles = [ config.age.secrets.wifi-password.path ];
+      nmEnvironmentFiles = [ "/run/secrets/wifi-password" ];
       nmProfiles = {
         gbz = {
           connection = {

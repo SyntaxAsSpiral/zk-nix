@@ -6,6 +6,7 @@
     ../boot.nix
     ../nh.nix
     ../user.nix
+    ../secrets.nix
     ../services.nix
     ../storage.nix
     ../packages.nix

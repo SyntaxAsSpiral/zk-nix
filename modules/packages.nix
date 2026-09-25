@@ -1,5 +1,5 @@
 # System packages not managed in Home Manager
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -82,8 +82,6 @@
     # Nix tooling
     manix
     nh
-    # agenix added via flake specialArgs inputs
-    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # FHS compat wrapper for non-Nix binaries
     steam-run

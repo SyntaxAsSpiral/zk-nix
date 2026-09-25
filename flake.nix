@@ -68,11 +68,6 @@
       # Do NOT follow nixpkgs — patches are pinned to flake's own nixpkgs
     };
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     hermes-agent = {
       url = "github:NousResearch/hermes-agent";
     };
@@ -99,14 +94,13 @@
       home-manager,
       nix-colors,
       jovian,
-      agenix,
       ...
     }:
     let
       system = "x86_64-linux";
       meshOverlays = import ./overlays { inherit inputs; };
 
-      # One host = one line below. Shared wiring (platform, overlays, agenix,
+      # One host = one line below. Shared wiring (platform, overlays,
       # Home-Manager) lives here; everything host-specific lives in hosts/<name>/.
       mkHost =
         name:
@@ -123,7 +117,6 @@
               nixpkgs.overlays = meshOverlays.hosts.${name};
             }
             ./hosts/${name}/configuration.nix
-            agenix.nixosModules.default
           ]
           ++ nixpkgs.lib.optionals homeManager [
             home-manager.nixosModules.home-manager
@@ -136,7 +129,6 @@
                 extraSpecialArgs = { inherit inputs; };
                 users.zk.imports = [
                   nix-colors.homeManagerModules.default
-                  agenix.homeManagerModules.default
                   ./hosts/${name}/home.nix
                 ];
               };

@@ -1,7 +1,6 @@
 # Mesh print receiver — POST http://tm20:8766/print
 # USB stays on this host. Clients: Holliday Table, holliday-estate, sideriod.
 {
-  config,
   pkgs,
   ...
 }:
@@ -36,7 +35,7 @@ in
         "PRINT_SPOOL=/var/lib/print-receiver/spool"
         "PRINT_PORT=8766"
       ];
-      EnvironmentFile = config.age.secrets.print-token.path;
+      EnvironmentFile = "/run/secrets/print-token";
       ExecStartPre = pkgs.writeShellScript "wait-tailscale-ip" ''
         set -euo pipefail
         for _ in $(seq 1 30); do

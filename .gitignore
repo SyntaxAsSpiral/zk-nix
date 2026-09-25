@@ -9,3 +9,6 @@ tmp/
 .codex/
 .codex
 result-sd-*
+
+# Local credentials are synced separately over SSH.
+/secrets/

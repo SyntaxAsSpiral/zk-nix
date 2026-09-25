@@ -4,6 +4,60 @@ Host files are the table of contents for each machine.
 
 `tm20` is the Pi 3B+ print-host appliance: it does **not** import `profiles/core.nix` or Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
 
+## Credentials and Reinstalls
+
+The editing copy is `/mnt/echo/nix-os` on adeck; hosts build from `/etc/nixos`.
+`secrets/` is ignored by Git and synced manually over SSH. Keep its complete
+contents backed up separately; a Git clone alone cannot restore credentials.
+Existing Git history is unchanged.
+
+For an existing host, the order is **pull config, sync secrets, then deploy**.
+The first pull that removes secrets from Git tracking can remove the old tracked
+files from the checkout, so sync after pulling. No reflash is needed for tm20.
+
+Example from adeck to nxiz (use Tailscale IPs from adeck):
+
+```bash
+rsync -a --chown=root:root --chmod=D700,F600 \
+  --rsync-path='sudo -n rsync' -e 'ssh -F /dev/null' \
+  /mnt/echo/nix-os/secrets/ zk@100.115.135.104:/etc/nixos/secrets/
+```
+
+Other targets: zrrh `100.77.90.79`, tm20 `100.123.184.5`.
+For adeck's own build copy:
+
+```bash
+sudo rsync -a --chown=root:root --chmod=D700,F600 \
+  /mnt/echo/nix-os/secrets/ /etc/nixos/secrets/
+```
+
+Do not use `--delete`: unrelated host-local files need not be removed.
+
+| Files | Required on |
+|-------|-------------|
+| `wifi-password` | All hosts |
+| `github-token`, `github-recovery-codes` | nxiz, adeck, zrrh |
+| `print-token` | tm20 |
+| `hosts/<host>/ssh_host_*` | Matching host, to preserve its SSH identity |
+| `nix-access-tokens.conf` | Hosts fetching private Nix inputs; tm20 provisions an empty file |
+
+The decrypted files retain their original contents, including environment-file
+syntax where applicable. `modules/secrets.nix` copies required credentials into
+`/run/secrets` during activation with mode `0400`, owned by `zk`. The print token
+uses group `plugdev`; other credentials use `users`. Missing or empty source
+files fail that activation step before it replaces any runtime credentials.
+
+For a fresh desktop/server install, clone the configuration into the target
+root's `/etc/nixos` and copy `secrets/` there **before running `nixos-install`**.
+For a target mounted at `/mnt`, that destination is `/mnt/etc/nixos/secrets`.
+
+For a future **tm20 reinstall**, build and flash the SD image, mount its root
+partition, and copy `secrets/` into that partition's `/etc/nixos/secrets` before
+first boot. The image no longer embeds credentials or host keys. First-boot
+activation installs its saved SSH identity and prepares Wi-Fi and print
+credentials. Without that copy, Wi-Fi provisioning and the print receiver lack
+their credentials. This step does not apply to the already-running tm20.
+
 Start here when asking:
 
 - What is enabled on this host?

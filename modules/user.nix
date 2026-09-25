@@ -45,35 +45,4 @@
   };
 
   services.getty.autologinUser = "zk";
-
-  # Secrets management via agenix
-  age.identityPaths = [
-    "/etc/ssh/ssh_host_ed25519_key"
-    "/home/zk/.ssh/id_ed25519"
-  ];
-
-  # Symlink decrypted secrets to /run/secrets/
-  age.secrets = {
-    wifi-password = {
-      file = ../secrets/wifi-password.age;
-      owner = "zk";
-      group = "users";
-      mode = "0400";
-      path = "/run/secrets/wifi-password";
-    };
-    github-token = {
-      file = ../secrets/github-token.age;
-      owner = "zk";
-      group = "users";
-      mode = "0400";
-      path = "/run/secrets/github-token";
-    };
-    github-recovery-codes = {
-      file = ../secrets/github-recovery-codes.age;
-      owner = "zk";
-      group = "users";
-      mode = "0400";
-      path = "/run/secrets/github-recovery-codes";
-    };
-  };
 }

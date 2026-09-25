@@ -49,7 +49,7 @@ nix develop             # shell with nixd, nil, nixfmt, statix, deadnix
 
 ### Flake outputs (`flake.nix`)
 
-- `nixosConfigurations.{nxiz,zrrh,adeck,tm20}` — built by `mkHost` in `flake.nix`. Desktop hosts get overlays, `agenix.nixosModules.default`, and Home-Manager (`./hosts/<host>/home.nix` plus `nix-colors` + `agenix` HM modules). `tm20` is `{ hostPlatform = "aarch64-linux"; homeManager = false; }`. Host-specific flake inputs (e.g. jovian for adeck) go in `extraModules`.
+- `nixosConfigurations.{nxiz,zrrh,adeck,tm20}` — built by `mkHost` in `flake.nix`. Desktop hosts get overlays and Home-Manager (`./hosts/<host>/home.nix` plus the `nix-colors` HM module). `tm20` is `{ hostPlatform = "aarch64-linux"; homeManager = false; }`. Host-specific flake inputs (e.g. jovian for adeck) go in `extraModules`.
 - `formatter.x86_64-linux = nixfmt`
 - `devShells.x86_64-linux.default` — the lint/dev shell above
 - `checks.x86_64-linux.{statix,deadnix}` — tree lints
@@ -90,7 +90,9 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 
 ### Secrets
 
-- `secrets/` contains agenix-encrypted files (`*.age`) plus raw SSH host keys and a PIA config. `secrets/secrets.nix` lists recipients.
+- `secrets/` is ignored and synced manually over SSH with rsync. Git does not provision credentials. Copy it to `/etc/nixos/secrets` before installation or activation; preserve file permissions.
+- Required files: all hosts need `wifi-password`; nxiz/adeck/zrrh also need `github-token` and `github-recovery-codes`; tm20 also needs `print-token`. Keep existing `hosts/<host>/` SSH identities and `nix-access-tokens.conf`.
+- `modules/secrets.nix` copies host-required credentials to `/run/secrets/` during activation with mode `0400`, owned by `zk`. tm20 uses group `plugdev` for its print token; other files use `users`. After flashing tm20, copy `secrets/` to `/etc/nixos/secrets` on the mounted root partition before first boot; the SD image contains no credentials.
 - SSH host keys are deployed via `modules/ssh-identity.nix` (part of `profiles/core.nix`), which copies from `/etc/nixos/secrets/hosts/<host>/` to `/etc/ssh/` on activation, keyed on `config.my.host`.
 - `nix.extraOptions` pulls `/etc/nixos/secrets/nix-access-tokens.conf` for private flake inputs. The file is expected to exist on every built host.
 
