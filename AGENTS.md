@@ -28,7 +28,7 @@ zcli image  tm20 [--dry]         # aarch64 sdImage, built on zrrh
 `zcli deploy all` is nxiz/adeck/zrrh only — tm20 is not in that set. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
 
 Behavior:
-- `zcli` runs `git -C /mnt/repository/nix-os add -A` before every invocation so new files are included.
+- `zcli` runs `git -C /etc/nixos add -A` before every invocation so new files are included.
 - Eval happens on the invoking host; build is offloaded to `zrrh` via `--build-host zk@zrrh` unless already on zrrh.
 - Remote deploys add `--target-host zk@<host> --sudo`.
 - Connectivity to `zrrh` (and the target, if remote) is pre-checked with `tailscale ping`.

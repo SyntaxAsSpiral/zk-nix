@@ -94,7 +94,10 @@ let
 
     adeck = {
       dirs = {
-        extraConfig = { };
+        documents = "/mnt/vault/@staging";
+        extraConfig = {
+          PROJECTS = "/mnt/echo";
+        };
       };
       localDirs = [
         "${home}/Documents"

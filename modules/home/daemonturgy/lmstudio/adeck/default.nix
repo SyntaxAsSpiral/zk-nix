@@ -10,6 +10,8 @@ let
   };
 in
 {
+  imports = [ ../log-retention.nix ];
+
   # LM Studio on adeck: llmster only (no GUI/AppImage).
   # Installed via `curl` — Nix manages dirs, settings, and server config.
   home.activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''

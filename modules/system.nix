@@ -20,7 +20,7 @@
   config = {
     my.flakePath =
       {
-        nxiz = "/mnt/repository/nix-os";
+        nxiz = "/etc/nixos";
         adeck = "/etc/nixos";
         zrrh = "/etc/nixos";
         tm20 = "/etc/nixos";

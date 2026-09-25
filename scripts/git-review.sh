@@ -16,7 +16,7 @@ SCAN_DIRS=(
   "/mnt/repository/kludge-chan"
   "/mnt/repository/lexemancy-site"
   "/mnt/repository/lɛxigȫn"
-  "/mnt/repository/nix-os"
+  "/etc/nixos"
   "/mnt/repository/obsidian-workshop"
   "/mnt/repository/obsidian-workshop/apply-opencode"
   "/mnt/repository/obsidian-workshop/obsidian-lmstudio-connect"

@@ -4,7 +4,7 @@
     "label": "{dirty}",
     "tooltip": "{tooltip}",
     "truncationSize": -1,
-    "execute": "/mnt/repository/nix-os/scripts/git-review.sh",
+    "execute": "/etc/nixos/scripts/git-review.sh",
     "interval": 15000,
     "hideOnEmpty": true,
     "actions": {
@@ -20,7 +20,7 @@
     "label": "{text}",
     "tooltip": "{tooltip}",
     "truncationSize": -1,
-    "execute": "/mnt/repository/nix-os/scripts/fleet-nxiz.sh",
+    "execute": "/etc/nixos/scripts/fleet-nxiz.sh",
     "interval": 10000,
     "hideOnEmpty": false,
     "actions": {
@@ -36,7 +36,7 @@
     "label": "{text}",
     "tooltip": "{tooltip}",
     "truncationSize": -1,
-    "execute": "/mnt/repository/nix-os/scripts/fleet-adeck.sh",
+    "execute": "/etc/nixos/scripts/fleet-adeck.sh",
     "interval": 10000,
     "hideOnEmpty": false,
     "actions": {

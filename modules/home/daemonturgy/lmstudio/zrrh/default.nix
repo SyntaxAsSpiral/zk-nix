@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  imports = [ ../log-retention.nix ];
+
   # LM Studio config for zrrh.
   # System package (pkgs.lmstudio) handles binaries and services.
   # Mutable symlinks — LMStudio writes its config, so we force link to the repo.

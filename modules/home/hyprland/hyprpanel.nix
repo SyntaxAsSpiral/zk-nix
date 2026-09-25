@@ -43,8 +43,8 @@
   # Mutable symlinks — hyprpanel GUI writes config back to repo
   # Must run after linkGeneration which otherwise restores the nix store symlink
   home.activation.hyprpanelConfig = config.lib.dag.entryAfter [ "linkGeneration" ] ''
-    ln -sf /mnt/repository/nix-os/modules/home/hyprpanel/config.json ~/.config/hyprpanel/config.json
-    ln -sf /mnt/repository/nix-os/modules/home/hyprpanel/modules.json ~/.config/hyprpanel/modules.json
-    ln -sf /mnt/repository/nix-os/modules/home/hyprpanel/modules.scss ~/.config/hyprpanel/modules.scss
+    ln -sf /etc/nixos/modules/home/hyprpanel/config.json ~/.config/hyprpanel/config.json
+    ln -sf /etc/nixos/modules/home/hyprpanel/modules.json ~/.config/hyprpanel/modules.json
+    ln -sf /etc/nixos/modules/home/hyprpanel/modules.scss ~/.config/hyprpanel/modules.scss
   '';
 }

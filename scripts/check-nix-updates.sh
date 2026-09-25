@@ -24,7 +24,7 @@ check_stale() {
         if [[ "$pkg" == "nixpkgs" || "$pkg" == "core" ]]; then
             # Special fast check for the core nixpkgs flake input
             local locked_rev
-            locked_rev=$(nix flake metadata /mnt/repository/nix-os --json 2>/dev/null | python3 -c "
+            locked_rev=$(nix flake metadata /etc/nixos --json 2>/dev/null | python3 -c "
 import json, sys
 data = json.load(sys.stdin)
 nodes = data.get('locks', {}).get('nodes', {})
