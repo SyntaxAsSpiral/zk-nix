@@ -13,6 +13,24 @@
           CONTROL_HOST="zrrh"
           FLAKE_PATH="${osConfig.my.flakePath}"
 
+          # adeck's DNS is Mullvad. Mesh names do not resolve there; SSH by tailnet IP.
+          # nixos-rebuild runs SSH as root, which does not have zk's known_hosts.
+          export NIX_SSHOPTS="-o UserKnownHostsFile=/home/zk/.ssh/known_hosts -o StrictHostKeyChecking=accept-new"
+          mesh_addr() {
+            local name="$1"
+            if [[ "$HOSTNAME" != "adeck" ]]; then
+              printf '%s' "$name"
+              return
+            fi
+            case "$name" in
+              nxiz) printf '%s' 100.115.135.104 ;;
+              zrrh) printf '%s' 100.77.90.79 ;;
+              adeck) printf '%s' 100.89.32.9 ;;
+              tm20) printf '%s' 100.123.184.5 ;;
+              *) fail "no tailscale address for $name" ;;
+            esac
+          }
+
           usage() {
             cat <<EOF
       zcli $VERSION — mesh build/deploy wrapper
@@ -174,13 +192,14 @@
 
             cmd=(
               sudo
+              --preserve-env=NIX_SSHOPTS
               ${pkgs.nixos-rebuild}/bin/nixos-rebuild "$mode"
               --flake "$FLAKE_PATH#$target"
               --use-substitutes
             )
 
             if [[ "$HOSTNAME" != "$CONTROL_HOST" ]]; then
-              cmd+=(--build-host "zk@$CONTROL_HOST")
+              cmd+=(--build-host "zk@$(mesh_addr "$CONTROL_HOST")")
             fi
 
             echo "==> $mode $target"
@@ -209,17 +228,18 @@
 
             cmd=(
               sudo
+              --preserve-env=NIX_SSHOPTS
               ${pkgs.nixos-rebuild}/bin/nixos-rebuild "$mode"
               --flake "$FLAKE_PATH#$target"
               --use-substitutes
             )
 
             if [[ "$HOSTNAME" != "$CONTROL_HOST" ]]; then
-              cmd+=(--build-host "zk@$CONTROL_HOST")
+              cmd+=(--build-host "zk@$(mesh_addr "$CONTROL_HOST")")
             fi
 
             if [[ "$target" != "$HOSTNAME" ]]; then
-              cmd+=(--target-host "zk@$target" --sudo)
+              cmd+=(--target-host "zk@$(mesh_addr "$target")" --sudo)
             fi
 
             # nixos-rebuild-ng re-execs the target's nixos-rebuild. For aarch64
@@ -255,7 +275,7 @@
               if [[ "$HOSTNAME" == "$CONTROL_HOST" ]]; then
                 sudo ${pkgs.nix}/bin/nix-store --realise "$system_path" --add-root "/nix/var/nix/gcroots/zcli-$target"
               else
-                ${pkgs.openssh}/bin/ssh "zk@$CONTROL_HOST" sudo nix-store --realise "$system_path" --add-root "/nix/var/nix/gcroots/zcli-$target"
+                ${pkgs.openssh}/bin/ssh "zk@$(mesh_addr "$CONTROL_HOST")" sudo nix-store --realise "$system_path" --add-root "/nix/var/nix/gcroots/zcli-$target"
               fi
             fi
           }
@@ -309,7 +329,7 @@
 
             if [[ "$HOSTNAME" != "$CONTROL_HOST" ]]; then
               cmd+=(
-                --builders "ssh://zk@$CONTROL_HOST aarch64-linux,x86_64-linux - 8 1 kvm,nixos-test,benchmark,big-parallel"
+                --builders "ssh://zk@$(mesh_addr "$CONTROL_HOST") aarch64-linux,x86_64-linux - 8 1 kvm,nixos-test,benchmark,big-parallel"
                 --max-jobs 0
               )
             fi
