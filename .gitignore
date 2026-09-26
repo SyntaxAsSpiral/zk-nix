@@ -4,6 +4,7 @@ result
 /result/
 *.qcow2
 .vscode/
+__pycache__/
 /modules/openrgb/config/logs/
 tmp/
 .codex/

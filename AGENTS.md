@@ -17,23 +17,25 @@ NixOS flake for the `zk` Tailscale mesh. Desktop hosts share modules from `modul
 
 ## Build / deploy
 
-Primary entrypoint is `zcli` (defined in `modules/home/cli/zcli.nix`). It wraps `nixos-rebuild` with mesh-aware build/target host selection.
+Primary entrypoint is `zcli` (`modules/home/cli/zcli.nix`). Sync publishes adeck's canonical tree. Build, deploy, and image wake zrrh if needed and run `nh` there.
 
 ```bash
-zcli build  <host|all> [--dry]   # eval local, build on zrrh when remote
-zcli deploy <host|all> [--dry]   # build + switch; --dry = dry-activate
-zcli image  tm20 [--dry]         # aarch64 sdImage, built on zrrh
+zcli sync [host|all] [--dry]  # adeck:/mnt/echo/nix-os → /etc/nixos
+zcli wake                     # wake zrrh; wait until SSH and nix answer
+zcli build <host>           # one host: eval and build on zrrh
+zcli deploy <host>          # nh os boot, then schedule a reboot and return
+zcli image tm20 [--dry]     # aarch64 sdImage, built on zrrh
 ```
 
-`zcli deploy all` is nxiz/adeck/zrrh only — tm20 is not in that set. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
+`zcli build` and `zcli deploy` take one host. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
 
 Behavior:
-- `zcli` runs `git -C /etc/nixos add -A` before every invocation so new files are included.
-- Eval happens on the invoking host; build is offloaded to `zrrh` via `--build-host zk@zrrh` unless already on zrrh.
-- Remote deploys add `--target-host zk@<host> --sudo`.
-- Connectivity to `zrrh` (and the target, if remote) is pre-checked with `tailscale ping`.
+- Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, plus secrets, onto zrrh:`/etc/nixos` before `nh` runs. Unstaged files stay local.
+- If zrrh is asleep, zcli sends the LAN magic packet from adeck and waits until SSH and nix answer.
+- Eval and build both happen on zrrh. Deploy is `nh os boot`, then a reboot scheduled on the target. The command returns once that request is accepted and prints `reboot scheduled`.
+- Direct `nh os ...` on a host still uses that host's local `/etc/nixos`.
 
-When diagnosing a build problem, prefer `zcli build <host> --dry` over raw `nixos-rebuild` so the build host/eval host split matches production.
+When diagnosing a build, run `zcli build <host>` so eval and build happen on zrrh the same way a deploy will.
 
 ## Lint / format / dev shell
 
@@ -85,7 +87,7 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
   - `waybar/` — `adeck.nix`
   - `profiles/` — `base.nix` (all hosts) and `desktop.nix` (nxiz + zrrh); see Per-host dispatch pattern above
   - Top-level HM modules: `awww.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `kaleidux.nix`, `msgvault.nix`, `nushell.nix`, `openrgb.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
-- `modules/home/cli/zcli.nix` — HM module that builds the `zcli` wrapper via `writeShellScriptBin`, reading the flake path from `osConfig.my.flakePath`.
+- `modules/home/cli/zcli.nix` — HM module for the `zcli` wrapper. Sync is `zcli-sync.sh`. Wake, build, deploy, and image are `zcli-run.sh`.
 - `hosts/<host>/hardware-configuration.nix` — host-specific hardware; do not share across hosts.
 
 ### Secrets
@@ -106,4 +108,4 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 
 ## Conventions
 - `docs/` is edit-on-request only (per global covenant); it does not currently exist in this repo, but do not create it without an explicit ask.
-- The flake directory is used directly by `zcli`; there is no "push to remote, then build" step — local changes go live on the next `zcli deploy`. Keep that in mind when committing: an unfinished edit will be deployed if someone runs `zcli deploy` while it is staged.
+- `zcli` publishes the staged canonical snapshot from adeck, then builds it on zrrh. An unfinished edit is included once it is staged.
