@@ -2,13 +2,28 @@
 # my.flakePath option (osConfig), so it never needs to be passed per host.
 { pkgs, osConfig, ... }:
 
+let
+  sync = pkgs.writeShellApplication {
+    name = "zcli-sync";
+    runtimeInputs = with pkgs; [
+      bash
+      coreutils
+      findutils
+      git
+      openssh
+      rsync
+      util-linux
+    ];
+    text = ''exec bash ${./zcli-sync.sh} "$@"'';
+  };
+in
 {
   home.packages = [
     (pkgs.writeShellScriptBin "zcli" ''
           #!${pkgs.bash}/bin/bash
           set -euo pipefail
 
-          VERSION="0.4.0"
+          VERSION="0.5.0"
           HOSTNAME="$(${pkgs.nettools}/bin/hostname)"
           CONTROL_HOST="zrrh"
           FLAKE_PATH="${osConfig.my.flakePath}"
@@ -36,17 +51,24 @@
       zcli $VERSION — mesh build/deploy wrapper
 
       Usage:
+        zcli sync [host|all] [host ...] [--dry]
         zcli build <host|all> [host ...] [--dry]
         zcli deploy <host|all> [host ...] [--dry]
         zcli image tm20 [--dry]
 
       Behavior:
+        - sync defaults to this host; adeck:/mnt/echo/nix-os is always the source
+        - sync all includes adeck/nxiz/zrrh flake files + secrets, and tm20 secrets only
+        - sync publishes committed + staged content; other local files stay local
         - on nxiz/adeck: evaluation happens locally, builds happen on zrrh
         - on zrrh: build/deploy runs locally on zrrh
         - local flake changes are used directly; nothing is pushed or synced to git remotes
-        - zcli auto-runs: git -C <flake> add -A
+        - build/deploy/image auto-run: git -C <flake> add -A
+        - deploy prepares the next boot; it does not switch the running system
 
       Examples:
+        zcli sync --dry
+        zcli sync all
         zcli build nxiz --dry
         zcli build nxiz adeck
         zcli deploy nxiz
@@ -70,6 +92,12 @@
           }
 
           stage_flake() {
+            exec 9>"$FLAKE_PATH/.git/zcli.lock"
+            ${pkgs.util-linux}/bin/flock -n 9 || fail "another sync/build/deploy is using $FLAKE_PATH"
+            [[ ! -e "$FLAKE_PATH/.git/zcli-sync-incomplete" ]] || fail "interrupted sync; complete it before building"
+            if [[ -f "$FLAKE_PATH/.git/zcli-sync-receipt" ]]; then
+              cat "$FLAKE_PATH/.git/zcli-sync-receipt"
+            fi
             ${pkgs.git}/bin/git -C "$FLAKE_PATH" add -A
           }
 
@@ -344,6 +372,18 @@
             echo "    flake: $FLAKE_PATH#nixosConfigurations.$target.config.system.build.sdImage"
             "''${cmd[@]}"
           }
+
+          # Sync/help work independently of the local flake and builder.
+          case "''${1:-}" in
+            sync)
+              shift
+              exec ${sync}/bin/zcli-sync "$@"
+              ;;
+            help|--help|-h)
+              usage
+              exit 0
+              ;;
+          esac
 
           require_cmd sudo
           require_cmd ${pkgs.nixos-rebuild}/bin/nixos-rebuild
