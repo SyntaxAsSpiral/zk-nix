@@ -95,7 +95,7 @@ receive() (
   [[ -z "$(git -C "$DEST" ls-files -- secrets)" ]] || fail "destination tracks secrets"
   exec 9>"$DEST/.git/zcli.lock"
   flock -n 9 || fail "another sync/build/deploy is using $DEST"
-  local baseline current desired staged path conflict=false
+  local baseline current desired staged path
   baseline=$(git -C "$DEST" rev-parse --verify refs/zcli/sync 2>/dev/null || git -C "$DEST" rev-parse 'HEAD^{tree}')
   current=$(tree "$DEST" "$stage/current-index" "$baseline")
   # Import the snapshot into this checkout's object database without copying .git.
@@ -107,26 +107,22 @@ receive() (
   if [[ -f "$DEST/.git/zcli-sync-incomplete" ]]; then
     [[ "$(cat "$DEST/.git/zcli-sync-incomplete")" == "$desired" ]] || fail "interrupted sync: retry its original snapshot first"
   fi
+  # Canonical snapshot wins. Untracked files that are not in the snapshot stay.
   while IFS= read -r -d '' path; do
     if ! git -C "$DEST" diff --quiet "$current" "$desired" -- "$path"; then
-      printf 'conflict: %s\n' "$path" >&2
-      conflict=true
+      printf 'replaced: %s\n' "$path"
     fi
   done < <(git -C "$DEST" diff --name-only -z "$baseline" "$current")
   while IFS= read -r -d '' path; do
     if ! git -C "$DEST" diff --quiet "$staged" "$desired" -- "$path"; then
-      printf 'staged conflict: %s\n' "$path" >&2
-      conflict=true
+      printf 'replaced: %s\n' "$path"
     fi
   done < <(git -C "$DEST" diff --name-only -z "$baseline" "$staged")
-  # Leave unrelated local files alone; refuse collisions with incoming files.
   while IFS= read -r -d '' path; do
     if [[ -e "$stage/payload/$path" || -L "$stage/payload/$path" ]]; then
-      printf 'unmanaged destination path: %s\n' "$path" >&2
-      conflict=true
+      printf 'replaced: %s\n' "$path"
     fi
   done < <(git -C "$DEST" ls-files --others -z)
-  [[ "$conflict" == false ]] || fail "destination has local edits; reconcile them with adeck before syncing"
 
   git -C "$DEST" diff --stat "$current" "$desired"
   [[ "$dry" == false ]] || return 0
@@ -162,7 +158,8 @@ for arg in "$@"; do
       echo 'Usage: zcli sync [host|all] [host ...] [--dry]'
       echo 'Default: invoking host. Source: adeck:/mnt/echo/nix-os.'
       echo 'Flake hosts receive committed + staged content, local git history, and secrets.'
-      echo 'A clean canonical checkout is clean after sync. Staged changes stay staged. tm20 receives only secrets.'
+      echo 'A clean canonical checkout is clean after sync. Staged changes stay staged.'
+      echo 'Destination edits to snapshot files are overwritten. tm20 receives only secrets.'
       exit 0 ;;
     all) targets+=(adeck nxiz zrrh tm20) ;;
     *) address "$arg" >/dev/null; targets+=("$arg") ;;

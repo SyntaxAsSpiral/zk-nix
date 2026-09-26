@@ -30,7 +30,7 @@ zcli image tm20 [--dry]     # aarch64 sdImage, built on zrrh
 `zcli build` and `zcli deploy` take one host. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
 
 Behavior:
-- Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, plus secrets, onto zrrh:`/etc/nixos` before `nh` runs. Unstaged files stay local.
+- Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, its git history, and secrets onto zrrh:`/etc/nixos` before `nh` runs. A clean canonical checkout is clean after sync. Staged changes stay staged. Unstaged files stay local. Destination edits to snapshot files are overwritten. History is fetched from that local repo.
 - If zrrh is asleep, zcli sends the LAN magic packet from adeck and waits until SSH and nix answer.
 - Eval and build both happen on zrrh. Deploy is `nh os boot`, then a reboot scheduled on the target. The command returns once that request is accepted and prints `reboot scheduled`.
 - Direct `nh os ...` on a host still uses that host's local `/etc/nixos`.

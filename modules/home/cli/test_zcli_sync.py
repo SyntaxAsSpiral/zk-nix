@@ -120,23 +120,25 @@ class SyncTests(unittest.TestCase):
         self.assertFalse((self.dest / ".git/zcli-sync-receipt").exists())
         self.assertFalse((self.dest / ".git/refs/zcli/sync").exists())
 
-    def test_destination_worktree_and_staged_conflicts_are_preserved(self):
+    def test_destination_worktree_and_staged_edits_are_replaced(self):
         (self.dest / "flake.nix").write_text("local work\n")
-        result = self.run_sync(expected=1)
-        self.assertIn("conflict: flake.nix", result.stderr)
+        result = self.run_sync()
+        self.assertIn("replaced: flake.nix", result.stdout)
+        self.assertEqual((self.dest / "flake.nix").read_text(), "original\n")
+        (self.dest / "flake.nix").write_text("local work\n")
         self.git(self.dest, "add", "flake.nix")
         (self.dest / "flake.nix").write_text("original\n")
-        result = self.run_sync(expected=1)
-        self.assertIn("staged conflict: flake.nix", result.stderr)
-        self.assertEqual(self.git(self.dest, "show", ":flake.nix"), "local work")
+        result = self.run_sync()
+        self.assertIn("replaced: flake.nix", result.stdout)
+        self.assertEqual(self.git(self.dest, "show", ":flake.nix"), "original")
 
-    def test_ignored_destination_collision_is_preserved(self):
+    def test_ignored_destination_collision_is_replaced(self):
         (self.dest / "ignored").write_text("keep me\n")
         (self.source / "ignored").write_text("incoming\n")
         self.git(self.source, "add", "-f", "ignored")
-        result = self.run_sync(expected=1)
-        self.assertIn("unmanaged destination path: ignored", result.stderr)
-        self.assertEqual((self.dest / "ignored").read_text(), "keep me\n")
+        result = self.run_sync()
+        self.assertIn("replaced: ignored", result.stdout)
+        self.assertEqual((self.dest / "ignored").read_text(), "incoming\n")
 
     def test_remote_invocation_forwards_original_default_and_validates_targets(self):
         self.run_sync("--dry", host="nxiz", SSH_STATUS="0")
