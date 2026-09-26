@@ -24,10 +24,13 @@ zcli sync [host|all] [--dry]  # adeck:/mnt/echo/nix-os → /etc/nixos
 zcli wake                     # wake zrrh; wait until SSH and nix answer
 zcli build <host>           # one host: eval and build on zrrh
 zcli deploy <host>          # nh os boot, then schedule a reboot and return
+zcli seq llm-agents         # update that input; boot zrrh then adeck; reboot them
 zcli image tm20 [--dry]     # aarch64 sdImage, built on zrrh
 ```
 
 `zcli build` and `zcli deploy` take one host. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
+
+A multi-host change boots on zrrh first, then the other hosts in that sequence, while zrrh stays up. Shared store paths from the zrrh build are reused; each later host still gets its own system closure. Reboots are queued only for hosts in the sequence. Their order does not matter, except the machine running `zcli` reboots last when it is one of them. Running the sequence from any other host leaves that host up.
 
 Behavior:
 - Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, its git history, and secrets onto zrrh:`/etc/nixos` before `nh` runs. A clean canonical checkout is clean after sync. Staged changes stay staged. Unstaged files stay local. Destination edits to snapshot files are overwritten. History is fetched from that local repo.
