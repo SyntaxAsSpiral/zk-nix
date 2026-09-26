@@ -1,5 +1,5 @@
 # Runtime copies from the private checkout; keep values out of Nix expressions.
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   names = [ "wifi-password" ] ++ (
@@ -13,6 +13,12 @@ in
   system.activationScripts.mesh-secrets = {
     deps = [ "users" "etc" ];
     text = ''
+      ${lib.optionalString (config.my.host == "tm20") ''
+        # Generation 7 dropped the agenix decryption that used to finish
+        # before services opened the Ethernet port and the printer.
+        echo "boot delay where agenix used to run"
+        ${pkgs.coreutils}/bin/sleep 20
+      ''}
       (
         set -eu
         # Check every source before replacing any runtime files.
