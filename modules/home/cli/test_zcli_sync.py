@@ -90,6 +90,26 @@ class SyncTests(unittest.TestCase):
         self.assertFalse((self.dest / "new file\nwith newline").exists())
         self.assertTrue((self.dest / ".git/zcli-sync-receipt").exists())
 
+    def test_clean_commit_is_clean_on_the_destination(self):
+        (self.source / "flake.nix").write_text("committed\n")
+        self.git(self.source, "add", "flake.nix")
+        self.git(self.source, "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
+                 "commit", "-qm", "second")
+        self.run_sync()
+        self.assertEqual(self.git(self.dest, "rev-parse", "HEAD"),
+                         self.git(self.source, "rev-parse", "HEAD"))
+        self.assertEqual(self.git(self.dest, "status", "--porcelain"), "")
+        self.assertEqual((self.dest / "flake.nix").read_text(), "committed\n")
+
+    def test_staged_changes_stay_staged(self):
+        (self.source / "flake.nix").write_text("staged\n")
+        self.git(self.source, "add", "flake.nix")
+        head = self.git(self.source, "rev-parse", "HEAD")
+        self.run_sync()
+        self.assertEqual(self.git(self.dest, "rev-parse", "HEAD"), head)
+        self.assertIn("M  flake.nix", self.git(self.dest, "status", "--porcelain"))
+        self.assertEqual((self.dest / "flake.nix").read_text(), "staged\n")
+
     def test_preview_preserves_destination_files_index_and_refs(self):
         (self.source / "flake.nix").write_text("edited\n")
         self.git(self.source, "add", "flake.nix")

@@ -28,8 +28,49 @@ tree() {
   GIT_INDEX_FILE="$index" git -C "$repo" write-tree
 }
 
+# Bring the canonical commits across, then point HEAD at the snapshot's commit.
+# The index stays on the staged tree, so a clean source is clean here and a
+# staged source stays staged. Fetch reads the local repo; it does not use GitHub.
+publish_history() {
+  local url
+  if [[ "$HOST" == adeck ]]; then
+    url=$SOURCE
+  else
+    url="ssh://zk@$(address adeck)/mnt/echo/nix-os"
+  fi
+  local -a fetch=(git -C "$DEST" fetch --no-tags --no-write-fetch-head "$url"
+    '+refs/heads/*:refs/zcli/from/heads/*'
+    '+refs/tags/*:refs/zcli/from/tags/*')
+  if [[ "$url" == ssh://* ]]; then
+    GIT_SSH_COMMAND="ssh -F /dev/null -o BatchMode=yes -o ConnectTimeout=10" "${fetch[@]}"
+  else
+    "${fetch[@]}"
+  fi
+  git -C "$DEST" cat-file -e "${commit}^{commit}" || fail "canonical commit was not fetched"
+  local sha ref name
+  while read -r sha ref; do
+    [[ -n "$ref" ]] || continue
+    name=${ref#refs/zcli/from/heads/}
+    if [[ "$head_ref" == "refs/heads/$name" ]]; then
+      git -C "$DEST" update-ref "refs/heads/$name" "$commit"
+    else
+      git -C "$DEST" update-ref "refs/heads/$name" "$sha"
+    fi
+  done < <(git -C "$DEST" for-each-ref --format='%(objectname) %(refname)' refs/zcli/from/heads)
+  while read -r sha ref; do
+    [[ -n "$ref" ]] || continue
+    name=${ref#refs/zcli/from/tags/}
+    git -C "$DEST" update-ref "refs/tags/$name" "$sha"
+  done < <(git -C "$DEST" for-each-ref --format='%(objectname) %(refname)' refs/zcli/from/tags)
+  if [[ "$head_ref" == detach ]]; then
+    git -C "$DEST" update-ref --no-deref HEAD "$commit"
+  else
+    git -C "$DEST" symbolic-ref HEAD "$head_ref"
+  fi
+}
+
 receive() (
-  local stage=$1 kind=$2 commit=$3 expected=$4 dry=$5
+  local stage=$1 kind=$2 commit=$3 expected=$4 dry=$5 head_ref=${6:-}
   [[ "$stage" =~ ^/tmp/zcli-sync\.[a-zA-Z0-9_]+$ && -d "$stage" && ! -L "$stage" ]] || fail "invalid staging directory"
   trap 'rm -rf -- "$stage"' EXIT
   [[ "$commit" =~ ^[a-f0-9]{40,64}$ && "$expected" =~ ^[a-f0-9]{40,64}$ ]] || fail "invalid snapshot identity"
@@ -49,6 +90,7 @@ receive() (
   fi
 
   [[ "$kind" == flake && "$HOST" != tm20 ]] || fail "invalid flake destination"
+  [[ "$head_ref" == detach || "$head_ref" =~ ^refs/heads/[^[:space:]]+$ ]] || fail "invalid head"
   [[ -d "$DEST/.git" && ! -L "$DEST/.git" ]] || fail "$DEST must be an existing Git checkout"
   [[ -z "$(git -C "$DEST" ls-files -- secrets)" ]] || fail "destination tracks secrets"
   exec 9>"$DEST/.git/zcli.lock"
@@ -96,7 +138,8 @@ receive() (
   done < <(git -C "$DEST" diff --name-only --diff-filter=D -z "$current" "$desired")
   rsync -rlptc --delay-updates "$stage/payload/" "$DEST/"
   [[ "$(tree "$DEST" "$stage/verify-index" "$desired")" == "$desired" ]] || fail "destination changed during sync"
-  # Include new files for Nix's Git source filter; HEAD/history remain untouched.
+  publish_history
+  # Index matches the snapshot so Nix sees staged files. HEAD is the canonical commit.
   git -C "$DEST" read-tree "$desired"
   git -C "$DEST" update-ref refs/zcli/sync "$desired"
   printf 'source_commit=%s\nsource_tree=%s\n' "$commit" "$desired" >"$DEST/.git/zcli-sync-receipt"
@@ -105,7 +148,7 @@ receive() (
 
 if [[ "${1:-}" == --receive ]]; then
   shift
-  [[ $# == 5 ]] || fail "invalid receiver arguments"
+  [[ $# == 5 || $# == 6 ]] || fail "invalid receiver arguments"
   receive "$@"
   exit
 fi
@@ -118,7 +161,8 @@ for arg in "$@"; do
     -h|--help)
       echo 'Usage: zcli sync [host|all] [host ...] [--dry]'
       echo 'Default: invoking host. Source: adeck:/mnt/echo/nix-os.'
-      echo 'Flake hosts receive committed + staged content and secrets; tm20 receives only secrets.'
+      echo 'Flake hosts receive committed + staged content, local git history, and secrets.'
+      echo 'A clean canonical checkout is clean after sync. Staged changes stay staged. tm20 receives only secrets.'
       exit 0 ;;
     all) targets+=(adeck nxiz zrrh tm20) ;;
     *) address "$arg" >/dev/null; targets+=("$arg") ;;
@@ -151,6 +195,11 @@ unset GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES
 [[ -z "$(find "$SOURCE/secrets" -type l -print -quit)" ]] || fail "canonical secrets contains symlinks"
 rsync -rpt "$SOURCE/secrets/" "$stage/secrets/"
 echo "Source: adeck:$SOURCE (commit $commit, staged tree $snapshot; secrets copied separately)"
+if head_ref=$(git -C "$SOURCE" symbolic-ref --quiet HEAD); then
+  :
+else
+  head_ref=detach
+fi
 
 seen=' '
 failed=false
@@ -171,9 +220,9 @@ for target in "${targets[@]}"; do
         mkdir "$incoming/payload"
         rsync -rlpt "$payload/" "$incoming/payload/"
         if [[ "$kind" == secrets ]]; then
-          sudo -n bash "${BASH_SOURCE[0]}" --receive "$incoming" "$kind" "$commit" "$snapshot" "$dry"
+          sudo -n bash "${BASH_SOURCE[0]}" --receive "$incoming" "$kind" "$commit" "$snapshot" "$dry" "$head_ref"
         else
-          receive "$incoming" "$kind" "$commit" "$snapshot" "$dry"
+          receive "$incoming" "$kind" "$commit" "$snapshot" "$dry" "$head_ref"
         fi
       else
         remote="zk@$(address "$target")"
@@ -183,7 +232,7 @@ for target in "${targets[@]}"; do
         rsync -rlpt -e "${SSH[*]}" "$payload/" "$remote:$incoming/payload/"
         receiver=(bash -s --)
         [[ "$kind" != secrets ]] || receiver=(sudo -n bash -s --)
-        "${SSH[@]}" "$remote" "${receiver[@]}" --receive "$incoming" "$kind" "$commit" "$snapshot" "$dry" <"${BASH_SOURCE[0]}"
+        "${SSH[@]}" "$remote" "${receiver[@]}" --receive "$incoming" "$kind" "$commit" "$snapshot" "$dry" "$head_ref" <"${BASH_SOURCE[0]}"
       fi
     done
   )

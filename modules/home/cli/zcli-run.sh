@@ -68,7 +68,7 @@ usage() {
     "$c_magenta" "$c_off" "$c_yellow" "$c_off" "$c_dim" "$c_off"
   section COMMANDS
   printf '    %szcli sync%s [host|all] [--dry]\n' "$c_yellow" "$c_off"
-  printf '        committed + staged files and secrets; tm20 gets secrets only\n'
+  printf '        committed + staged files, local git history, and secrets; tm20 gets secrets only\n'
   printf '    %szcli wake%s\n' "$c_yellow" "$c_off"
   printf '        wake zrrh and wait until nix answers\n'
   printf '    %szcli build <host>%s builds that host'\''s system closure on zrrh and stops\n' "$c_yellow" "$c_off"
