@@ -4,6 +4,33 @@ Host files are the table of contents for each machine.
 
 `tm20` is the Pi 3B+ print-host appliance: it does **not** import `profiles/core.nix` or Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
 
+## Promoting mutable host config
+
+Some nxiz and zrrh app configs link into their `/etc/nixos` checkouts so GUI
+changes take effect without a rebuild. Adeck's `/mnt/echo/nix-os` remains the
+canonical copy. `zcli sync` sends adeck's committed and staged files to a host;
+it does not bring host edits back, and it replaces edits to managed files.
+
+For a deliberate config change on nxiz or zrrh:
+
+1. From adeck, run `zcli sync <host> --dry`. Review every `replaced:` path and
+   promote any host edit worth keeping through steps 3-5 before the real sync.
+   Then preview again.
+2. Run `zcli sync <host>` from adeck.
+3. Make the app change on the host. In `/etc/nixos`, inspect the diff and commit
+   only the selected config paths. Use `git commit --only -- <paths>` so staged
+   files received from adeck are not included by accident.
+4. Push the host commit to the existing `trunk` branch on GitHub. If the push is
+   rejected because `trunk` advanced, reconcile the histories before retrying;
+   do not force-push. Check selected files for credentials before publishing.
+5. Pull the commit into adeck's canonical checkout before the next sync. Review
+   that commit there, then sync hosts as needed.
+
+Host-specific files usually avoid content conflicts, but separate commits can
+still diverge in Git history. Automatic app rewrites are optional changes: review
+them before committing rather than pushing every local difference. Saving these
+config edits does not require a NixOS rebuild.
+
 ## Credentials and Reinstalls
 
 The editing copy is `/mnt/echo/nix-os` on adeck; hosts build from `/etc/nixos`.

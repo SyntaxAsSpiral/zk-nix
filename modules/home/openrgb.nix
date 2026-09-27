@@ -5,6 +5,7 @@
 
 let
   repoPath = "/etc/nixos/modules/openrgb/config";
+  agentsPath = "/etc/nixos/modules/openrgb/.agents";
   confPath = "${config.home.homeDirectory}/.config/OpenRGB";
 in
 {
@@ -29,5 +30,11 @@ in
       rm -rf "${confPath}/plugins/settings/effect-profiles"
     fi
     ln -sfn "${repoPath}/plugins/settings/effect-profiles" "${confPath}/plugins/settings/effect-profiles"
+
+    # Skill is not written by the GUI. Point the whole directory at the flake.
+    if [ -d "${confPath}/.agents" ] && [ ! -L "${confPath}/.agents" ]; then
+      rm -rf "${confPath}/.agents"
+    fi
+    ln -sfn "${agentsPath}" "${confPath}/.agents"
   '';
 }
