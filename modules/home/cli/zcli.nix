@@ -16,6 +16,15 @@ let
     ];
     text = ''exec bash ${./zcli-sync.sh} "$@"'';
   };
+  contextPython = pkgs.python3.withPackages (ps: [
+    ps.pyyaml
+    ps.python-frontmatter
+  ]);
+  context = pkgs.writeShellApplication {
+    name = "zcli-context";
+    runtimeInputs = [ pkgs.bash pkgs.coreutils pkgs.openssh ];
+    text = ''exec env ZCLI_CONTEXT_PYTHON=${contextPython}/bin/python bash ${./zcli-context.sh} "$@"'';
+  };
   run = pkgs.writeShellApplication {
     name = "zcli-run";
     runtimeInputs = [
@@ -44,11 +53,20 @@ in
           exit 1 ;;
         sync)
           shift
+          if [[ "''${1:-}" == context ]]; then
+            shift
+            exec ${context}/bin/zcli-context sync "$@"
+          fi
+          printf '☠☠☠ >>> RUNTIME·SYNC·INITIATED ☠☠☠\n'
           exec ${sync}/bin/zcli-sync "$@" ;;
+        assemble)
+          shift
+          exec ${context}/bin/zcli-context assemble "$@" ;;
         build|deploy|image|wake)
+          printf '☠☠☠ >>> %s·PROTOCOL·INITIATED ☠☠☠\n' "''${1^^}"
           exec ${run}/bin/zcli-run "$@" ;;
         *)
-          echo "Error: unknown command: $1" >&2
+          echo "☠ Unknown protocol: $1" >&2
           ${run}/bin/zcli-run help >&2
           exit 1 ;;
       esac

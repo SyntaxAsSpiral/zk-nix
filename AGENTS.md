@@ -23,20 +23,18 @@ Primary entrypoint is `zcli` (`modules/home/cli/zcli.nix`). Sync publishes adeck
 zcli sync [host|all] [--dry]  # adeck:/mnt/echo/nix-os → /etc/nixos
 zcli wake                     # wake zrrh; wait until SSH and nix answer
 zcli build <host>           # one host: eval and build on zrrh
-zcli deploy <host>          # nh os boot, then schedule a reboot and return
-zcli seq llm-agents         # update that input; boot zrrh then adeck; reboot them
+zcli deploy <host> [host ...] [--switch]  # boot and queue reboots, or switch now
 zcli image tm20 [--dry]     # aarch64 sdImage, built on zrrh
 ```
 
-`zcli build` and `zcli deploy` take one host. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
-
-A multi-host change boots on zrrh first, then the other hosts in that sequence, while zrrh stays up. Shared store paths from the zrrh build are reused; each later host still gets its own system closure. Reboots are queued only for hosts in the sequence. Their order does not matter, except the machine running `zcli` reboots last when it is one of them. Running the sequence from any other host leaves that host up.
+`zcli build` takes one host. `zcli deploy` takes an explicit ordered host list. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
 
 Behavior:
 - Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, its git history, and secrets onto zrrh:`/etc/nixos` before `nh` runs. A clean canonical checkout is clean after sync. Staged changes stay staged. Unstaged files stay local. Destination edits to snapshot files are overwritten. History is fetched from that local repo.
 - If zrrh is asleep, zcli sends the LAN magic packet from adeck and waits until SSH and nix answer.
-- Eval and build both happen on zrrh. Deploy is `nh os boot`, then a reboot scheduled on the target. The command returns once that request is accepted and prints `reboot scheduled`.
+- Eval and build both happen on zrrh. Deploy follows the requested host order, moving the invoking host to the end when listed. By default it runs `nh os boot` for every host before scheduling their reboots; the invoking host gets a later reboot timer. `--switch` runs `nh os switch` in that order and schedules no reboots.
 - Direct `nh os ...` on a host still uses that host's local `/etc/nixos`.
+- nxiz builds and activates itself with `nh os` after `zcli sync nxiz`. `zcli deploy nxiz` is for a huge shared build, such as a full flake update that includes the CachyOS kernel and Linux: zrrh builds those paths once, then the deploy reuses them on nxiz.
 
 When diagnosing a build, run `zcli build <host>` so eval and build happen on zrrh the same way a deploy will.
 
@@ -63,7 +61,7 @@ Inputs follow `nixpkgs` (via `inputs.nixpkgs.follows`) except `nix-cachyos-kerne
 
 ### Per-host dispatch pattern
 
-`modules/system.nix` declares `options.my.host` as an enum of `nxiz | adeck | zrrh`, plus `options.my.flakePath` (where the flake lives on that host — single source of truth consumed by `nh.nix` and `zcli`). Shared modules that vary per host pick from a `perHost` attrset keyed on `config.my.host`. Current consumers: `boot.nix`, `networking.nix`, `storage.nix` (taildrive mounts), `ssh-identity.nix`, and similar. When adding host-specific behavior to a shared module, extend the `perHost` attrset rather than branching on `hostName`.
+`modules/system.nix` declares `options.my.host` as an enum of `nxiz | adeck | zrrh`, plus `options.my.flakePath` (where `nh` reads the flake on that host, normally `/etc/nixos`). `zcli` publishes from adeck:`/mnt/echo/nix-os`. Shared modules that vary per host pick from a `perHost` attrset keyed on `config.my.host`. Current consumers: `boot.nix`, `networking.nix`, `storage.nix` (taildrive mounts), `ssh-identity.nix`, and similar. When adding host-specific behavior to a shared module, extend the `perHost` attrset rather than branching on `hostName`.
 
 Each host's `configuration.nix` sets `my.host = "<name>"` and imports profiles plus only the modules unique to it:
 
@@ -95,7 +93,7 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 
 ### Secrets
 
-- `secrets/` is ignored and synced manually over SSH with rsync. Git does not provision credentials. Copy it to `/etc/nixos/secrets` before installation or activation; preserve file permissions.
+- `secrets/` is gitignored. `zcli sync` copies it to the target's `/etc/nixos/secrets`. tm20 receives that copy and nothing else. Git does not store credentials. On a first install, before `zcli` exists, copy `secrets/` to `/etc/nixos/secrets` by hand and preserve file permissions.
 - Required files: all hosts need `wifi-password`; nxiz/adeck/zrrh also need `github-token` and `github-recovery-codes`; tm20 also needs `print-token`. Keep existing `hosts/<host>/` SSH identities and `nix-access-tokens.conf`.
 - `modules/secrets.nix` copies host-required credentials to `/run/secrets/` during activation with mode `0400`, owned by `zk`. tm20 uses group `plugdev` for its print token; other files use `users`. After flashing tm20, copy `secrets/` to `/etc/nixos/secrets` on the mounted root partition before first boot; the SD image contains no credentials.
 - SSH host keys are deployed via `modules/ssh-identity.nix` (part of `profiles/core.nix`), which copies from `/etc/nixos/secrets/hosts/<host>/` to `/etc/ssh/` on activation, keyed on `config.my.host`.
@@ -111,4 +109,5 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 
 ## Conventions
 - `docs/` is edit-on-request only (per global covenant); it does not currently exist in this repo, but do not create it without an explicit ask.
-- `zcli` publishes the staged canonical snapshot from adeck, then builds it on zrrh. An unfinished edit is included once it is staged.
+- `zcli` publishes the committed and staged canonical snapshot from adeck, then builds it on zrrh. An unstaged edit stays on adeck. Edit the flake in `/mnt/echo/nix-os`.
+- Activate nxiz with `nh os` on nxiz. Use `zcli deploy nxiz` for a huge shared build, such as a full flake update that includes the CachyOS kernel and Linux, so zrrh builds those paths once and nxiz reuses them.

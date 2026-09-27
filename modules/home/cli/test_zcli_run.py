@@ -117,12 +117,14 @@ exit 0
         path = self.root / "trace"
         return path.read_text().splitlines() if path.exists() else []
 
-    def test_rejects_all_dry_and_multiple_hosts_before_any_work(self):
+    def test_rejects_invalid_deploy_lists_and_flags_before_any_work(self):
         for args in (
             ("build", "all"),
             ("build", "nxiz", "--dry"),
             ("deploy", "nxiz", "--dry"),
-            ("deploy", "nxiz", "adeck"),
+            ("deploy", "nxiz", "nxiz"),
+            ("deploy", "nxiz", "all"),
+            ("build", "nxiz", "--switch"),
             ("image", "nxiz"),
         ):
             result = self.invoke(*args, expected=1)
@@ -181,6 +183,26 @@ exit 0
         self.assertIn("zk@adeck", (self.root / "ssh.log").read_text())
         self.assertTrue((self.root / "reboot.log").exists())
         self.assertNotIn("systemd-run", (self.root / "ssh.log").read_text())
+
+    def test_multi_host_boots_in_user_order_with_command_host_last(self):
+        result = self.invoke("deploy", "adeck", "nxiz", "zrrh")
+        self.assertIn("Deploy order: nxiz zrrh adeck (boot)", result.stdout)
+        self.assertEqual(self.trace(), ["ready", "sync", "nh", "nh", "nh", "reboot", "reboot", "reboot"])
+        self.assertLess(result.stdout.index("==> deploy nxiz"), result.stdout.index("==> deploy zrrh"))
+        self.assertLess(result.stdout.index("==> deploy zrrh"), result.stdout.index("==> deploy adeck"))
+        self.assertLess(result.stdout.index("==> deploy adeck"), result.stdout.index("reboot scheduled on nxiz"))
+        self.assertLess(result.stdout.index("reboot scheduled on zrrh"), result.stdout.index("reboot scheduled on adeck"))
+        self.assertIn("--on-active=5", (self.root / "ssh.log").read_text())
+        self.assertIn("--on-active=20", (self.root / "reboot.log").read_text())
+
+    def test_multi_host_switch_activates_in_order_without_reboot(self):
+        result = self.invoke("deploy", "zrrh", "adeck", "--switch", host="zrrh")
+        self.assertIn("Deploy order: adeck zrrh (switch)", result.stdout)
+        self.assertEqual(self.trace(), ["sync", "nh", "nh"])
+        self.assertLess(result.stdout.index("==> deploy adeck"), result.stdout.index("==> deploy zrrh"))
+        self.assertIn("os\nswitch\n-H\nadeck", (self.root / "nh.log").read_text())
+        self.assertIn("--target-host", (self.root / "nh.log").read_text())
+        self.assertFalse((self.root / "reboot.log").exists())
 
     def test_general_help_distinguishes_image_from_build(self):
         result = self.invoke("-h")

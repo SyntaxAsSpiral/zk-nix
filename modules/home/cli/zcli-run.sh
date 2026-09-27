@@ -34,7 +34,7 @@ help_init() {
   fi
 }
 
-section() { printf '\n%s%s%s\n' "$c_cyan" "$1" "$c_off"; }
+section() { printf '\n%s☠☠☠ >>> %s·PROTOCOL%s\n' "$c_cyan" "$1" "$c_off"; }
 
 banner() {
   [[ -t 1 ]] || return 0
@@ -58,8 +58,8 @@ banner() {
 
 usage() {
   help_init
-  banner 'ZCLI DAEMON'
-  printf '%s%s%s · %smesh build/deploy%s %s0.6.0%s\n' \
+  banner 'ZCLI COGITATOR'
+  printf '%s%s%s · %smesh cogitator%s %s0.8.1%s\n' \
     "$c_magenta" zcli "$c_off" "$c_cyan" "$c_off" "$c_dim" "$c_off"
   section NAME
   printf '    %szcli%s — canonical snapshot, evaluated and built on zrrh\n' "$c_magenta" "$c_off"
@@ -69,18 +69,22 @@ usage() {
   section COMMANDS
   printf '    %szcli sync%s [host|all] [--dry]\n' "$c_yellow" "$c_off"
   printf '        committed + staged files, local git history, and secrets; tm20 gets secrets only\n'
+  printf '    %szcli assemble%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
+  printf '    %szcli sync context%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
+  printf '        ConSensus workshop on adeck; sync deploys staging without commit or push\n'
   printf '    %szcli wake%s\n' "$c_yellow" "$c_off"
   printf '        wake zrrh and wait until nix answers\n'
   printf '    %szcli build <host>%s builds that host'\''s system closure on zrrh and stops\n' "$c_yellow" "$c_off"
-  printf '    %szcli deploy <host>%s boots that closure, schedules a reboot, and returns\n' "$c_yellow" "$c_off"
-  printf '        success line: reboot scheduled on <host>\n'
+  printf '    %szcli deploy <host> [host ...] [--switch]%s\n' "$c_yellow" "$c_off"
+  printf '        boot and schedule reboots by default; --switch activates without rebooting\n'
+  printf '        follows your host order, moving the invoking host to the end\n'
   printf '    %szcli image tm20%s builds the flashable SD card .img. zcli build tm20 does not.\n' "$c_yellow" "$c_off"
   printf '        zcli image -h prints how to write the card. --dry resolves the image only\n'
   section NOTES
   printf '    canonical source is adeck:/mnt/echo/nix-os\n'
   printf '    build, deploy, and image wake zrrh, then sync that snapshot to zrrh:/etc/nixos\n'
   printf '    direct nh os stays on the machine where you run it\n'
-  printf '    build and deploy take one host\n'
+  printf '    build takes one host; deploy takes one or more distinct hosts\n'
   printf '    stage changes you want included; unstaged files stay local\n'
   section EXAMPLES
   printf '    %szcli wake%s\n' "$c_dim" "$c_off"
@@ -88,6 +92,11 @@ usage() {
   printf '    %szcli build tm20%s\n' "$c_dim" "$c_off"
   printf '    %szcli image tm20%s\n' "$c_dim" "$c_off"
   printf '    %szcli deploy nxiz%s\n' "$c_dim" "$c_off"
+  printf '    %szcli deploy nxiz zrrh adeck --switch%s\n' "$c_dim" "$c_off"
+  printf '    %szcli deploy zrrh adeck%s\n' "$c_dim" "$c_off"
+  printf '    %szcli assemble%s\n' "$c_dim" "$c_off"
+  printf '    %szcli sync context --dry-run%s\n' "$c_dim" "$c_off"
+  printf '    |001101|—|001101|—|111000| checksum stable\n'
 }
 
 image_usage() {
@@ -201,10 +210,10 @@ prepare() {
 }
 
 schedule_reboot() {
-  local unit now
+  local delay=${1:-2} unit now
   now=$(date +%s)
   unit="zcli-reboot-${target}-${now}"
-  local -a reboot_cmd=(sudo -n systemd-run --collect --unit="$unit" --on-active=2 systemctl reboot)
+  local -a reboot_cmd=(sudo -n systemd-run --collect --unit="$unit" --on-active="$delay" systemctl reboot)
   if [[ "$target" == "$HOST" ]]; then
     "${reboot_cmd[@]}"
   else
@@ -216,7 +225,7 @@ schedule_reboot() {
 nh_os() {
   local action=$1
   local -a nh_cmd=("$NH" os "$action" -H "$target" "$ZRRH_FLAKE" -e passwordless)
-  if [[ "$action" == boot && "$target" != zrrh ]]; then
+  if [[ "$action" != build && "$target" != zrrh ]]; then
     # nh's own SSH starts on zrrh, where mesh names resolve.
     nh_cmd+=(--target-host "zk@$target" --use-substitutes)
   fi
@@ -265,12 +274,16 @@ esac
 cmd=$1
 shift
 dry=false
+switch=false
 hosts=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --dry)
       [[ "$cmd" == image ]] || fail "$cmd does not take --dry"
       dry=true ;;
+    --switch)
+      [[ "$cmd" == deploy ]] || fail "$cmd does not take --switch"
+      switch=true ;;
     -h|--help)
       if [[ "$cmd" == image ]]; then
         image_usage
@@ -280,7 +293,7 @@ while [[ $# -gt 0 ]]; do
       exit 0 ;;
     all)
       if [[ "$cmd" == deploy ]]; then
-        fail "deploy all is not settled; pass one host"
+        fail "deploy requires an explicit host list"
       fi
       hosts+=("$1") ;;
     -*) fail "unknown flag for $cmd: $1" ;;
@@ -294,21 +307,53 @@ case "$cmd" in
     [[ ${#hosts[@]} -eq 0 && "$dry" == false ]] || fail "wake takes no arguments"
     wake_zrrh
     ;;
-  build|deploy)
-    [[ ${#hosts[@]} -eq 1 ]] || fail "$cmd requires exactly one host"
+  build)
+    [[ ${#hosts[@]} -eq 1 ]] || fail "build requires exactly one host"
     target=${hosts[0]}
     valid_host "$target"
-    if [[ "$cmd" == deploy && "$target" != zrrh && "$target" != "$HOST" ]]; then
-      "${SSH_PROBE[@]}" "zk@$(address "$target")" true || fail "$target is unreachable via Tailscale"
-    fi
     prepare
-    if [[ "$cmd" == build ]]; then
-      echo "==> build $target"
-      nh_os build
-    else
+    echo "==> build $target"
+    nh_os build
+    ;;
+  deploy)
+    [[ ${#hosts[@]} -gt 0 ]] || fail "deploy requires at least one host"
+    ordered=()
+    local_host_requested=false
+    for candidate in "${hosts[@]}"; do
+      valid_host "$candidate"
+      for seen in "${ordered[@]}"; do
+        [[ "$candidate" != "$seen" ]] || fail "duplicate deploy host: $candidate"
+      done
+      if [[ "$candidate" == "$HOST" ]]; then
+        [[ "$local_host_requested" == false ]] || fail "duplicate deploy host: $candidate"
+        local_host_requested=true
+      else
+        ordered+=("$candidate")
+      fi
+    done
+    [[ "$local_host_requested" == false ]] || ordered+=("$HOST")
+    for candidate in "${ordered[@]}"; do
+      if [[ "$candidate" != zrrh && "$candidate" != "$HOST" ]]; then
+        "${SSH_PROBE[@]}" "zk@$(address "$candidate")" true || fail "$candidate is unreachable via Tailscale"
+      fi
+    done
+    prepare
+    action=boot
+    [[ "$switch" == false ]] || action=switch
+    echo "Deploy order: ${ordered[*]} ($action)"
+    for target in "${ordered[@]}"; do
       echo "==> deploy $target"
-      nh_os boot
-      schedule_reboot
+      nh_os "$action"
+    done
+    if [[ "$switch" == false ]]; then
+      for target in "${ordered[@]}"; do
+        delay=2
+        if [[ ${#ordered[@]} -gt 1 ]]; then
+          delay=5
+          [[ "$target" != "$HOST" ]] || delay=20
+        fi
+        schedule_reboot "$delay"
+      done
     fi
     ;;
   image)
