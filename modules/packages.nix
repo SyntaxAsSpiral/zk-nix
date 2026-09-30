@@ -31,7 +31,6 @@
 
     # Network
     curl
-    mosh
     openssh
     rsync
     sshfs

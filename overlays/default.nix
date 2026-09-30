@@ -6,7 +6,6 @@
 let
   nixpkgsFixes = import ./nixpkgs-fixes.nix;
   flakePackages = import ./flake-packages.nix { inherit inputs system; };
-  pins = import ./pins.nix;
 
   fromInputs = {
     cachyosKernel = inputs.nix-cachyos-kernel.overlays.pinned;
@@ -22,7 +21,6 @@ in
     fromInputs
     nixpkgsFixes
     flakePackages
-    pins
     ;
 
   # Host overlay map. Edit this first when a package override/pin should apply
@@ -30,14 +28,12 @@ in
   hosts = {
     adeck = [
       fromInputs.llmAgents
-      pins.tailscale
     ]
     ++ flakePackages;
 
     nxiz = [
       fromInputs.cachyosKernel
       fromInputs.hyprland
-      pins.tailscale
     ]
     ++ nixpkgsFixes
     ++ flakePackages;
@@ -45,12 +41,10 @@ in
     zrrh = [
       fromInputs.cachyosKernel
       fromInputs.llmAgents
-      pins.tailscale
     ]
     ++ nixpkgsFixes;
 
     tm20 = [
-      pins.tailscale
       (import ./tm20-cli.nix { inherit inputs; })
     ];
   };

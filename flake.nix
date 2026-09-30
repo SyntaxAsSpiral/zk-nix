@@ -7,11 +7,10 @@
     # nxiz keeps Hyprland 0.56.2 while its configuration is still hyprlang.
     nixpkgs-hyprland.url = "github:NixOS/nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
 
-    nixpkgs-sonic-pi.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
-
     # LLM inference stack (llama-cpp, vllm) with CUDA — deliberately pinned
     # so routine `nix flake update` never rebuilds the CUDA world.
-    # Bump explicitly with: nix flake update nixpkgs-llm
+    # The rev is in the URL. Replace it, then `nix flake update nixpkgs-llm`
+    # to refresh the lock hash. Registry: overlays/README.md.
     nixpkgs-llm.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
 
     home-manager = {

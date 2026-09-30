@@ -2,24 +2,8 @@
 {
   config,
   pkgs,
-  inputs,
   ...
 }:
-
-let
-  pinnedSonicPiPkgs = inputs.nixpkgs-sonic-pi.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  sonicPiPinned =
-    (pinnedSonicPiPkgs.sonic-pi.override {
-      ruby = pinnedSonicPiPkgs.ruby_3_3;
-      boost = pinnedSonicPiPkgs.boost186;
-    }).overrideAttrs
-      (old: {
-        doCheck = false;
-        meta = old.meta // {
-          broken = false;
-        };
-      });
-in
 
 {
   imports = [
@@ -54,7 +38,11 @@ in
       vlc
       zathura
       lmstudio
-      sonicPiPinned
+      # Upstream checkPhase starts jackd, which the sandbox cannot do.
+      # Ruby 3.3 and Boost 1.86 now come from nixpkgs itself.
+      (sonic-pi.overrideAttrs (_old: {
+        doCheck = false;
+      }))
       libreoffice
 
       # Dev Tools

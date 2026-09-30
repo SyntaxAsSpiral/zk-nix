@@ -118,7 +118,7 @@ Put config in `hosts/<host>/home.nix` when it is user-level and host-only:
 
 - Shared system behavior belongs in `modules/`.
 - Shared user behavior belongs in `modules/home/`.
-- Package pins and overrides belong in `overlays/`.
+- Package pins and overrides belong in `overlays/`. The registry, including when each hold can come off, is `overlays/README.md`.
 - Host divergence inside a shared module should usually be a visible `perHost` map keyed by `config.my.host`.
 
 The goal is not fewer lines. The goal is fast orientation: open the host file, see what the host is made of, then follow imports to the shared policy.

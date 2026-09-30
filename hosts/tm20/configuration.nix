@@ -57,7 +57,6 @@
 
   services.getty.autologinUser = "zk";
   services.openssh.enable = true;
-  programs.mosh.enable = true;
 
   # system.nix includes this file; empty is enough for nix-daemon to start.
   environment.etc."nixos/secrets/nix-access-tokens.conf" = {

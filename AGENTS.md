@@ -57,7 +57,7 @@ nix develop             # shell with nixd, nil, nixfmt, statix, deadnix
 - `devShells.x86_64-linux.default` — the lint/dev shell above
 - `checks.x86_64-linux.{statix,deadnix}` — tree lints
 
-Inputs follow `nixpkgs` (via `inputs.nixpkgs.follows`) except `nix-cachyos-kernel`, which is intentionally pinned to its own nixpkgs so kernel patches apply cleanly. Do not add a `follows` line to it.
+Inputs follow `nixpkgs` (via `inputs.nixpkgs.follows`) except `nix-cachyos-kernel`, which is intentionally pinned to its own nixpkgs so kernel patches apply cleanly. Do not add a `follows` line to it. Every hold that keeps a package or input off the moving pin is listed in `overlays/README.md`. Add the row, including the condition that removes it, in the same change as the pin.
 
 ### Per-host dispatch pattern
 
