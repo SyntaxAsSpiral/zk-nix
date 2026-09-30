@@ -1,0 +1,1003 @@
+{
+    "controllers": [
+        {
+            "active_mode": 0,
+            "colors": [
+                0,
+                0,
+                0,
+                0,
+                2622708
+            ],
+            "description": "Gigabyte RGB Fusion 2 GPU Device",
+            "display_name": "",
+            "flags": 1,
+            "leds": [
+                {
+                    "name": "GPU zone 1"
+                },
+                {
+                    "name": "GPU zone 2"
+                },
+                {
+                    "name": "GPU zone 3"
+                },
+                {
+                    "name": "GPU zone 4"
+                },
+                {
+                    "name": "GPU zone 5"
+                }
+            ],
+            "location": "I2C: /dev/i2c-1, address 0x71",
+            "modes": [
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 1,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 304,
+                    "name": "Direct",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 1,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 289,
+                    "name": "Pulse",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 1,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 305,
+                    "name": "Flash",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 1,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 305,
+                    "name": "Double Flash",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 0,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 17,
+                    "name": "Color Cycle",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 1,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 305,
+                    "name": "Gradient",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 0,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 273,
+                    "name": "Wave",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "colors_max": 8,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 337,
+                    "name": "Color Shift",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 99,
+                    "brightness_max": 99,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "colors_max": 3,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 337,
+                    "name": "Tricolor",
+                    "speed": 2,
+                    "speed_max": 5,
+                    "speed_min": 0
+                }
+            ],
+            "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+            "serial": "",
+            "type": 2,
+            "vendor": "Gigabyte",
+            "version": "",
+            "zones": [
+                {
+                    "display_name": "",
+                    "flags": 4096,
+                    "leds_count": 1,
+                    "leds_max": 1,
+                    "leds_min": 1,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "GPU zone 1",
+                    "type": 0
+                },
+                {
+                    "display_name": "",
+                    "flags": 4096,
+                    "leds_count": 1,
+                    "leds_max": 1,
+                    "leds_min": 1,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "GPU zone 2",
+                    "type": 0
+                },
+                {
+                    "display_name": "",
+                    "flags": 4096,
+                    "leds_count": 1,
+                    "leds_max": 1,
+                    "leds_min": 1,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "GPU zone 3",
+                    "type": 0
+                },
+                {
+                    "display_name": "",
+                    "flags": 4096,
+                    "leds_count": 1,
+                    "leds_max": 1,
+                    "leds_min": 1,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "GPU zone 4",
+                    "type": 0
+                },
+                {
+                    "display_name": "",
+                    "flags": 4096,
+                    "leds_count": 1,
+                    "leds_max": 1,
+                    "leds_min": 1,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "GPU zone 5",
+                    "type": 0
+                }
+            ]
+        },
+        {
+            "active_mode": 0,
+            "colors": [
+                16711935,
+                255,
+                255,
+                201712,
+                0,
+                0,
+                790101,
+                1553,
+                0,
+                0,
+                0,
+                3102,
+                553471,
+                71739,
+                0,
+                0,
+                6256,
+                24831,
+                5251327,
+                4722943,
+                6291711,
+                9437376,
+                13635712,
+                9437376,
+                6291711,
+                4722943,
+                1065215,
+                6256,
+                6256,
+                24831,
+                5251327,
+                4722943,
+                6291711,
+                9437376,
+                13635712,
+                9437376,
+                6291711,
+                4722943,
+                1065215,
+                6256,
+                6256,
+                24831,
+                5251327,
+                4722943,
+                6291711,
+                9437376,
+                13635712,
+                9437376,
+                6291711,
+                4722943,
+                1065215,
+                6256
+            ],
+            "description": "ASUS Aura USB Mainboard Device",
+            "display_name": "",
+            "flags": 1,
+            "leds": [
+                {
+                    "name": "Aura Mainboard, LED 1"
+                },
+                {
+                    "name": "Aura Mainboard, RGB Header 1"
+                },
+                {
+                    "name": "Aura Mainboard, RGB Header 2"
+                },
+                {
+                    "name": "Aura Mainboard, RGB Header 3"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 1"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 2"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 3"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 4"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 5"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 6"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 7"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 8"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 9"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 10"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 11"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 12"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 13"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 14"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 15"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 16"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 17"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 18"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 19"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 20"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 21"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 22"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 23"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 24"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 25"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 26"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 27"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 28"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 29"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 30"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 31"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 32"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 33"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 34"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 35"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 36"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 37"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 38"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 39"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 40"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 41"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 42"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 43"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 44"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 45"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 46"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 47"
+                },
+                {
+                    "name": "Aura Addressable 1, LED 48"
+                }
+            ],
+            "location": "HID: /dev/hidraw3",
+            "modes": [
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 1,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 32,
+                    "name": "Direct",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 0,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 256,
+                    "name": "Off",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0
+                    ],
+                    "colors_max": 1,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 320,
+                    "name": "Static",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0
+                    ],
+                    "colors_max": 1,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 320,
+                    "name": "Breathing",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0
+                    ],
+                    "colors_max": 1,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 320,
+                    "name": "Flashing",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 0,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 256,
+                    "name": "Spectrum Cycle",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 0,
+                    "colors_max": 0,
+                    "colors_min": 0,
+                    "direction": 0,
+                    "flags": 256,
+                    "name": "Rainbow",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0
+                    ],
+                    "colors_max": 1,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 320,
+                    "name": "Chase Fade",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                },
+                {
+                    "brightness": 0,
+                    "brightness_max": 0,
+                    "brightness_min": 0,
+                    "color_mode": 2,
+                    "colors": [
+                        0
+                    ],
+                    "colors_max": 1,
+                    "colors_min": 1,
+                    "direction": 0,
+                    "flags": 320,
+                    "name": "Chase",
+                    "speed": 0,
+                    "speed_max": 0,
+                    "speed_min": 0
+                }
+            ],
+            "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+            "serial": "9876543210",
+            "type": 0,
+            "vendor": "ASUS",
+            "version": "AULA3-AR32-0309",
+            "zones": [
+                {
+                    "display_name": "",
+                    "flags": 4096,
+                    "leds_count": 4,
+                    "leds_max": 4,
+                    "leds_min": 4,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "Aura Mainboard",
+                    "type": 1
+                },
+                {
+                    "display_name": "",
+                    "flags": 4098,
+                    "leds_count": 48,
+                    "leds_max": 120,
+                    "leds_min": 0,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "Aura Addressable 1",
+                    "segments": [
+                        {
+                            "flags": 0,
+                            "leds_count": 12,
+                            "matrix_map": {
+                                "height": 0,
+                                "width": 0
+                            },
+                            "name": "pump",
+                            "start_idx": 0,
+                            "type": 1
+                        },
+                        {
+                            "flags": 0,
+                            "leds_count": 12,
+                            "matrix_map": {
+                                "height": 0,
+                                "width": 0
+                            },
+                            "name": "f1",
+                            "start_idx": 12,
+                            "type": 1
+                        },
+                        {
+                            "flags": 0,
+                            "leds_count": 12,
+                            "matrix_map": {
+                                "height": 0,
+                                "width": 0
+                            },
+                            "name": "f2",
+                            "start_idx": 24,
+                            "type": 1
+                        },
+                        {
+                            "flags": 0,
+                            "leds_count": 12,
+                            "matrix_map": {
+                                "height": 0,
+                                "width": 0
+                            },
+                            "name": "f3",
+                            "start_idx": 36,
+                            "type": 1
+                        }
+                    ],
+                    "type": 1
+                },
+                {
+                    "display_name": "",
+                    "flags": 2,
+                    "leds_count": 0,
+                    "leds_max": 120,
+                    "leds_min": 0,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "Aura Addressable 2",
+                    "type": 1
+                },
+                {
+                    "display_name": "",
+                    "flags": 2,
+                    "leds_count": 0,
+                    "leds_max": 120,
+                    "leds_min": 0,
+                    "matrix_map": {
+                        "height": 0,
+                        "width": 0
+                    },
+                    "name": "Aura Addressable 3",
+                    "type": 1
+                }
+            ]
+        }
+    ],
+    "profile_name": "sunset",
+    "profile_version": 6,
+    "plugins": {
+        "OpenRGB Effects Plugin": {
+            "Effects": [
+                {
+                    "AllowOnlyFirst": false,
+                    "AutoStart": true,
+                    "Brightness": 100,
+                    "ControllerZones": [
+                        {
+                            "description": "ASUS Aura USB Mainboard Device",
+                            "is_segment": true,
+                            "location": "HID: /dev/hidraw3",
+                            "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                            "reverse": true,
+                            "segment_idx": 0,
+                            "self_brightness": 100,
+                            "serial": "9876543210",
+                            "vendor": "ASUS",
+                            "version": "AULA3-AR32-0309",
+                            "zone_idx": 1
+                        }
+                    ],
+                    "CustomName": "",
+                    "CustomSettings": {
+                        "animation_direction": 1,
+                        "animation_speed": 20.0,
+                        "color_mode": 1,
+                        "color_rotation_direction": 0,
+                        "color_rotation_speed": 39.0,
+                        "colors": [
+                            85,
+                            22015,
+                            8323327,
+                            8323157,
+                            33023,
+                            170
+                        ],
+                        "cx": 21,
+                        "cy": 3,
+                        "spacing": 2,
+                        "thickness": 4
+                    },
+                    "EffectClassName": "Hypnotoad",
+                    "FPS": 60,
+                    "RandomColors": false,
+                    "Slider2Val": 1,
+                    "Speed": 14,
+                    "Temperature": 100,
+                    "Tint": 0
+                },
+                {
+                    "AllowOnlyFirst": false,
+                    "AutoStart": true,
+                    "Brightness": 11,
+                    "ControllerZones": [
+                        {
+                            "description": "ASUS Aura USB Mainboard Device",
+                            "is_segment": false,
+                            "location": "HID: /dev/hidraw3",
+                            "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "9876543210",
+                            "vendor": "ASUS",
+                            "version": "AULA3-AR32-0309",
+                            "zone_idx": 0
+                        }
+                    ],
+                    "CustomName": "",
+                    "EffectClassName": "GradientWave",
+                    "FPS": 60,
+                    "RandomColors": false,
+                    "Slider2Val": 1,
+                    "Speed": 19,
+                    "Temperature": 100,
+                    "Tint": 100,
+                    "UserColors": [
+                        331050,
+                        265271
+                    ]
+                },
+                {
+                    "AllowOnlyFirst": false,
+                    "AutoStart": true,
+                    "Brightness": 8,
+                    "ControllerZones": [
+                        {
+                            "description": "ASUS Aura USB Mainboard Device",
+                            "is_segment": true,
+                            "location": "HID: /dev/hidraw3",
+                            "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                            "reverse": false,
+                            "segment_idx": 1,
+                            "self_brightness": 100,
+                            "serial": "9876543210",
+                            "vendor": "ASUS",
+                            "version": "AULA3-AR32-0309",
+                            "zone_idx": 1
+                        },
+                        {
+                            "description": "ASUS Aura USB Mainboard Device",
+                            "is_segment": true,
+                            "location": "HID: /dev/hidraw3",
+                            "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                            "reverse": false,
+                            "segment_idx": 2,
+                            "self_brightness": 100,
+                            "serial": "9876543210",
+                            "vendor": "ASUS",
+                            "version": "AULA3-AR32-0309",
+                            "zone_idx": 1
+                        },
+                        {
+                            "description": "ASUS Aura USB Mainboard Device",
+                            "is_segment": true,
+                            "location": "HID: /dev/hidraw3",
+                            "name": "ASUS ROG STRIX X670E-E GAMING WIFI",
+                            "reverse": false,
+                            "segment_idx": 3,
+                            "self_brightness": 100,
+                            "serial": "9876543210",
+                            "vendor": "ASUS",
+                            "version": "AULA3-AR32-0309",
+                            "zone_idx": 1
+                        }
+                    ],
+                    "CustomName": "",
+                    "CustomSettings": {
+                        "grow_speed": 10,
+                        "intensity_speed": 41,
+                        "max_intensity": 80,
+                        "motion": false,
+                        "radius": 50,
+                        "run_once": false
+                    },
+                    "EffectClassName": "Sunrise",
+                    "FPS": 60,
+                    "RandomColors": false,
+                    "Slider2Val": 1,
+                    "Speed": 7,
+                    "Temperature": 35,
+                    "Tint": 0,
+                    "UserColors": [
+                        85,
+                        8323327,
+                        22015,
+                        8323157
+                    ]
+                },
+                {
+                    "AllowOnlyFirst": false,
+                    "AutoStart": true,
+                    "Brightness": 100,
+                    "ControllerZones": [
+                        {
+                            "description": "Gigabyte RGB Fusion 2 GPU Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-1, address 0x71",
+                            "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                            "reverse": true,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "Gigabyte",
+                            "version": "",
+                            "zone_idx": 0
+                        },
+                        {
+                            "description": "Gigabyte RGB Fusion 2 GPU Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-1, address 0x71",
+                            "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                            "reverse": true,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "Gigabyte",
+                            "version": "",
+                            "zone_idx": 1
+                        },
+                        {
+                            "description": "Gigabyte RGB Fusion 2 GPU Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-1, address 0x71",
+                            "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                            "reverse": true,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "Gigabyte",
+                            "version": "",
+                            "zone_idx": 2
+                        },
+                        {
+                            "description": "Gigabyte RGB Fusion 2 GPU Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-1, address 0x71",
+                            "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                            "reverse": true,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "Gigabyte",
+                            "version": "",
+                            "zone_idx": 3
+                        }
+                    ],
+                    "CustomName": "",
+                    "CustomSettings": {
+                        "colors": [
+                            0,
+                            0,
+                            0,
+                            16711765,
+                            8323157,
+                            7481,
+                            0,
+                            0,
+                            8323242,
+                            85,
+                            94,
+                            4468059,
+                            0,
+                            0,
+                            0,
+                            4928050,
+                            3539016
+                        ]
+                    },
+                    "EffectClassName": "CustomMarquee",
+                    "FPS": 60,
+                    "RandomColors": false,
+                    "Slider2Val": 1,
+                    "Speed": 9,
+                    "Temperature": 100,
+                    "Tint": 100
+                },
+                {
+                    "AllowOnlyFirst": false,
+                    "AutoStart": true,
+                    "Brightness": 100,
+                    "ControllerZones": [
+                        {
+                            "description": "Gigabyte RGB Fusion 2 GPU Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-1, address 0x71",
+                            "name": "Gigabyte GeForce RTX 4090 GAMING OC",
+                            "reverse": true,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "Gigabyte",
+                            "version": "",
+                            "zone_idx": 4
+                        }
+                    ],
+                    "CustomName": "",
+                    "CustomSettings": {
+                        "grow_speed": 10,
+                        "intensity_speed": 58,
+                        "max_intensity": 80,
+                        "motion": true,
+                        "radius": 67,
+                        "run_once": false
+                    },
+                    "EffectClassName": "Sunrise",
+                    "FPS": 60,
+                    "RandomColors": false,
+                    "Slider2Val": 1,
+                    "Speed": 2,
+                    "Temperature": 35,
+                    "Tint": 0,
+                    "UserColors": [
+                        85,
+                        8323327,
+                        22015,
+                        8323157
+                    ]
+                }
+            ],
+            "version": 2
+        }
+    }
+}

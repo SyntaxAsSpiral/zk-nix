@@ -14,22 +14,26 @@ in
     mkdir -p "${confPath}/plugins/settings"
     mkdir -p "${confPath}/logs"
 
-    # Symlink top-level config and profiles
+    # OpenRGB 1.0 reads OpenRGB.json, Configuration.json, and profiles/*.json.
+    # A .orp or .ors left in the config directory is renamed to .bak on startup,
+    # and the effects plugin skips a legacy effect file when a profile of the
+    # same name already exists. Keep those legacy files in the repo only.
     ln -sf "${repoPath}/OpenRGB.json" "${confPath}/OpenRGB.json"
-    ln -sf "${repoPath}/boot.orp" "${confPath}/boot.orp"
-    ln -sf "${repoPath}/off.orp" "${confPath}/off.orp"
-    ln -sf "${repoPath}/sunset.orp" "${confPath}/sunset.orp"
-    ln -sf "${repoPath}/sizes.ors" "${confPath}/sizes.ors"
+    ln -sf "${repoPath}/Configuration.json" "${confPath}/Configuration.json"
+    rm -f "${confPath}/boot.orp" "${confPath}/off.orp" "${confPath}/sunset.orp" "${confPath}/sizes.ors" \
+      "${confPath}/boot.orp.bak" "${confPath}/off.orp.bak" "${confPath}/sunset.orp.bak" "${confPath}/sizes.ors.bak"
+    if [ -L "${confPath}/plugins/settings/effect-profiles" ]; then
+      rm -f "${confPath}/plugins/settings/effect-profiles"
+    fi
 
     # Symlink plugin settings file
     ln -sf "${repoPath}/plugins/settings/EffectSettings.json" "${confPath}/plugins/settings/EffectSettings.json"
 
-    # Symlink the ENTIRE effect-profiles directory
-    # Force remove existing directory if it's not a symlink to prevent nesting
-    if [ -d "${confPath}/plugins/settings/effect-profiles" ] && [ ! -L "${confPath}/plugins/settings/effect-profiles" ]; then
-      rm -rf "${confPath}/plugins/settings/effect-profiles"
+    # Profiles are what the 1.0 UI lists, including effect stacks saved in them.
+    if [ -d "${confPath}/profiles" ] && [ ! -L "${confPath}/profiles" ]; then
+      rm -rf "${confPath}/profiles"
     fi
-    ln -sfn "${repoPath}/plugins/settings/effect-profiles" "${confPath}/plugins/settings/effect-profiles"
+    ln -sfn "${repoPath}/profiles" "${confPath}/profiles"
 
     # Skill is not written by the GUI. Point the whole directory at the flake.
     if [ -d "${confPath}/.agents" ] && [ ! -L "${confPath}/.agents" ]; then
