@@ -50,12 +50,12 @@ _:
     }
     {
       name = "steam-scratchpad";
-      "match:class" = "^(steam)$";
+      "match:class" = "^(steam|Steam)$";
       workspace = "special:magic silent";
     }
     {
       name = "lmstudio-scratchpad";
-      "match:class" = "^(LM Studio|LM-Studio)$";
+      "match:class" = "^(ai.elementlabs.lmstudio)$";
       workspace = "special:magic silent";
     }
     {
