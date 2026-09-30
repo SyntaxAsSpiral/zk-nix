@@ -188,7 +188,7 @@ release_zrrh_awake() {
 }
 hold_zrrh_awake() {
   release_zrrh_awake
-  local why=$1 fifo line
+  local why=$1 fifo line remote
   # An SSH session is not an active seat, so logind demands a polkit prompt
   # for a blocking sleep lock. sudo -n is the same passwordless path as reboot.
   fifo=$(mktemp)
@@ -198,9 +198,11 @@ hold_zrrh_awake() {
     sudo -n "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
       sh -c 'echo zcli-awake; exec sleep infinity' >"$fifo" &
   else
-    ssh_mesh run zrrh \
-      sudo -n "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
-      sh -c 'echo zcli-awake; exec sleep infinity' >"$fifo" &
+    # ssh joins its arguments and the remote shell parses that string.
+    # A reason of "zcli deploy zrrh" otherwise becomes the program inhibit runs.
+    printf -v remote 'sudo -n %q --what=sleep --who=zcli --why=%q --mode=block sh -c %q' \
+      "$INHIBIT" "$why" 'echo zcli-awake; exec sleep infinity'
+    ssh_mesh run zrrh "$remote" >"$fifo" &
   fi
   AWAKE_PID=$!
   if ! IFS= read -r line <"$fifo" || [[ "$line" != zcli-awake ]]; then

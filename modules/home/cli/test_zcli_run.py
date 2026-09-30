@@ -175,7 +175,7 @@ exit 0
         self.assertIn("os\nbuild\n-H\nnxiz\n", nh)
         self.assertIn("--what=sleep", nh)
         self.assertIn("--mode=block", nh)
-        self.assertIn("--why=zcli build nxiz", nh)
+        self.assertIn(r"--why=zcli\ build\ nxiz", nh)
         self.assertNotIn("--target-host", nh)
         self.assertFalse((self.root / "reboot.log").exists())
 
@@ -186,8 +186,8 @@ exit 0
         ssh = (self.root / "ssh.log").read_text()
         self.assertIn("boot", ssh)
         self.assertIn("--what=sleep", ssh)
-        self.assertIn("--why=zcli deploy nxiz", ssh)
-        self.assertIn("sleep\ninfinity", ssh)
+        self.assertIn(r"--why=zcli\ deploy\ nxiz", ssh)
+        self.assertIn(r"exec\ sleep\ infinity", ssh)
         self.assertIn("--target-host", ssh)
         self.assertIn("zk@nxiz", ssh)
         self.assertIn("100.115.135.104", ssh)
@@ -245,7 +245,7 @@ exit 0
         ssh = (self.root / "ssh.log").read_text()
         self.assertIn("--dry-run", ssh)
         self.assertIn("--what=sleep", ssh)
-        self.assertIn("--why=zcli image tm20", ssh)
+        self.assertIn(r"--why=zcli\ image\ tm20", ssh)
         self.assertNotIn("--out-link", ssh)
         self.assertFalse((self.root / "nix.log").exists())
 
