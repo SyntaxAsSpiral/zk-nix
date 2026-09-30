@@ -16,8 +16,7 @@ let
       hash = "sha256-6oSXZ9yTQEXdJxiQ9OkpWK/wqjZpLwMC4+3/1yv6Eu8=";
     };
 
-    go = pkgs.go_1_25;
-
+    # nixpkgs removed go_1_25. buildGoModule uses the current toolchain.
     proxyVendor = true;
     subPackages = [ "cmd/msgvault" ];
     tags = [ "fts5" ];

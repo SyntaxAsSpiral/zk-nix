@@ -71,6 +71,17 @@ printf '%s\\n' "$@" >> "$NH_LOG"
 echo nh >> "$TRACE"
 exit 0
 """)
+        self.write_bin("systemd-inhibit", """#!/bin/sh
+printf '%s\\n' "$@" >> "$INHIBIT_LOG"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --what|--who|--why|--mode) shift 2 ;;
+    --what=*|--who=*|--why=*|--mode=*) shift ;;
+    *) break ;;
+  esac
+done
+exec "$@"
+""")
         self.write_bin("nix", """#!/bin/sh
 printf '%s\\n' "$@" >> "$NIX_LOG"
 exit 0
@@ -81,6 +92,8 @@ exit 0
             "PATH": f"{bin_dir}:{os.environ['PATH']}",
             "TEST_HOST": "adeck",
             "ZCLI_NH": str(bin_dir / "nh"),
+            "ZCLI_INHIBIT": str(bin_dir / "systemd-inhibit"),
+            "INHIBIT_LOG": str(self.root / "inhibit.log"),
             "ZCLI_NIX": str(bin_dir / "nix"),
             "ZCLI_WAKE": str(bin_dir / "wakeonlan"),
             "ZCLI_SYNC": str(bin_dir / "zcli-sync"),
@@ -156,6 +169,9 @@ exit 0
         self.assertEqual(self.trace(), ["ready", "sync", "nh"])
         nh = (self.root / "ssh.log").read_text()
         self.assertIn("os\nbuild\n-H\nnxiz\n", nh)
+        self.assertIn("--what=sleep", nh)
+        self.assertIn("--mode=block", nh)
+        self.assertIn("--why=zcli build nxiz", nh)
         self.assertNotIn("--target-host", nh)
         self.assertFalse((self.root / "reboot.log").exists())
 
@@ -165,6 +181,9 @@ exit 0
         self.assertEqual(self.trace(), ["ready", "sync", "nh", "reboot"])
         ssh = (self.root / "ssh.log").read_text()
         self.assertIn("boot", ssh)
+        self.assertIn("--what=sleep", ssh)
+        self.assertIn("--why=zcli deploy nxiz", ssh)
+        self.assertIn("sleep\ninfinity", ssh)
         self.assertIn("--target-host", ssh)
         self.assertIn("zk@nxiz", ssh)
         self.assertIn("100.115.135.104", ssh)
@@ -220,6 +239,8 @@ exit 0
         self.invoke("image", "tm20", "--dry")
         ssh = (self.root / "ssh.log").read_text()
         self.assertIn("--dry-run", ssh)
+        self.assertIn("--what=sleep", ssh)
+        self.assertIn("--why=zcli image tm20", ssh)
         self.assertNotIn("--out-link", ssh)
         self.assertFalse((self.root / "nix.log").exists())
 

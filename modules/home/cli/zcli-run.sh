@@ -6,6 +6,7 @@ shopt -s inherit_errexit
 HOST=$(hostname)
 NH=${ZCLI_NH:-/run/current-system/sw/bin/nh}
 NIX=${ZCLI_NIX:-/run/current-system/sw/bin/nix}
+INHIBIT=${ZCLI_INHIBIT:-/run/current-system/sw/bin/systemd-inhibit}
 WAKE=${ZCLI_WAKE:-/run/current-system/sw/bin/wakeonlan}
 SYNC=${ZCLI_SYNC:-zcli-sync}
 CANONICAL=${ZCLI_CANONICAL:-/mnt/echo/nix-os}
@@ -83,6 +84,7 @@ usage() {
   section NOTES
   printf '    canonical source is adeck:/mnt/echo/nix-os\n'
   printf '    build, deploy, and image wake zrrh, then sync that snapshot to zrrh:/etc/nixos\n'
+  printf '    those jobs hold a sleep lock on zrrh so Noctalia idle does not suspend it\n'
   printf '    direct nh os stays on the machine where you run it\n'
   printf '    build takes one host; deploy takes one or more distinct hosts\n'
   printf '    stage changes you want included; unstaged files stay local\n'
@@ -156,6 +158,31 @@ run_on_zrrh() {
   [[ "$mode" == tty && -t 1 ]] && ssh+=(-t)
   "${ssh[@]}" "zk@$(address zrrh)" "$@"
 }
+
+# Noctalia suspends zrrh after 30 minutes without keyboard or mouse.
+# One lock covers the whole job, including the gaps in a multi-host deploy.
+# A per-command lock would drop between hosts and let a waiting suspend through.
+AWAKE_PID=
+release_zrrh_awake() {
+  [[ -n "${AWAKE_PID:-}" ]] || return 0
+  kill "$AWAKE_PID" 2>/dev/null || true
+  wait "$AWAKE_PID" 2>/dev/null || true
+  AWAKE_PID=
+}
+hold_zrrh_awake() {
+  release_zrrh_awake
+  local why=$1
+  if [[ "$HOST" == zrrh ]]; then
+    "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block sleep infinity &
+  else
+    "${SSH_RUN[@]}" "zk@$(address zrrh)" \
+      "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block sleep infinity &
+  fi
+  AWAKE_PID=$!
+}
+trap release_zrrh_awake EXIT
+trap 'release_zrrh_awake; exit 130' INT
+trap 'release_zrrh_awake; exit 143' TERM
 
 zrrh_ready() {
   local err status
@@ -312,6 +339,7 @@ case "$cmd" in
     target=${hosts[0]}
     valid_host "$target"
     prepare
+    hold_zrrh_awake "zcli build $target"
     echo "==> build $target"
     nh_os build
     ;;
@@ -338,6 +366,7 @@ case "$cmd" in
       fi
     done
     prepare
+    hold_zrrh_awake "zcli deploy ${ordered[*]}"
     action=boot
     [[ "$switch" == false ]] || action=switch
     echo "Deploy order: ${ordered[*]} ($action)"
@@ -360,6 +389,7 @@ case "$cmd" in
     [[ ${#hosts[@]} -eq 1 && "${hosts[0]}" == tm20 ]] || fail "sd image is only defined for tm20"
     target=tm20
     prepare
+    hold_zrrh_awake "zcli image tm20"
     build_image
     ;;
   *)

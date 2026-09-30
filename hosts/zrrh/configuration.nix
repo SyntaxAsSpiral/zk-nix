@@ -96,7 +96,8 @@ in
     xwayland-satellite
     pkgsLlm.llama-cpp
     llm-agents.pi
-    llm-agents.codex
+    # Numtide's cached build. shared-nixpkgs recompiles this on every nixpkgs bump.
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
     llm-agents.gemini-cli
     llm-agents.crush
     llm-agents.grok
