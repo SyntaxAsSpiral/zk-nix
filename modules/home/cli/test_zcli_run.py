@@ -37,6 +37,10 @@ if printf '%s' "$joined" | grep -q 'systemd-run'; then
   echo reboot >> "$TRACE"
   exit 0
 fi
+if printf '%s' "$joined" | grep -q 'systemd-inhibit'; then
+  echo zcli-awake
+  exit 0
+fi
 if printf '%s' "$joined" | grep -q ' os '; then
   echo nh >> "$TRACE"
   exit 0
@@ -187,6 +191,7 @@ exit 0
         self.assertIn("--target-host", ssh)
         self.assertIn("zk@nxiz", ssh)
         self.assertIn("100.115.135.104", ssh)
+        self.assertIn("HostKeyAlias=nxiz", ssh)
         self.assertIn("--on-active=2", ssh)
         self.assertIn("systemctl", ssh)
 

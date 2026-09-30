@@ -146,6 +146,21 @@ valid_host() {
   esac
 }
 
+# Dial the Tailscale IP. known_hosts is keyed by mesh name, so the host key
+# is checked as that name. probe|run|tty selects the ssh option set.
+ssh_mesh() {
+  local mode=$1 name=$2
+  shift 2
+  local -a ssh
+  case "$mode" in
+    probe) ssh=("${SSH_PROBE[@]}") ;;
+    run) ssh=("${SSH_RUN[@]}") ;;
+    tty) ssh=("${SSH_RUN[@]}" -t) ;;
+    *) fail "ssh mode: $mode" ;;
+  esac
+  "${ssh[@]}" -o "HostKeyAlias=$name" "zk@$(address "$name")" "$@"
+}
+
 # Run argv on zrrh. tty requests a remote tty so nh can draw its build graph.
 run_on_zrrh() {
   local mode=$1
@@ -154,9 +169,11 @@ run_on_zrrh() {
     "$@"
     return
   fi
-  local -a ssh=("${SSH_RUN[@]}")
-  [[ "$mode" == tty && -t 1 ]] && ssh+=(-t)
-  "${ssh[@]}" "zk@$(address zrrh)" "$@"
+  if [[ "$mode" == tty && -t 1 ]]; then
+    ssh_mesh tty zrrh "$@"
+  else
+    ssh_mesh run zrrh "$@"
+  fi
 }
 
 # Noctalia suspends zrrh after 30 minutes without keyboard or mouse.
@@ -171,14 +188,27 @@ release_zrrh_awake() {
 }
 hold_zrrh_awake() {
   release_zrrh_awake
-  local why=$1
+  local why=$1 fifo line
+  # An SSH session is not an active seat, so logind demands a polkit prompt
+  # for a blocking sleep lock. sudo -n is the same passwordless path as reboot.
+  fifo=$(mktemp)
+  rm -f "$fifo"
+  mkfifo "$fifo"
   if [[ "$HOST" == zrrh ]]; then
-    "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block sleep infinity &
+    sudo -n "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
+      sh -c 'echo zcli-awake; exec sleep infinity' >"$fifo" &
   else
-    "${SSH_RUN[@]}" "zk@$(address zrrh)" \
-      "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block sleep infinity &
+    ssh_mesh run zrrh \
+      sudo -n "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
+      sh -c 'echo zcli-awake; exec sleep infinity' >"$fifo" &
   fi
   AWAKE_PID=$!
+  if ! IFS= read -r line <"$fifo" || [[ "$line" != zcli-awake ]]; then
+    rm -f "$fifo"
+    release_zrrh_awake
+    fail "zrrh refused the sleep lock"
+  fi
+  rm -f "$fifo"
 }
 trap release_zrrh_awake EXIT
 trap 'release_zrrh_awake; exit 130' INT
@@ -187,7 +217,7 @@ trap 'release_zrrh_awake; exit 143' TERM
 zrrh_ready() {
   local err status
   set +e
-  err=$("${SSH_PROBE[@]}" "zk@$(address zrrh)" "$NIX" store info 2>&1 >/dev/null)
+  err=$(ssh_mesh probe zrrh "$NIX" store info 2>&1 >/dev/null)
   status=$?
   set -e
   [[ "$status" -eq 0 ]] && return 0
@@ -202,7 +232,7 @@ send_wake() {
   if [[ "$HOST" == adeck ]]; then
     "$WAKE" -i "$WOL_BCAST" "$WOL_MAC"
   else
-    "${SSH_RUN[@]}" "zk@$(address adeck)" "$WAKE" -i "$WOL_BCAST" "$WOL_MAC"
+    ssh_mesh run adeck "$WAKE" -i "$WOL_BCAST" "$WOL_MAC"
   fi
 }
 
@@ -244,7 +274,7 @@ schedule_reboot() {
   if [[ "$target" == "$HOST" ]]; then
     "${reboot_cmd[@]}"
   else
-    "${SSH_RUN[@]}" "zk@$(address "$target")" "${reboot_cmd[@]}"
+    ssh_mesh run "$target" "${reboot_cmd[@]}"
   fi
   echo "reboot scheduled on $target"
 }
@@ -362,7 +392,9 @@ case "$cmd" in
     [[ "$local_host_requested" == false ]] || ordered+=("$HOST")
     for candidate in "${ordered[@]}"; do
       if [[ "$candidate" != zrrh && "$candidate" != "$HOST" ]]; then
-        "${SSH_PROBE[@]}" "zk@$(address "$candidate")" true || fail "$candidate is unreachable via Tailscale"
+        if ! err=$(ssh_mesh probe "$candidate" true 2>&1); then
+          fail "$candidate: ${err:-ssh failed}"
+        fi
       fi
     done
     prepare
