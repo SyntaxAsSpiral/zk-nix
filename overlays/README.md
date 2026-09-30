@@ -25,6 +25,7 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 | Hold | Where | Hosts | Why | Drop when |
 | --- | --- | --- | --- | --- |
 | HyprPanel `1961ba86` (2026-04-23) | `nixpkgs-fixes.nix`, `hyprpanel-package.nix` | overlay on nxiz and zrrh; nxiz installs it | On nixpkgs 2026-07-21 the hyprpanel alias throws. Upstream archived the project for wayle. | nxiz leaves HyprPanel, or nixpkgs packages a build this config can use. |
+| astal-cava input map | `nixpkgs-fixes.nix`, `patches/astal-cava-input-map.patch` | nxiz, zrrh (the HyprPanel overlay) | astal `fd94e333` casts `AstalCavaInput` onto libcava 1.0.0. Pipewire is 2 in Astal and coreaudio is 2 in libcava, so startup calls `strlen` on a null source and the panel dumps core. | nixpkgs astal maps the input through `astal_input_to_cava` (upstream `main` already does). |
 | tumbler without libgepub | `nixpkgs-fixes.nix` | nxiz, zrrh | The EPUB thumbnailer pulls webkitgtk. | EPUB thumbnails are worth that build. |
 | LM Studio `/etc/nixos` bind | `nixpkgs-fixes.nix` | nxiz, zrrh | Upstream bwrap skips `/etc`, so `~/.lmstudio` symlinks into the flake fail. The old rpath patchelf workaround came off after nixpkgs#511533. | The upstream wrapper binds `/etc`, or those symlinks leave `/etc/nixos`. |
 | fsel desktop-entry cache | `flake-packages.nix`, `patches/fsel-disable-desktop-entry-cache.patch` | adeck, nxiz | The cache hides newly installed desktop files. | Upstream fsel stops serving a stale file list. |

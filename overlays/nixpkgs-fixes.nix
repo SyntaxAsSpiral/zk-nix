@@ -1,8 +1,22 @@
 [
   # nixpkgs 2026-07-21: hyprpanel alias throws (upstream archived for wayle).
   # Keep the last packaged revision so nxiz's existing panel/config still builds.
-  (_final: prev: {
-    hyprpanel = prev.callPackage ./hyprpanel-package.nix { };
+  # astal fd94e333 casts AstalCavaInput onto libcava's enum. Pipewire is 2 in
+  # Astal and coreaudio is 2 in libcava 1.0.0, so get_input strlens a null source.
+  (final: prev: {
+    astal = prev.astal.overrideScope (
+      _final: prevScope: {
+        cava = prevScope.cava.overrideAttrs (old: {
+          patches = (old.patches or [ ]) ++ [
+            ./patches/astal-cava-input-map.patch
+          ];
+        });
+      }
+    );
+
+    hyprpanel = prev.callPackage ./hyprpanel-package.nix {
+      astal = final.astal;
+    };
   })
 
   # Build tumbler without EPUB thumbnailer (libgepub) to avoid webkitgtk

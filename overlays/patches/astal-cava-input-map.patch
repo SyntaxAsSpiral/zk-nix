@@ -1,0 +1,53 @@
+--- a/cava.c
++++ b/cava.c
+@@ -107,6 +107,33 @@
+     free_config(&priv->cfg);
+ }
+ 
++static enum input_method astal_input_to_cava(AstalCavaInput input) {
++    switch (input) {
++        case ASTAL_CAVA_INPUT_FIFO:
++            return INPUT_FIFO;
++        case ASTAL_CAVA_INPUT_PORTAUDIO:
++            return INPUT_PORTAUDIO;
++        case ASTAL_CAVA_INPUT_PIPEWIRE:
++            return INPUT_PIPEWIRE;
++        case ASTAL_CAVA_INPUT_ALSA:
++            return INPUT_ALSA;
++        case ASTAL_CAVA_INPUT_PULSE:
++            return INPUT_PULSE;
++        case ASTAL_CAVA_INPUT_SNDIO:
++            return INPUT_SNDIO;
++        case ASTAL_CAVA_INPUT_OSS:
++            return INPUT_OSS;
++        case ASTAL_CAVA_INPUT_JACK:
++            return INPUT_JACK;
++        case ASTAL_CAVA_INPUT_SHMEM:
++            return INPUT_SHMEM;
++        case ASTAL_CAVA_INPUT_WINSCAP:
++            return INPUT_WINSCAP;
++        default:
++            return INPUT_PIPEWIRE;
++    }
++}
++
+ static void astal_cava_cava_start(AstalCavaCava* self) {
+     AstalCavaCavaPrivate* priv = astal_cava_cava_get_instance_private(self);
+ 
+@@ -145,7 +172,7 @@
+         .stereo = self->stereo,
+         .noise_reduction = self->noise_reduction,
+         .framerate = self->framerate,
+-        .input = (enum input_method)self->input,
++        .input = astal_input_to_cava(self->input),
+         .channels = self->channels,
+         .lower_cut_off = self->low_cutoff,
+         .upper_cut_off = self->high_cutoff,
+@@ -229,6 +256,7 @@
+                 break;
+             default:
+                 g_critical("unsupported audio source");
++                priv->cfg.audio_source = g_strdup("auto");
+         }
+     } else {
+         priv->cfg.audio_source = g_strdup(self->audio_source);
