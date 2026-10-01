@@ -32,5 +32,5 @@ openrgb --noautoconnect -d 0 -z 1 --size 48 --mode Direct --color \
 ## Notes
 
 - Direct mode does NOT persist across power loss — must be re-applied
-- Detector config in `~/.config/OpenRGB/OpenRGB.json` locks out all SMBus/GPU probing (only ASUS Aura USB enabled)
+- Detector flags in `OpenRGB.json` are a per-device allow list. `Gigabyte GeForce RTX 4090 GAMING OC` and the ASUS Aura USB and motherboard entries this build uses are enabled. `Gigabyte RGB Fusion 2 SMBus` stays disabled.
 - Do NOT run `openrgb -sp` after setting Direct mode colors — it saves all-black

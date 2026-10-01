@@ -57,37 +57,37 @@ nix develop             # shell with nixd, nil, nixfmt, statix, deadnix
 - `devShells.x86_64-linux.default` — the lint/dev shell above
 - `checks.x86_64-linux.{statix,deadnix}` — tree lints
 
-Inputs follow `nixpkgs` (via `inputs.nixpkgs.follows`) except `nix-cachyos-kernel`, which is intentionally pinned to its own nixpkgs so kernel patches apply cleanly. Do not add a `follows` line to it. Every hold that keeps a package or input off the moving pin is listed in `overlays/README.md`. Add the row, including the condition that removes it, in the same change as the pin.
+Branch inputs that set `inputs.nixpkgs.follows` track the root nixpkgs pin. An input whose URL names a commit or a tag stays put. `nix-cachyos-kernel` is pinned to its own nixpkgs so kernel patches apply cleanly, and it has no `follows` line; do not add one. Every hold that keeps a package or input off the moving pin is listed in `overlays/README.md`. Add the row, including the condition that removes it, in the same change as the pin.
 
 ### Per-host dispatch pattern
 
-`modules/system.nix` declares `options.my.host` as an enum of `nxiz | adeck | zrrh`, plus `options.my.flakePath` (where `nh` reads the flake on that host, normally `/etc/nixos`). `zcli` publishes from adeck:`/mnt/echo/nix-os`. Shared modules that vary per host pick from a `perHost` attrset keyed on `config.my.host`. Current consumers: `boot.nix`, `networking.nix`, `storage.nix` (taildrive mounts), `ssh-identity.nix`, and similar. When adding host-specific behavior to a shared module, extend the `perHost` attrset rather than branching on `hostName`.
+`modules/system.nix` declares `options.my.host` as an enum of `nxiz | adeck | zrrh | tm20`, plus `options.my.flakePath` (where `nh` reads the flake on that host, normally `/etc/nixos`). `zcli` publishes from adeck:`/mnt/echo/nix-os`. Shared modules that vary per host pick from a `perHost` attrset keyed on `config.my.host`. Current `perHost` attrsets: `boot.nix`, `networking.nix`, and `storage.nix` (taildrive mounts). Other modules read `config.my.host` directly, including `secrets.nix`, `services.nix`, `ssh-identity.nix`, and `qbittorrent.nix`. When adding host-specific behavior to a shared module, extend the `perHost` attrset rather than branching on `hostName`.
 
 Each host's `configuration.nix` sets `my.host = "<name>"` and imports profiles plus only the modules unique to it:
 
-- `modules/profiles/core.nix` — baseline every host imports (system, boot, nh, user, services, storage, packages, networking, fonts, ssh-identity)
+- `modules/profiles/core.nix` — baseline for adeck, nxiz, and zrrh (system, boot, nh, user, secrets, services, storage, packages, networking, fonts, ssh-identity). tm20 imports system, networking, ssh-identity, secrets, and nh on its own and does not import this profile.
 - `modules/profiles/desktop.nix` — nxiz + zrrh only (nvidia, steam, performance, thunar, appimage); adeck deliberately does not import it
-- `modules/home/profiles/base.nix` — HM baseline every host imports (CLI set, nushell, xdg, nano/zed, hermes, zcli, daemon-profile, user identity)
-- `modules/home/profiles/desktop.nix` — HM for GUI hosts (catppuccin, firefox, gtk, icons, spotify, thunar, fzf-emoji); no catppuccin on adeck pending stylix migration
+- `modules/home/profiles/base.nix` — HM baseline for adeck, nxiz, and zrrh (CLI set, nushell, xdg, nano/zed, zcli, daemon-profile). Hermes is imported from `hosts/adeck/home.nix` only.
+- `modules/home/profiles/desktop.nix` — HM for nxiz and zrrh (nix-colors catppuccin-macchiato, firefox, gtk, icons, spotify, thunar, fzf-emoji). adeck does not import it.
 
 Anything in a host's `configuration.nix`/`home.nix` beyond profile imports should be genuinely unique to that host.
 
 ### Module layout
 
-- `modules/*.nix` — system-level modules. Current set: `boot.nix`, `fonts.nix`, `greetd.nix`, `ly.nix`, `networking.nix`, `nh.nix`, `nvidia.nix`, `openrgb/`, `packages.nix`, `performance.nix`, `profiles/`, `pulse-generator.nix`, `qbittorrent.nix`, `services.nix`, `ssh-identity.nix`, `steam.nix`, `storage.nix`, `system.nix`, `user.nix`. Membership in `profiles/{core,desktop}.nix` determines what is shared; greetd/ly/openrgb/pulse-generator/qbittorrent/sideriod-mcp are imported directly by the hosts that use them.
+- `modules/*.nix` — system-level modules. Current set: `boot.nix`, `fonts.nix`, `greetd.nix`, `llama-tts.nix`, `networking.nix`, `nh.nix`, `nvidia.nix`, `openrgb/`, `packages.nix`, `performance.nix`, `profiles/`, `pulse-generator.nix`, `qbittorrent.nix`, `secrets.nix`, `services.nix`, `sideriod-mcp.nix`, `ssh-identity.nix`, `steam.nix`, `storage.nix`, `system.nix`, `user.nix`. Membership in `profiles/{core,desktop}.nix` determines what is shared; greetd, openrgb, pulse-generator, qbittorrent, and sideriod-mcp are imported directly by the hosts that use them. `llama-tts.nix` is imported by adeck only.
 - `modules/home/` — Home-Manager modules grouped by concern. Hosts opt in by importing from `hosts/<host>/home.nix`.
   - `cli/` — bat, btop, eza, fastfetch, fish, fun, fzf, gh, git, jolt, lazygit, yazi, zcli
   - `editors/` — nano, obsidian, zed
   - `browser/` — firefox
   - `terminal/` — alacritty, ghostty, kitty
-  - `hyprland/` — nxiz-only: appearance, hypridle, hyprland, keybinds, monitors, waybar integration, windowrules
+  - `hyprland/` — nxiz-only: appearance, hypridle, hyprland, hyprpanel, keybinds, monitors, windowrules
   - `niri/` — per-host configs: `adeck.nix`, `zrrh.nix`
-  - `daemonturgy/` — daemon/agent tooling: `hermes/`, `lmstudio/{adeck,nxiz,zrrh}/`, `mods/`
+  - `daemonturgy/` — daemon/agent tooling: `herm/`, `hermes/`, `lmstudio/{adeck,nxiz,zrrh}/`, `mods/`, `pi/`, `stackchan/`
   - `noctalia/` — per-host: `zrrh/`
   - `otter-launcher/` — launcher configs: `zrrh/`
   - `waybar/` — `adeck.nix`
-  - `profiles/` — `base.nix` (all hosts) and `desktop.nix` (nxiz + zrrh); see Per-host dispatch pattern above
-  - Top-level HM modules: `awww.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `kaleidux.nix`, `msgvault.nix`, `nushell.nix`, `openrgb.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
+  - `profiles/` — `base.nix` (adeck, nxiz, zrrh) and `desktop.nix` (nxiz + zrrh); see Per-host dispatch pattern above
+  - Top-level HM modules: `awww.nix`, `awww-cycle.nix`, `bb-server.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `msgvault.nix`, `nushell.nix`, `openrgb.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
 - `modules/home/cli/zcli.nix` — HM module for the `zcli` wrapper. Sync is `zcli-sync.sh`. Wake, build, deploy, and image are `zcli-run.sh`.
 - `hosts/<host>/hardware-configuration.nix` — host-specific hardware; do not share across hosts.
 
@@ -101,7 +101,7 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 
 ### Theming
 
-`catppuccin-nix` is currently wired into nxiz and will be replaced with `nix-colors` + `stylix`. Do **not** add catppuccin imports to `adeck` modules — its theming is intentionally unset pending migration. `nix-colors` is already available as an input and HM module.
+`modules/home/catppuccin.nix` sets the Home Manager color scheme from `nix-colors` (`catppuccin-macchiato`). nxiz and zrrh import it through the desktop home profile. adeck does not import that profile, and its theming stays unset. This flake has no `catppuccin-nix` input and no stylix module.
 
 ## Scripts
 

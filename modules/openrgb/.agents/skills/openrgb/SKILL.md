@@ -1,10 +1,10 @@
 ---
 name: openrgb
-description: Advanced OpenRGB integration for ambient computing — SDK server automation, remote display surfaces, presence indicators, notification channels, and event-driven effects using openrgb-python. Use when building RGB as an ambient interface layer, presence/notification systems, multi-host lighting coordination, or system-event-driven effects.
+description: Advanced OpenRGB integration for ambient computing — SDK server automation, remote display surfaces, presence indicators, notification channels, and event-driven effects using openrgb-python. On zrrh, OpenRGB is pinned to 1.0rc3.1 and a saved look is three files (colors, segments, effects). Use when building RGB as an ambient interface layer, or when changing this host's OpenRGB config.
 compatibility: Requires OpenRGB with SDK server enabled, openrgb-python (pip). Network features require hosts reachable over TCP. Linux recommended; partial Windows/macOS support.
 metadata:
   author: zk
-  version: "0.2"
+  version: "0.3"
 ---
 
 # OpenRGB Ambient
@@ -101,18 +101,13 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-### NixOS Declarative
+### This flake (zrrh)
 
-```nix
-services.hardware.openrgb = {
-  enable = true;
-  package = pkgs.openrgb-with-all-plugins;
-  motherboard = "amd"; # or "intel"
-  server.port = 6742;
-};
-boot.kernelModules = [ "i2c-dev" ];
-hardware.i2c.enable = true;
-```
+OpenRGB is zrrh-only. `modules/openrgb/default.nix` installs `pkgs.openrgb-with-all-plugins` and loads `i2c-dev`. `overlays/default.nix` replaces that package from the `nixpkgs-openrgb` input (`34ab99075`, OpenRGB 1.0rc3.1, effects plugin 1.0rc2). The hold, and the condition that removes it, live in `overlays/README.md`. Root nixpkgs currently ships 1.0. This flake does not enable `services.hardware.openrgb`.
+
+Niri starts it with `spawn-at-startup "openrgb" "--startminimized"` in `modules/home/niri/config-zrrh.kdl`.
+
+`modules/home/openrgb.nix` symlinks `modules/openrgb/config` into `~/.config/OpenRGB`, and this skill from `modules/openrgb/.agents`. A save in the GUI writes through those symlinks into the repo.
 
 ### Firewall Considerations
 
@@ -175,6 +170,7 @@ class DisplayClient:
             self.client.devices[index].set_color(color)
 
     def load_profile(self, name: str):
+        """Load a color profile (.orp). Segments and effects are separate files."""
         if self.ensure_connected():
             self.client.load_profile(name)
 
@@ -436,24 +432,15 @@ Usage: `OPENRGB_HOST=192.168.1.50 python build_watch.py make -j8`
 
 ## Profile Management
 
-OpenRGB profiles save/restore complete device state. Use them as named ambient modes.
+On this host's OpenRGB 1.0rc3.1, one saved look is three files under `modules/openrgb/config`. `load_profile` and `openrgb --profile` load the color file only.
 
-```python
-def apply_ambient_mode(client: OpenRGBClient, mode: str):
-    """Apply a named ambient mode via OpenRGB profiles."""
-    profiles = {
-        "work":    "ambient-work",
-        "chill":   "ambient-chill",
-        "night":   "ambient-night",
-        "off":     "ambient-off",
-        "meeting": "ambient-meeting",
-    }
-    profile_name = profiles.get(mode)
-    if profile_name:
-        client.load_profile(profile_name)
-```
+| File | Holds | Applies |
+|------|-------|---------|
+| `sunset.orp`, `boot.orp`, `off.orp` | Direct colors | Hardware fallback while OpenRGB is not running |
+| `sizes.ors` | Segment map. `Configuration.json` has the same groups in JSON; the activation script links `sizes.ors` and does not link `Configuration.json` | With the app. `Aura Addressable 1` is 48 LEDs: `pump` at 0, `f1` at 12, `f2` at 24, `f3` at 36, 12 each |
+| `plugins/settings/effect-profiles/<name>` | Effect stack, including Hypnotoad's saved colors | Only while OpenRGB is open. `EffectSettings.json` `startup_profile` is `sunset`. Effects point at segment indexes; they do not define the groups |
 
-Create profiles in OpenRGB GUI, save with `ambient-*` naming convention, then load programmatically.
+1.0 stores colors and effects together in `profiles/*.json` and ignores `startup_profile`. It renamed this header from `Aura Addressable 1` to `Addressable RGB Header 1`, and it only exposes segments to the effects plugin on a segmented zone. This header is linear, so `pump` and the three fans do not attach. The pin stays until that is fixed. `sunset-2` is a 1.0 save with an empty segment list and is not in git.
 
 ## Daemon Skeleton
 
@@ -537,8 +524,8 @@ openrgb --noautoconnect --color ff5555
 # Set specific device
 openrgb --noautoconnect --device 0 --mode static --color 50fa7b
 
-# Load a profile
-openrgb --noautoconnect --profile ambient-work
+# Load a color profile (.orp). Segments and effects are separate; see Profile Management.
+openrgb --noautoconnect --profile sunset
 
 # All off
 openrgb --noautoconnect --mode static --color 000000

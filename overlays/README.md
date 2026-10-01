@@ -31,6 +31,7 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 | fsel desktop-entry cache | `flake-packages.nix`, `patches/fsel-disable-desktop-entry-cache.patch` | adeck, nxiz | The cache hides newly installed desktop files. | Upstream fsel stops serving a stale file list. |
 | sonic-pi `doCheck = false` | `hosts/nxiz/home.nix` | nxiz | Uses root nixpkgs. Ruby 3.3 and Boost 1.86 are upstream since nixpkgs#514802. The checkPhase still starts `jackd`, which the sandbox cannot do. | The upstream check stops requiring a live JACK server. |
 | Codex from `llm-agents.packages` | `hosts/adeck/configuration.nix`, `hosts/zrrh/configuration.nix` | adeck, zrrh | The Rust workspace is too expensive to rebuild on every nixpkgs bump. This takes the build numtide published for llm-agents' own nixpkgs. pi, gemini-cli, crush, and grok stay on `shared-nixpkgs`. | Codex leaves the system packages, or a nixpkgs bump is worth compiling it again. |
+| OpenRGB 1.0rc3.1 | `nixpkgs-openrgb` `34ab99075` (2026-08-31), `overlays/default.nix` | zrrh | 1.0 renamed `Aura Addressable 1` and will not keep Hypnotoad's custom colors or the pump/fan segments. | 1.0 loads those segments and saves the effect's custom colors. |
 
 ## Other build holds
 
@@ -44,5 +45,5 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 
 - `adeck`: llm-agents, cached Codex, fsel, llama-tts binary.
 - `nxiz`: CachyOS kernel, Hyprland pin, HyprPanel, tumbler, LM Studio, fsel, sonic-pi checks disabled.
-- `zrrh`: CachyOS kernel, llm-agents, cached Codex, HyprPanel overlay, tumbler, LM Studio, `nixpkgs-llm`, noctalia tag.
+- `zrrh`: CachyOS kernel, llm-agents, cached Codex, HyprPanel overlay, tumbler, LM Studio, `nixpkgs-llm`, noctalia tag, OpenRGB 1.0rc3.1.
 - `tm20`: tm20-cli. `tm20-source` is a branch input and moves on `nix flake update`.

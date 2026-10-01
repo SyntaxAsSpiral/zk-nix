@@ -1,4 +1,4 @@
-# Shared baseline — imported by every mesh host.
+# Shared baseline — imported by adeck, nxiz, and zrrh. tm20 does not import it.
 # Host-specific values inside these modules key off config.my.host (perHost tables).
 {
   imports = [

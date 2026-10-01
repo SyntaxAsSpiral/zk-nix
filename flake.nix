@@ -7,6 +7,11 @@
     # nxiz keeps Hyprland 0.56.2 while its configuration is still hyprlang.
     nixpkgs-hyprland.url = "github:NixOS/nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
 
+    # zrrh keeps OpenRGB 1.0rc3.1. 1.0 renamed the addressable header and
+    # drops Hypnotoad's saved colors. The rev is in the URL. Replace it, then
+    # `nix flake update nixpkgs-openrgb`. Registry: overlays/README.md.
+    nixpkgs-openrgb.url = "github:NixOS/nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
+
     # LLM inference stack (llama-cpp, vllm) with CUDA — deliberately pinned
     # so routine `nix flake update` never rebuilds the CUDA world.
     # The rev is in the URL. Replace it, then `nix flake update nixpkgs-llm`

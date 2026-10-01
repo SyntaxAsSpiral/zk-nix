@@ -92,5 +92,5 @@ in
     };
   };
 
-  # hyprpaper removed — wallpaper managed by kaleidux
+  # hyprpaper is not used. nxiz wallpapers come from awww.
 }

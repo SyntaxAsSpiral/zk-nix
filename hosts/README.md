@@ -34,8 +34,10 @@ config edits does not require a NixOS rebuild.
 ## Credentials and Reinstalls
 
 The editing copy is `/mnt/echo/nix-os` on adeck; hosts build from `/etc/nixos`.
-`secrets/` is ignored by Git and synced manually over SSH. Keep its complete
-contents backed up separately; a Git clone alone cannot restore credentials.
+`secrets/` is ignored by Git. `zcli sync` copies it onto each target's
+`/etc/nixos/secrets`; tm20 receives that copy and nothing else. Keep a separate
+backup, because a Git clone cannot restore credentials. The rsync below is for
+a reinstall, before `zcli` exists on the target.
 Existing Git history is unchanged.
 
 For an existing host, the order is **pull config, sync secrets, then deploy**.

@@ -12,6 +12,9 @@ let
     hyprland = _final: _prev: {
       hyprland = inputs.nixpkgs-hyprland.legacyPackages.${system}.hyprland;
     };
+    openrgb = _final: _prev: {
+      openrgb-with-all-plugins = inputs.nixpkgs-openrgb.legacyPackages.${system}.openrgb-with-all-plugins;
+    };
     # Upstream dropped overlays.default; shared-nixpkgs is pkgs.llm-agents.*.
     llmAgents = inputs.llm-agents.overlays.shared-nixpkgs;
   };
@@ -41,6 +44,7 @@ in
     zrrh = [
       fromInputs.cachyosKernel
       fromInputs.llmAgents
+      fromInputs.openrgb
     ]
     ++ nixpkgsFixes;
 
