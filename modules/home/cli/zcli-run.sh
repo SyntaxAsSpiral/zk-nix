@@ -72,7 +72,9 @@ usage() {
   printf '        committed + staged files, local git history, and secrets; tm20 gets secrets only\n'
   printf '    %szcli assemble%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
   printf '    %szcli sync context%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
-  printf '        ConSensus workshop on adeck; sync deploys staging without commit or push\n'
+  printf '        ConSensus workshop on adeck; deploys staging without commit or push\n'
+  printf '    %szcli deploy context%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
+  printf '        same workshop deploy, then commits and pushes; --dry-run does not commit\n'
   printf '    %szcli wake%s\n' "$c_yellow" "$c_off"
   printf '        wake zrrh and wait until nix answers\n'
   printf '    %szcli build <host>%s builds that host'\''s system closure on zrrh and stops\n' "$c_yellow" "$c_off"
@@ -87,6 +89,7 @@ usage() {
   printf '    those jobs hold a sleep lock on zrrh so Noctalia idle does not suspend it\n'
   printf '    direct nh os stays on the machine where you run it\n'
   printf '    build takes one host; deploy takes one or more distinct hosts\n'
+  printf '    deploy context stays on adeck and does not wake zrrh\n'
   printf '    stage changes you want included; unstaged files stay local\n'
   section EXAMPLES
   printf '    %szcli wake%s\n' "$c_dim" "$c_off"
@@ -98,6 +101,7 @@ usage() {
   printf '    %szcli deploy zrrh adeck%s\n' "$c_dim" "$c_off"
   printf '    %szcli assemble%s\n' "$c_dim" "$c_off"
   printf '    %szcli sync context --dry-run%s\n' "$c_dim" "$c_off"
+  printf '    %szcli deploy context%s\n' "$c_dim" "$c_off"
   printf '    |001101|—|001101|—|111000| checksum stable\n'
 }
 

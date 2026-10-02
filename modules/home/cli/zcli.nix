@@ -22,7 +22,13 @@ let
   ]);
   context = pkgs.writeShellApplication {
     name = "zcli-context";
-    runtimeInputs = [ pkgs.bash pkgs.coreutils pkgs.openssh ];
+    runtimeInputs = with pkgs; [
+      bash
+      coreutils
+      git
+      openssh
+      rsync
+    ];
     text = ''exec env ZCLI_CONTEXT_PYTHON=${contextPython}/bin/python bash ${./zcli-context.sh} "$@"'';
   };
   run = pkgs.writeShellApplication {
@@ -62,7 +68,14 @@ in
         assemble)
           shift
           exec ${context}/bin/zcli-context assemble "$@" ;;
-        build|deploy|image|wake)
+        deploy)
+          if [[ "''${2:-}" == context ]]; then
+            shift 2
+            exec ${context}/bin/zcli-context deploy "$@"
+          fi
+          printf '☠☠☠ >>> DEPLOY·PROTOCOL·INITIATED ☠☠☠\n'
+          exec ${run}/bin/zcli-run "$@" ;;
+        build|image|wake)
           printf '☠☠☠ >>> %s·PROTOCOL·INITIATED ☠☠☠\n' "''${1^^}"
           exec ${run}/bin/zcli-run "$@" ;;
         *)

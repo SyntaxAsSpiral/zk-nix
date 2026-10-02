@@ -232,6 +232,8 @@ exit 0
         result = self.invoke("-h")
         self.assertIn("zcli build <host> builds that host's system closure", result.stdout)
         self.assertIn("zcli image tm20 builds the flashable SD card .img", result.stdout)
+        self.assertIn("zcli deploy context", result.stdout)
+        self.assertIn("then commits and pushes", result.stdout)
         self.assertEqual(self.trace(), [])
 
     def test_image_help_prints_flash_commands_without_building(self):

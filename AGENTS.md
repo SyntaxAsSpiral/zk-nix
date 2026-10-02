@@ -21,13 +21,15 @@ Primary entrypoint is `zcli` (`modules/home/cli/zcli.nix`). Sync publishes adeck
 
 ```bash
 zcli sync [host|all] [--dry]  # adeck:/mnt/echo/nix-os → /etc/nixos
+zcli sync context [--dry-run] [--verbose]    # ConSensus staging deploy; no commit or push
+zcli deploy context [--dry-run] [--verbose]  # same deploy, then commit and push
 zcli wake                     # wake zrrh; wait until SSH and nix answer
 zcli build <host>           # one host: eval and build on zrrh
 zcli deploy <host> [host ...] [--switch]  # boot and queue reboots, or switch now
 zcli image tm20 [--dry]     # aarch64 sdImage, built on zrrh
 ```
 
-`zcli build` takes one host. `zcli deploy` takes an explicit ordered host list. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet.
+`zcli build` takes one host. `zcli deploy` takes an explicit ordered host list. First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet. `zcli sync context` deploys ConSensus staging on adeck and leaves git alone. `zcli deploy context` runs that same deploy, then commits and pushes. `--dry-run` previews and does not commit. Neither context command wakes zrrh.
 
 Behavior:
 - Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, its git history, and secrets onto zrrh:`/etc/nixos` before `nh` runs. A clean canonical checkout is clean after sync. Staged changes stay staged. Unstaged files stay local. Destination edits to snapshot files are overwritten. History is fetched from that local repo.
@@ -88,7 +90,7 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
   - `waybar/` — `adeck.nix`
   - `profiles/` — `base.nix` (adeck, nxiz, zrrh) and `desktop.nix` (nxiz + zrrh); see Per-host dispatch pattern above
   - Top-level HM modules: `awww.nix`, `awww-cycle.nix`, `bb-server.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `msgvault.nix`, `nushell.nix`, `openrgb.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
-- `modules/home/cli/zcli.nix` — HM module for the `zcli` wrapper. Sync is `zcli-sync.sh`. Wake, build, deploy, and image are `zcli-run.sh`.
+- `modules/home/cli/zcli.nix` — HM module for the `zcli` wrapper. Sync is `zcli-sync.sh`. Context assemble, sync, and deploy are `zcli-context.sh`. Wake, build, host deploy, and image are `zcli-run.sh`.
 - `hosts/<host>/hardware-configuration.nix` — host-specific hardware; do not share across hosts.
 
 ### Secrets
