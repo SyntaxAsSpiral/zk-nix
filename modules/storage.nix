@@ -110,6 +110,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      User = "zk";
       # tailscaled needs a moment to come online after the unit starts
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
       ExecStart = pkgs.writeShellScript "taildrive-register" ''
