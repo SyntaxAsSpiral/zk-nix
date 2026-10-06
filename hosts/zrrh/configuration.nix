@@ -26,9 +26,26 @@ in
 
   my.host = "zrrh";
 
-  # qemu-user so this builder can realize aarch64 closures (tm20 / Pi 3B+).
-  # One-time: zcli deploy zrrh. After that, image/build tm20 does not rebuild the kernel.
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot = {
+    # qemu-user so this builder can realize aarch64 closures (tm20 / Pi 3B+).
+    # One-time: zcli deploy zrrh. After that, image/build tm20 does not rebuild the kernel.
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+    # Earlier NVIDIA handoff for sharper boot graphics
+    initrd.kernelModules = [
+      "nvidia"
+      "nvidia_modeset"
+      "nvidia_uvm"
+      "nvidia_drm"
+      "amdgpu" # Load after nvidia to prioritize card indexing
+    ];
+
+    # Force console to the NVIDIA card (card1) to ensure Plymouth visibility
+    kernelParams = [ "fbcon=map:1" ];
+
+    # Super I/O fan/RPM sensors (AIO pump + case fans on motherboard headers)
+    kernelModules = [ "nct6775" ];
+  };
 
   programs = {
     # Compositor
@@ -43,21 +60,6 @@ in
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
   };
-
-  # Earlier NVIDIA handoff for sharper boot graphics
-  boot.initrd.kernelModules = [
-    "nvidia"
-    "nvidia_modeset"
-    "nvidia_uvm"
-    "nvidia_drm"
-    "amdgpu" # Load after nvidia to prioritize card indexing
-  ];
-
-  # Force console to the NVIDIA card (card1) to ensure Plymouth visibility
-  boot.kernelParams = [ "fbcon=map:1" ];
-
-  # Super I/O fan/RPM sensors (AIO pump + case fans on motherboard headers)
-  boot.kernelModules = [ "nct6775" ];
 
   # GPU Control (AMD/NVIDIA)
   # 4090 capped at 330W by default (inference is memory-bound; <7% tokens/s cost).

@@ -55,8 +55,17 @@
   };
   security.sudo.wheelNeedsPassword = false;
 
-  services.getty.autologinUser = "zk";
-  services.openssh.enable = true;
+  services = {
+    getty.autologinUser = "zk";
+    openssh.enable = true;
+
+    udev.extraRules = ''
+      # Epson TM-T20III (04b8:0e28) — raw USB for tm20/nusb, not CUPS.
+      SUBSYSTEM=="usb", ATTR{idVendor}=="04b8", ATTR{idProduct}=="0e28", MODE="0660", GROUP="plugdev", TAG+="uaccess"
+
+      ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{idVendor}=="04b8", ATTRS{idProduct}=="0e28", ATTR{bInterfaceClass}=="07", RUN+="${pkgs.bash}/bin/sh -c 'echo -n $kernel > /sys/bus/usb/drivers/usblp/unbind'"
+    '';
+  };
 
   # system.nix includes this file; empty is enough for nix-daemon to start.
   environment.etc."nixos/secrets/nix-access-tokens.conf" = {
@@ -75,13 +84,6 @@
     liberation_ttf
     tm20-cli
   ];
-
-  services.udev.extraRules = ''
-    # Epson TM-T20III (04b8:0e28) — raw USB for tm20/nusb, not CUPS.
-    SUBSYSTEM=="usb", ATTR{idVendor}=="04b8", ATTR{idProduct}=="0e28", MODE="0660", GROUP="plugdev", TAG+="uaccess"
-
-    ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_interface", ATTRS{idVendor}=="04b8", ATTRS{idProduct}=="0e28", ATTR{bInterfaceClass}=="07", RUN+="${pkgs.bash}/bin/sh -c 'echo -n $kernel > /sys/bus/usb/drivers/usblp/unbind'"
-  '';
 
   system.stateVersion = "25.11";
 }

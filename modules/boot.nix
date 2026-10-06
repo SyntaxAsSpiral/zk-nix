@@ -67,27 +67,33 @@ let
   h = perHost.${config.my.host};
 in
 {
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 5;
-  boot.loader.systemd-boot.consoleMode = "max";
-  boot.loader.efi.canTouchEfiVariables = h.canTouchEfiVariables;
-  boot.consoleLogLevel = 3;
-  boot.kernelPackages =
-    if config.my.host == "adeck" then
-      # Valve vendor kernel: steamdeck EC driver (battery charge limit,
-      # fan hwmon) is patched in; stock kernels lack it entirely
-      pkgs.linuxPackages_jovian
-    else if h.stockKernel or false then
-      # Broadest hardware support from cache.nixos.org; no CachyOS overlay needed.
-      pkgs.linuxPackages_latest
-    else
-      pkgs.cachyosKernels.linuxPackages-cachyos-latest;
-  boot.kernelParams = h.kernelParams;
-  boot.blacklistedKernelModules = lib.optionals h.blacklistNouveau [ "nouveau" ];
-  boot.plymouth = lib.mkIf h.plymouth {
-    enable = true;
-    theme = h.plymouthTheme;
-    logo = h.plymouthLogo;
-    themePackages = h.plymouthThemePackages;
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 5;
+        consoleMode = "max";
+      };
+      efi.canTouchEfiVariables = h.canTouchEfiVariables;
+    };
+    consoleLogLevel = 3;
+    kernelPackages =
+      if config.my.host == "adeck" then
+        # Valve vendor kernel: steamdeck EC driver (battery charge limit,
+        # fan hwmon) is patched in; stock kernels lack it entirely
+        pkgs.linuxPackages_jovian
+      else if h.stockKernel or false then
+        # Broadest hardware support from cache.nixos.org; no CachyOS overlay needed.
+        pkgs.linuxPackages_latest
+      else
+        pkgs.cachyosKernels.linuxPackages-cachyos-latest;
+    inherit (h) kernelParams;
+    blacklistedKernelModules = lib.optionals h.blacklistNouveau [ "nouveau" ];
+    plymouth = lib.mkIf h.plymouth {
+      enable = true;
+      theme = h.plymouthTheme;
+      logo = h.plymouthLogo;
+      themePackages = h.plymouthThemePackages;
+    };
   };
 }

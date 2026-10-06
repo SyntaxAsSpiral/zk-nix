@@ -16,15 +16,17 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [
-    "xhci_pci" "ehci_pci" "ohci_pci" "uhci_hcd"
-    "usb_storage" "uas" "usbhid" "hid_generic"
-    "ahci" "nvme" "sd_mod" "sr_mod"
-    "sdhci_pci" "rtsx_pci_sdmmc" "mmc_block"
-  ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd.availableKernelModules = [
+      "xhci_pci" "ehci_pci" "ohci_pci" "uhci_hcd"
+      "usb_storage" "uas" "usbhid" "hid_generic"
+      "ahci" "nvme" "sd_mod" "sr_mod"
+      "sdhci_pci" "rtsx_pci_sdmmc" "mmc_block"
+    ];
+    initrd.kernelModules = [ ];
+    kernelModules = [ "kvm-intel" "kvm-amd" ];
+    extraModulePackages = [ ];
+  };
 
   fileSystems."/" =
     { device = "/dev/disk/by-label/jump";
@@ -40,8 +42,10 @@
 
   swapDevices = [ ];
 
-  hardware.enableRedistributableFirmware = true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware = {
+    enableRedistributableFirmware = true;
+    cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+    cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  };
 }

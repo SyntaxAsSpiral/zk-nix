@@ -136,15 +136,21 @@ let
 in
 {
   networking = {
-    hostName = h.hostName;
-    networkmanager.enable = true;
-    networkmanager.dns = lib.mkIf h.resolvedDns "systemd-resolved";
-    networkmanager.ensureProfiles.environmentFiles = h.nmEnvironmentFiles or [ ];
-    networkmanager.ensureProfiles.profiles = h.nmProfiles or { };
-    networkmanager.settings.main.no-auto-default = lib.mkIf ((h.nmProfiles or { }) != { }) "*";
-    networkmanager.settings."connection-zrrh-wol" = lib.mkIf (h.nmWake or false) {
-      match-device = "mac:60:cf:84:61:d8:00";
-      "ethernet.wake-on-lan" = 64; # NM config uses the numeric magic-packet flag.
+    inherit (h) hostName;
+    networkmanager = {
+      enable = true;
+      dns = lib.mkIf h.resolvedDns "systemd-resolved";
+      ensureProfiles = {
+        environmentFiles = h.nmEnvironmentFiles or [ ];
+        profiles = h.nmProfiles or { };
+      };
+      settings = {
+        main.no-auto-default = lib.mkIf ((h.nmProfiles or { }) != { }) "*";
+        "connection-zrrh-wol" = lib.mkIf (h.nmWake or false) {
+          match-device = "mac:60:cf:84:61:d8:00";
+          "ethernet.wake-on-lan" = 64; # NM config uses the numeric magic-packet flag.
+        };
+      };
     };
     firewall = {
       enable = true;

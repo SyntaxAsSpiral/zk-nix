@@ -7,28 +7,30 @@
   config = lib.mkIf config.my.performance.enable {
     # 1. Process Scheduling: Ananicy-cpp + CachyOS rules
     # This automatically 'nices' games, compositors, and background tasks.
-    services.ananicy = {
-      enable = true;
-      package = pkgs.ananicy-cpp;
-      rulesProvider = pkgs.ananicy-rules-cachyos;
+    services = {
+      ananicy = {
+        enable = true;
+        package = pkgs.ananicy-cpp;
+        rulesProvider = pkgs.ananicy-rules-cachyos;
+      };
+
+      # 2. Interrupt distribution: irqbalance
+      # Distributes hardware interrupts across CPU cores for better responsiveness.
+      irqbalance.enable = true;
+
+      # 3. I/O Schedulers: udev rules
+      # NVMe = none (hardware handles it)
+      # SSD/eMMC = bfq (budget fair queueing)
+      # Spinning disk = bfq
+      udev.extraRules = ''
+        # set scheduler for NVMe
+        ACTION=="add|change", KERNEL=="nvme[0-9]n[0-9]", ATTR{queue/scheduler}="none"
+        # set scheduler for SSD and eMMC
+        ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="bfq"
+        # set scheduler for rotating disks
+        ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+      '';
     };
-
-    # 2. Interrupt distribution: irqbalance
-    # Distributes hardware interrupts across CPU cores for better responsiveness.
-    services.irqbalance.enable = true;
-
-    # 3. I/O Schedulers: udev rules
-    # NVMe = none (hardware handles it)
-    # SSD/eMMC = bfq (budget fair queueing)
-    # Spinning disk = bfq
-    services.udev.extraRules = ''
-      # set scheduler for NVMe
-      ACTION=="add|change", KERNEL=="nvme[0-9]n[0-9]", ATTR{queue/scheduler}="none"
-      # set scheduler for SSD and eMMC
-      ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="bfq"
-      # set scheduler for rotating disks
-      ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
-    '';
 
     # 4. CPU Governor: powersave + balance_performance EPP (amd-pstate-epp)
     # Sustained all-core loads still reach full PPT-limited boost; saves

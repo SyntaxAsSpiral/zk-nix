@@ -14,27 +14,31 @@ in
 
   # LM Studio on adeck: llmster only (no GUI/AppImage).
   # Installed via `curl` — Nix manages dirs, settings, and server config.
-  home.activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
-  '';
+  home = {
+    activation.ensureLmstudioDirsAdeck = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "$HOME/.lmstudio" "$HOME/.lmstudio/models" "$HOME/.lmstudio/hub/models" "$HOME/.lmstudio/bin" "$HOME/.lmstudio/.internal"
+    '';
 
-  home.packages = [ lms ];
+    packages = [ lms ];
 
-  home.file.".lmstudio/settings.json" = {
-    source = ./settings.json;
-    force = true;
-  };
-  home.file.".lmstudio/config-presets" = {
-    source = ../config-presets;
-    force = true;
-  };
-  home.file.".lmstudio/.internal/http-server-config.json" = {
-    source = ./http-server-config.json;
-    force = true;
-  };
-  home.file.".lmstudio/.internal/user-concrete-model-default-config/lmstudio-community/granite-4.0-h-tiny-GGUF/granite-4.0-h-tiny-Q4_K_M.gguf.json" = {
-    source = ./user-concrete-model-default-config/lmstudio-community/granite-4.0-h-tiny-GGUF/granite-4.0-h-tiny-Q4_K_M.gguf.json;
-    force = true;
+    file = {
+      ".lmstudio/settings.json" = {
+        source = ./settings.json;
+        force = true;
+      };
+      ".lmstudio/config-presets" = {
+        source = ../config-presets;
+        force = true;
+      };
+      ".lmstudio/.internal/http-server-config.json" = {
+        source = ./http-server-config.json;
+        force = true;
+      };
+      ".lmstudio/.internal/user-concrete-model-default-config/lmstudio-community/granite-4.0-h-tiny-GGUF/granite-4.0-h-tiny-Q4_K_M.gguf.json" = {
+        source = ./user-concrete-model-default-config/lmstudio-community/granite-4.0-h-tiny-GGUF/granite-4.0-h-tiny-Q4_K_M.gguf.json;
+        force = true;
+      };
+    };
   };
 
   # Start llmster daemon on boot.

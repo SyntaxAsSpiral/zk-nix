@@ -29,38 +29,40 @@ in
     cycle
   ];
 
-  systemd.user.services.awww = {
-    Unit = {
-      Description = "awww wallpaper daemon";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
+  systemd.user = {
+    services.awww = {
+      Unit = {
+        Description = "awww wallpaper daemon";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.awww}/bin/awww-daemon";
+        Restart = "on-failure";
+        RestartSec = 3;
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
-    Service = {
-      ExecStart = "${pkgs.awww}/bin/awww-daemon";
-      Restart = "on-failure";
-      RestartSec = 3;
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
 
-  systemd.user.services.awww-cycle = {
-    Unit = {
-      Description = "Set a random wallpaper";
-      After = [ "awww.service" ];
-      Requires = [ "awww.service" ];
+    services.awww-cycle = {
+      Unit = {
+        Description = "Set a random wallpaper";
+        After = [ "awww.service" ];
+        Requires = [ "awww.service" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${cycle}/bin/awww-cycle";
+      };
     };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${cycle}/bin/awww-cycle";
-    };
-  };
 
-  systemd.user.timers.awww-cycle = {
-    Unit.Description = "Cycle wallpaper every 10 minutes";
-    Timer = {
-      OnStartupSec = "3s";
-      OnUnitActiveSec = "10m";
+    timers.awww-cycle = {
+      Unit.Description = "Cycle wallpaper every 10 minutes";
+      Timer = {
+        OnStartupSec = "3s";
+        OnUnitActiveSec = "10m";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
-    Install.WantedBy = [ "graphical-session.target" ];
   };
 }

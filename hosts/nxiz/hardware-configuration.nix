@@ -8,34 +8,38 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "sd_mod" ];
+    initrd.kernelModules = [ ];
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
+  };
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/b3821fe9-ed59-4d17-994c-faadecc16a60";
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/b3821fe9-ed59-4d17-994c-faadecc16a60";
       fsType = "btrfs";
       options = [ "subvol=@" ];
     };
 
-  fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/b3821fe9-ed59-4d17-994c-faadecc16a60";
+    "/home" = {
+      device = "/dev/disk/by-uuid/b3821fe9-ed59-4d17-994c-faadecc16a60";
       fsType = "btrfs";
       options = [ "subvol=@home" ];
     };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/90B6-5EC8";
+    "/boot" = {
+      device = "/dev/disk/by-uuid/90B6-5EC8";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  fileSystems."/swap" =
-    { device = "/dev/disk/by-uuid/b3821fe9-ed59-4d17-994c-faadecc16a60";
+    "/swap" = {
+      device = "/dev/disk/by-uuid/b3821fe9-ed59-4d17-994c-faadecc16a60";
       fsType = "btrfs";
       options = [ "subvol=@swap" "noatime" ];
     };
+  };
 
   swapDevices = [
     { device = "/swap/swapfile"; size = 8192; }

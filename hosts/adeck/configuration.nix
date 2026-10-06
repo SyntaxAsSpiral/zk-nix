@@ -60,57 +60,60 @@
   ];
 
   systemd = {
-    # Firmware fan control is sufficient on this device; Jovian fan daemon crashes
-    # because expected hwmon names are absent on this hardware/kernel combo.
-    # (The jovian kernel restores those hwmon names — revisit if fan curves are wanted.)
-    services.jupiter-fan-control.enable = lib.mkForce false;
+    services = {
+      # Firmware fan control is sufficient on this device; Jovian fan daemon crashes
+      # because expected hwmon names are absent on this hardware/kernel combo.
+      # (The jovian kernel restores those hwmon names — revisit if fan curves are wanted.)
+      jupiter-fan-control.enable = lib.mkForce false;
 
-    # Battery longevity: always plugged in, so cap charge at 80% (like SteamOS).
-    # The knob is steamdeck_hwmon from the jovian kernel. Fail if it's missing
-    # instead of silently no-op'ing — that was how the cap drifted past 80.
-    services.battery-charge-limit = {
-      description = "Cap battery charge at 80%";
-      wantedBy = [
-        "multi-user.target"
-        "suspend.target"
-        "hibernate.target"
-      ];
-      after = [
-        "suspend.target"
-        "hibernate.target"
-      ];
-      serviceConfig.Type = "oneshot";
-      script = ''
-        set -eu
-        found=
-        for f in /sys/class/hwmon/hwmon*/max_battery_charge_level; do
-          [ -e "$f" ] || continue
-          echo 80 > "$f"
-          echo "set $f to 80"
-          found=1
-        done
-        if [ -z "$found" ]; then
-          echo "steamdeck max_battery_charge_level sysfs missing" >&2
-          exit 1
-        fi
-      '';
+      # Battery longevity: always plugged in, so cap charge at 80% (like SteamOS).
+      # The knob is steamdeck_hwmon from the jovian kernel. Fail if it's missing
+      # instead of silently no-op'ing — that was how the cap drifted past 80.
+      battery-charge-limit = {
+        description = "Cap battery charge at 80%";
+        wantedBy = [
+          "multi-user.target"
+          "suspend.target"
+          "hibernate.target"
+        ];
+        after = [
+          "suspend.target"
+          "hibernate.target"
+        ];
+        serviceConfig.Type = "oneshot";
+        script = ''
+          set -eu
+          found=
+          for f in /sys/class/hwmon/hwmon*/max_battery_charge_level; do
+            [ -e "$f" ] || continue
+            echo 80 > "$f"
+            echo "set $f to 80"
+            found=1
+          done
+          if [ -z "$found" ]; then
+            echo "steamdeck max_battery_charge_level sysfs missing" >&2
+            exit 1
+          fi
+        '';
+      };
+
+      # Prevent screen dimming during stage 2 boot by forcing it to 100%
+      restore-brightness = {
+        description = "Force brightness to 100% on boot";
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.brightnessctl}/bin/brightnessctl set 100%";
+        };
+      };
     };
+
     timers.battery-charge-limit = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
         OnBootSec = "15s";
         OnUnitActiveSec = "10min";
         Persistent = true;
-      };
-    };
-
-    # Prevent screen dimming during stage 2 boot by forcing it to 100%
-    services.restore-brightness = {
-      description = "Force brightness to 100% on boot";
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.brightnessctl}/bin/brightnessctl set 100%";
       };
     };
 

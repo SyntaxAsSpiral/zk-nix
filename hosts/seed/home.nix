@@ -16,14 +16,16 @@
     ../../modules/home/cli/zcli.nix
   ];
 
-  home.username = "zk";
-  home.homeDirectory = "/home/zk";
-  home.stateVersion = "25.11";
+  home = {
+    username = "zk";
+    homeDirectory = "/home/zk";
+    stateVersion = "25.11";
+
+    packages = with pkgs; [
+      fastfetch
+      nodejs
+    ];
+  };
 
   programs.home-manager.enable = true;
-
-  home.packages = with pkgs; [
-    fastfetch
-    nodejs
-  ];
 }

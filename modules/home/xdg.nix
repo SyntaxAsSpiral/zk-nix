@@ -184,7 +184,7 @@ in
       + lib.concatMapStringsSep "\n" (d: ''mkdir -p "${d}"'') h.localDirs
     );
 
-    sessionVariables = h.sessionVariables;
+    inherit (h) sessionVariables;
 
     # Populate ~/Images/wallpapers with per-host wallpaper set from repo
     file."Images/wallpapers".source = wpSource.${osConfig.my.host};

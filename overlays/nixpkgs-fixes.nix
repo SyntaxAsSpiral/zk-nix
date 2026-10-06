@@ -15,7 +15,7 @@
     );
 
     hyprpanel = prev.callPackage ./hyprpanel-package.nix {
-      astal = final.astal;
+      inherit (final) astal;
     };
   })
 

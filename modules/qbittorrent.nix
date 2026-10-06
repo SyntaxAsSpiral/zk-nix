@@ -108,27 +108,29 @@ in
 
     # Allow scp in autorun to read SSH keys from ~/.ssh.
     # PrivateUsers must be off so CAP_NET_ADMIN/SO_MARK applies to host routing.
-    systemd.services.qbittorrent.serviceConfig = {
-      ProtectHome = lib.mkForce false;
-      PrivateUsers = lib.mkForce false;
-      AmbientCapabilities = "CAP_NET_ADMIN";
-      CapabilityBoundingSet = lib.mkForce "CAP_NET_ADMIN";
-      Environment = "LD_PRELOAD=${qbtMarkLib}/lib/libqbtmark.so";
-      # IPv6 sockets bind the LAN/Comcast addresses and skip Mullvad.
-      RestrictAddressFamilies = lib.mkForce [
-        "AF_INET"
-        "AF_NETLINK"
+    systemd = {
+      services.qbittorrent.serviceConfig = {
+        ProtectHome = lib.mkForce false;
+        PrivateUsers = lib.mkForce false;
+        AmbientCapabilities = "CAP_NET_ADMIN";
+        CapabilityBoundingSet = lib.mkForce "CAP_NET_ADMIN";
+        Environment = "LD_PRELOAD=${qbtMarkLib}/lib/libqbtmark.so";
+        # IPv6 sockets bind the LAN/Comcast addresses and skip Mullvad.
+        RestrictAddressFamilies = lib.mkForce [
+          "AF_INET"
+          "AF_NETLINK"
+        ];
+      };
+      services.qbittorrent.preStart = ''
+        install -d -m 0755 -o zk -g users /var/lib/qBittorrent/qBittorrent/config
+        install -m 0600 -o zk -g users ${enforcedConfig} /var/lib/qBittorrent/qBittorrent/config/qBittorrent.conf
+      '';
+
+      # Ensure torrent directory exists on the temp subvolume
+      tmpfiles.rules = [
+        "d /mnt/vault/@temp/torrents 0755 zk users -"
       ];
     };
-    systemd.services.qbittorrent.preStart = ''
-      install -d -m 0755 -o zk -g users /var/lib/qBittorrent/qBittorrent/config
-      install -m 0600 -o zk -g users ${enforcedConfig} /var/lib/qBittorrent/qBittorrent/config/qBittorrent.conf
-    '';
-
-    # Ensure torrent directory exists on the temp subvolume
-    systemd.tmpfiles.rules = [
-      "d /mnt/vault/@temp/torrents 0755 zk users -"
-    ];
 
     # Bring Mullvad up as an exit node on this Tailscale identity, but do not
     # let Tailscale's default "lookup 52" rule swallow the whole host.
