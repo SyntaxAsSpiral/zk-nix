@@ -124,7 +124,7 @@ receive() (
     fi
   done < <(git -C "$DEST" ls-files --others -z)
 
-  git -C "$DEST" diff --stat "$current" "$desired"
+  git --no-pager -C "$DEST" diff --stat "$current" "$desired"
   [[ "$dry" == false ]] || return 0
   printf '%s\n' "$desired" >"$DEST/.git/zcli-sync-incomplete"
   # Delete only previously managed files. Ignored files and secrets stay intact.
