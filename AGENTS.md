@@ -23,15 +23,15 @@ Primary entrypoint is `zcli` (`modules/home/cli/zcli.nix`). Sync publishes adeck
 ```bash
 zcli sync [host|all] [--dry]  # adeck:/mnt/echo/nix-os → /etc/nixos
 zcli assemble [--dry-run] [--verbose]        # ConSensus workshop assemble on adeck
-zcli sync context [--dry-run] [--verbose]    # ConSensus staging deploy; no commit or push
-zcli deploy context [--dry-run] [--verbose]  # same deploy, then commit and push
+zcli sync context [--dry-run] [--verbose]    # ConSensus staging deploy, then commit and push
+zcli deploy context [--dry-run] [--verbose]  # same deploy, commit, and push
 zcli wake                     # wake zrrh; wait until SSH and nix answer
 zcli build <host>           # one host: eval and build on zrrh
 zcli deploy <host> [host ...] [--switch]  # boot and queue reboots, or switch now
 zcli image tm20 [--dry]     # aarch64 sdImage, built on zrrh
 ```
 
-`zcli build` takes one host. `zcli deploy` takes an explicit ordered host list. `zcli` knows only `nxiz`, `zrrh`, `adeck`, and `tm20` (`sync all` means those four). `seed` is not a `zcli` target: it has no address in `zcli`'s host table, so build and install it by hand (the stick ships `nixos-install-tools`). First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet. `zcli sync context` deploys ConSensus staging on adeck and leaves git alone. `zcli deploy context` runs that same deploy, then commits and pushes. `--dry-run` previews and does not commit. Neither context command wakes zrrh.
+`zcli build` takes one host. `zcli deploy` takes an explicit ordered host list. `zcli` knows only `nxiz`, `zrrh`, `adeck`, and `tm20` (`sync all` means those four). `seed` is not a `zcli` target: it has no address in `zcli`'s host table, so build and install it by hand (the stick ships `nixos-install-tools`). First flash is `zcli image tm20`, then `zcli deploy tm20` once the Pi is on the tailnet. `zcli sync context` deploys ConSensus staging on adeck, then commits and pushes. `zcli deploy context` runs that same deploy, commit, and push. `--dry-run` previews and does not commit. Neither context command wakes zrrh.
 
 Behavior:
 - Canonical source is adeck:`/mnt/echo/nix-os`. Build and deploy sync the committed + staged snapshot, its git history, and secrets onto zrrh:`/etc/nixos` before `nh` runs. A clean canonical checkout is clean after sync. Staged changes stay staged. Unstaged files stay local. Destination edits to snapshot files are overwritten. History is fetched from that local repo.

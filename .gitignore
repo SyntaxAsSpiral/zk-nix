@@ -1,5 +1,6 @@
 /reference/
 /.kiro/
+.agents/
 result
 /result/
 *.qcow2

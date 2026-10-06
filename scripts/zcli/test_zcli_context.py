@@ -67,12 +67,12 @@ exit 0
         path = self.root / "python.log"
         return path.read_text() if path.exists() else ""
 
-    def test_sync_deploys_without_git(self):
+    def test_sync_deploys_and_updates_git(self):
         result = self.invoke("sync")
         self.assertIn("CONTEXT·SYNC·INITIATED", result.stdout)
         log = self.python_log()
         self.assertIn("sync.py", log)
-        self.assertIn("--no-git", log)
+        self.assertNotIn("--no-git", log)
         self.assertEqual(self.trace(), ["python"])
         self.assertFalse((self.root / "ssh.log").exists())
 

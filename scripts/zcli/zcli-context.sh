@@ -11,8 +11,8 @@ usage() {
   printf '       zcli sync context [--dry-run] [--verbose]\n'
   printf '       zcli deploy context [--dry-run] [--verbose]\n'
   printf 'Runs the ConSensus workshop on adeck.\n'
-  printf 'Sync deploys staging without Git commit or push.\n'
-  printf 'Deploy deploys staging, then commits and pushes. --dry-run previews and does not commit.\n'
+  printf 'Sync and deploy both deploy staging, then commit and push.\n'
+  printf '--dry-run previews and does not commit.\n'
 }
 
 fail() { printf '☠ Context protocol failed: %s\n' "$*" >&2; exit 1; }
@@ -48,7 +48,7 @@ esac
 [[ -f "$ROOT/workshop/src/$script" ]] || fail "missing workshop script: $script"
 printf '☠☠☠ >>> CONTEXT·%s·INITIATED ☠☠☠\n' "${action^^}"
 if [[ "$action" == sync ]]; then
-  exec "$PYTHON" "$ROOT/workshop/src/sync.py" --no-git "${flags[@]}"
+  exec "$PYTHON" "$ROOT/workshop/src/sync.py" "${flags[@]}"
 fi
 if [[ "$action" == deploy ]]; then
   exec "$PYTHON" "$ROOT/workshop/src/sync.py" "${flags[@]}"

@@ -72,9 +72,9 @@ usage() {
   printf '        committed + staged files, local git history, and secrets; tm20 gets secrets only\n'
   printf '    %szcli assemble%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
   printf '    %szcli sync context%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
-  printf '        ConSensus workshop on adeck; deploys staging without commit or push\n'
+  printf '        ConSensus workshop on adeck; deploys staging, then commits and pushes\n'
   printf '    %szcli deploy context%s [--dry-run] [--verbose]\n' "$c_yellow" "$c_off"
-  printf '        same workshop deploy, then commits and pushes; --dry-run does not commit\n'
+  printf '        same workshop deploy, commit, and push; --dry-run does not commit\n'
   printf '    %szcli wake%s\n' "$c_yellow" "$c_off"
   printf '        wake zrrh and wait until nix answers\n'
   printf '    %szcli build <host>%s builds that host'\''s system closure on zrrh and stops\n' "$c_yellow" "$c_off"
@@ -183,38 +183,42 @@ run_on_zrrh() {
 # Noctalia suspends zrrh after 30 minutes without keyboard or mouse.
 # One lock covers the whole job, including the gaps in a multi-host deploy.
 # A per-command lock would drop between hosts and let a waiting suspend through.
-AWAKE_PID=
+# The lock is transient unit zcli-awake.service. EXIT stops that unit.
+# A background ssh running `sleep infinity` does not die when the client
+# disconnects, and logind has KillUserProcesses=false, so the old lock stayed
+# up until the next reboot.
+AWAKE_HELD=
+stop_zrrh_awake_unit() {
+  local remote
+  if [[ "$HOST" == zrrh ]]; then
+    sudo -n systemctl stop zcli-awake.service 2>/dev/null || true
+    return 0
+  fi
+  printf -v remote 'sudo -n systemctl stop zcli-awake.service'
+  ssh_mesh run zrrh "$remote" 2>/dev/null || true
+}
 release_zrrh_awake() {
-  [[ -n "${AWAKE_PID:-}" ]] || return 0
-  kill "$AWAKE_PID" 2>/dev/null || true
-  wait "$AWAKE_PID" 2>/dev/null || true
-  AWAKE_PID=
+  [[ -n "${AWAKE_HELD:-}" ]] || return 0
+  AWAKE_HELD=
+  stop_zrrh_awake_unit
 }
 hold_zrrh_awake() {
-  release_zrrh_awake
-  local why=$1 fifo line remote
+  local why=$1 remote
+  # Drop a unit left by a zcli that did not exit. Then take one for this job.
+  stop_zrrh_awake_unit
+  AWAKE_HELD=1
   # An SSH session is not an active seat, so logind demands a polkit prompt
   # for a blocking sleep lock. sudo -n is the same passwordless path as reboot.
-  fifo=$(mktemp)
-  rm -f "$fifo"
-  mkfifo "$fifo"
+  # One remote string: ssh joins argv, and a spaced --why must stay one word.
   if [[ "$HOST" == zrrh ]]; then
-    sudo -n "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
-      sh -c 'echo zcli-awake; exec sleep infinity' >"$fifo" &
+    sudo -n systemd-run --collect --unit=zcli-awake --description="$why" \
+      "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
+      sleep infinity
   else
-    # ssh joins its arguments and the remote shell parses that string.
-    # A reason of "zcli deploy zrrh" otherwise becomes the program inhibit runs.
-    printf -v remote 'sudo -n %q --what=sleep --who=zcli --why=%q --mode=block sh -c %q' \
-      "$INHIBIT" "$why" 'echo zcli-awake; exec sleep infinity'
-    ssh_mesh run zrrh "$remote" >"$fifo" &
+    printf -v remote 'sudo -n systemd-run --collect --unit=%q --description=%q %q --what=sleep --who=zcli --why=%q --mode=block sleep infinity' \
+      zcli-awake "$why" "$INHIBIT" "$why"
+    ssh_mesh run zrrh "$remote"
   fi
-  AWAKE_PID=$!
-  if ! IFS= read -r line <"$fifo" || [[ "$line" != zcli-awake ]]; then
-    rm -f "$fifo"
-    release_zrrh_awake
-    fail "zrrh refused the sleep lock"
-  fi
-  rm -f "$fifo"
 }
 trap release_zrrh_awake EXIT
 trap 'release_zrrh_awake; exit 130' INT
