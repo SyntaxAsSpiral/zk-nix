@@ -72,6 +72,15 @@ let
         echo ""
       '';
     };
+
+    seed = {
+      loginFile = "";
+      agentConfig = "";
+      extraConfig = ''
+        fastfetch
+        echo ""
+      '';
+    };
   };
   h = perHost.${osConfig.my.host};
 in

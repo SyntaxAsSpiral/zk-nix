@@ -150,7 +150,7 @@
           hostPlatform = "aarch64-linux";
           homeManager = false;
         };
-        jump = mkHost "jump" { homeManager = false; };
+        seed = mkHost "seed" { };
       };
 
       # 6. Formatter (nix fmt)

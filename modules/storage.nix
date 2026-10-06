@@ -88,7 +88,7 @@ let
     };
 
     # Rescue stick: no fixed disks, no Taildrive shares.
-    jump = {
+    seed = {
       local = { };
       driveShares = { };
     };

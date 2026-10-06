@@ -104,8 +104,8 @@ let
         };
       };
     };
-    jump = {
-      hostName = "jump";
+    seed = {
+      hostName = "seed";
       resolvedDns = true;
       postResumeDnsFlush = false;
       nmEnvironmentFiles = [ "/run/secrets/wifi-password" ];

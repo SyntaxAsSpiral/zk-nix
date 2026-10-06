@@ -55,7 +55,7 @@ let
         "udev.log_priority=3"
       ];
     };
-    jump = {
+    seed = {
       # Rescue stick: plain console, stock kernel, never touch the host's NVRAM.
       canTouchEfiVariables = false;
       plymouth = false;

@@ -53,6 +53,6 @@ in
     ];
 
     # Rescue stick: stock nixpkgs kernel and packages, all from cache.nixos.org.
-    jump = [ ];
+    seed = [ ];
   };
 }
