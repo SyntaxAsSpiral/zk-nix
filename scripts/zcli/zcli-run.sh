@@ -7,6 +7,9 @@ HOST=$(hostname)
 NH=${ZCLI_NH:-/run/current-system/sw/bin/nh}
 NIX=${ZCLI_NIX:-/run/current-system/sw/bin/nix}
 INHIBIT=${ZCLI_INHIBIT:-/run/current-system/sw/bin/systemd-inhibit}
+# A system unit's PATH does not include this. `sleep` alone fails with
+# "Failed to execute 'sleep': No such file or directory".
+SLEEP=${ZCLI_SLEEP:-/run/current-system/sw/bin/sleep}
 WAKE=${ZCLI_WAKE:-/run/current-system/sw/bin/wakeonlan}
 SYNC=${ZCLI_SYNC:-zcli-sync}
 CANONICAL=${ZCLI_CANONICAL:-/mnt/echo/nix-os}
@@ -213,11 +216,13 @@ hold_zrrh_awake() {
   if [[ "$HOST" == zrrh ]]; then
     sudo -n systemd-run --collect --unit=zcli-awake --description="$why" \
       "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
-      sleep infinity
+      "$SLEEP" infinity
+    sudo -n systemctl is-active --quiet zcli-awake.service || fail "zrrh refused the sleep lock"
   else
-    printf -v remote 'sudo -n systemd-run --collect --unit=%q --description=%q %q --what=sleep --who=zcli --why=%q --mode=block sleep infinity' \
-      zcli-awake "$why" "$INHIBIT" "$why"
+    printf -v remote 'sudo -n systemd-run --collect --unit=%q --description=%q %q --what=sleep --who=zcli --why=%q --mode=block %q infinity' \
+      zcli-awake "$why" "$INHIBIT" "$why" "$SLEEP"
     ssh_mesh run zrrh "$remote"
+    ssh_mesh run zrrh "sudo -n systemctl is-active --quiet zcli-awake.service" || fail "zrrh refused the sleep lock"
   fi
 }
 trap release_zrrh_awake EXIT

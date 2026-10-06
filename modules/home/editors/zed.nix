@@ -4,12 +4,20 @@ let
   # Looked up by bare name from userSettings.lsp. The remote server and the
   # worktree shell do not inherit the zeditor wrapper PATH that extraPackages
   # builds, so these also have to be on the user profile PATH.
+  # elixir-ls installs the whole project at the store root, including VERSION.
+  # sonic-pi on nxiz also ships VERSION, and home.packages buildEnv refuses
+  # the collision. The wrappers use absolute paths, so the profile only needs bin.
+  elixirLs = pkgs.runCommand "elixir-ls-bin" { } ''
+    mkdir -p "$out/bin"
+    ln -s ${pkgs.elixir-ls}/bin/elixir-ls "$out/bin/elixir-ls"
+    ln -s ${pkgs.elixir-ls}/bin/elixir-debug-adapter "$out/bin/elixir-debug-adapter"
+  '';
   languageServers = with pkgs; [
     nixd
     nil
     nixfmt
     rust-analyzer
-    elixir-ls
+    elixirLs
     shellcheck
   ];
 in
