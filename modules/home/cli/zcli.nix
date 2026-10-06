@@ -1,4 +1,4 @@
-yoyou better fucking pray to wahtever is # zcli — mesh sync plus build/deploy. Canonical source is adeck:/mnt/echo/nix-os.
+# zcli — mesh sync plus build/deploy. Canonical source is adeck:/mnt/echo/nix-os.
 # Build, deploy, and image eval on zrrh via nh. Direct nh os stays local.
 { pkgs, ... }:
 
@@ -14,7 +14,7 @@ let
       rsync
       util-linux
     ];
-    text = ''exec bash ${../../../scripts/zcli-sync.sh} "$@"'';
+    text = ''exec bash ${../../../scripts/zcli/zcli-sync.sh} "$@"'';
   };
   contextPython = pkgs.python3.withPackages (ps: [
     ps.pyyaml
@@ -29,7 +29,7 @@ let
       openssh
       rsync
     ];
-    text = ''exec env ZCLI_CONTEXT_PYTHON=${contextPython}/bin/python bash ${../../../scripts/zcli-context.sh} "$@"'';
+    text = ''exec env ZCLI_CONTEXT_PYTHON=${contextPython}/bin/python bash ${../../../scripts/zcli/zcli-context.sh} "$@"'';
   };
   run = pkgs.writeShellApplication {
     name = "zcli-run";
@@ -43,7 +43,7 @@ let
       pkgs.toilet
       pkgs.lolcat
     ];
-    text = ''exec bash ${../../../scripts/zcli-run.sh} "$@"'';
+    text = ''exec bash ${../../../scripts/zcli/zcli-run.sh} "$@"'';
   };
 in
 {

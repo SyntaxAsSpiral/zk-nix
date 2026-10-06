@@ -1,4 +1,5 @@
 # Seed home: nushell and the shared CLI set. No desktop, no Zed, no fonts.
+{ pkgs, ... }:
 {
   imports = [
     ../../modules/home/nushell.nix
@@ -20,4 +21,9 @@
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
+
+  home.packages = with pkgs; [
+    fastfetch
+    nodejs
+  ];
 }

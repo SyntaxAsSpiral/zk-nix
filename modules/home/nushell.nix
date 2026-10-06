@@ -75,7 +75,14 @@ let
 
     seed = {
       loginFile = "";
-      agentConfig = "";
+      agentConfig = ''
+        # Coding agents (always-latest via npx)
+        def --wrapped gemini [...args] { npx --yes @google/gemini-cli@latest ...$args }
+        def --wrapped codex [...args] { npx --yes @openai/codex@latest ...$args }
+        def --wrapped crush [...args] { npx --yes @charmland/crush@latest ...$args }
+        def --wrapped pi [...args] { npx --yes @earendil-works/pi-coding-agent ...$args }
+
+      '';
       extraConfig = ''
         fastfetch
         echo ""
