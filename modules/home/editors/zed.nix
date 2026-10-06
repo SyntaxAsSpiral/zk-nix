@@ -1,6 +1,21 @@
 { pkgs, ... }:
 
+let
+  # Looked up by bare name from userSettings.lsp. The remote server and the
+  # worktree shell do not inherit the zeditor wrapper PATH that extraPackages
+  # builds, so these also have to be on the user profile PATH.
+  languageServers = with pkgs; [
+    nixd
+    nil
+    nixfmt
+    rust-analyzer
+    elixir-ls
+    shellcheck
+  ];
+in
 {
+  home.packages = languageServers;
+
   programs.zed-editor = {
     enable = true;
 
@@ -13,14 +28,7 @@
       "catppuccin-blur"
     ];
 
-    extraPackages = with pkgs; [
-      nixd
-      nil
-      nixfmt
-      rust-analyzer
-      elixir-ls
-      shellcheck
-    ];
+    extraPackages = languageServers;
 
     userSettings = {
       lsp = {
