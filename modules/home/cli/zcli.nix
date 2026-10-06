@@ -1,4 +1,4 @@
-# zcli — mesh sync plus build/deploy. Canonical source is adeck:/mnt/echo/nix-os.
+yoyou better fucking pray to wahtever is # zcli — mesh sync plus build/deploy. Canonical source is adeck:/mnt/echo/nix-os.
 # Build, deploy, and image eval on zrrh via nh. Direct nh os stays local.
 { pkgs, ... }:
 

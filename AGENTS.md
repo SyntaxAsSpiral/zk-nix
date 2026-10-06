@@ -90,7 +90,7 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
   - `waybar/` — `adeck.nix`
   - `profiles/` — `base.nix` (adeck, nxiz, zrrh) and `desktop.nix` (nxiz + zrrh); see Per-host dispatch pattern above
   - Top-level HM modules: `awww.nix`, `awww-cycle.nix`, `bb-server.nix`, `catppuccin.nix`, `daemon-profile.nix`, `fsel.nix`, `gtk.nix`, `icons.nix`, `msgvault.nix`, `nushell.nix`, `openrgb.nix`, `python.nix`, `spotify.nix`, `thunar.nix`, `xdg.nix`
-- `modules/home/cli/zcli.nix` — HM module for the `zcli` wrapper. The scripts are `scripts/zcli-sync.sh`, `scripts/zcli-context.sh`, and `scripts/zcli-run.sh`.
+- `modules/home/cli/zcli.nix` — HM module for the `zcli` wrapper. The scripts and tests are in `scripts/zcli/`.
 - `hosts/<host>/hardware-configuration.nix` — host-specific hardware; do not share across hosts.
 
 ### Secrets
@@ -107,7 +107,7 @@ Anything in a host's `configuration.nix`/`home.nix` beyond profile imports shoul
 
 ## Scripts
 
-`scripts/` contains mesh utility scripts: `zcli-sync.sh`, `zcli-context.sh`, and `zcli-run.sh` (the `zcli` implementation, installed by `modules/home/cli/zcli.nix`), `check-nix-updates.sh` (nixpkgs update checker), `git-review.sh` (pre-deploy diff helper), `qbt-sync-zrrh.sh` (qBittorrent sync between adeck and zrrh), `watch-pkgs.conf` (watchexec config). These are invoked directly or via host services/aliases — not through a compositor panel.
+`scripts/` contains mesh utility scripts. `scripts/zcli/` holds `zcli-sync.sh`, `zcli-context.sh`, `zcli-run.sh`, and their tests; `modules/home/cli/zcli.nix` installs them. The other scripts are `check-nix-updates.sh` (nixpkgs update checker), `git-review.sh` (pre-deploy diff helper), `qbt-sync-zrrh.sh` (qBittorrent sync between adeck and zrrh), and `watch-pkgs.conf` (watchexec config). These are invoked directly or via host services/aliases — not through a compositor panel.
 
 ## Conventions
 - `docs/` is edit-on-request only (per global covenant); it does not currently exist in this repo, but do not create it without an explicit ask.

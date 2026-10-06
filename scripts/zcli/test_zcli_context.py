@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parents[3] / "scripts" / "zcli-context.sh"
+SCRIPT = Path(__file__).resolve().parent / "zcli-context.sh"
 
 
 class ContextTests(unittest.TestCase):

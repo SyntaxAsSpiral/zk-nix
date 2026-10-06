@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 
-SCRIPT = Path(__file__).resolve().parents[3] / "scripts" / "zcli-sync.sh"
+SCRIPT = Path(__file__).resolve().parent / "zcli-sync.sh"
 
 
 class SyncTests(unittest.TestCase):
