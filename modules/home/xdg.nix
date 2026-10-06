@@ -1,5 +1,5 @@
 # XDG base directories, user-dirs, and MIME defaults
-# Shared across all hosts — remote content via Taildrive bookmarks
+# Shared by adeck, nxiz, and zrrh (base profile) — remote content via Taildrive bookmarks
 {
   config,
   lib,

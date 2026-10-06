@@ -16,6 +16,8 @@ configuration.
 })
 ```
 
-The wrapper is defined in `hosts/nxiz/home.nix`. There is currently no Pi
-wrapper or declarative `~/.pi` state mapping in the `zrrh` Home Manager
-configuration, and this directory contains documentation only.
+The wrapper is defined in `hosts/nxiz/home.nix`. `seed` gets the same `npx`
+command as a `pi` function in the `seed` block of `modules/home/nushell.nix`.
+There is currently no Pi wrapper or declarative `~/.pi` state mapping in the
+`zrrh` or `adeck` Home Manager configuration, and this directory contains
+documentation only.

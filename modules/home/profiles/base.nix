@@ -1,4 +1,5 @@
-# Baseline home environment — imported by every mesh host's home.nix.
+# Baseline home environment — imported by adeck, nxiz, and zrrh. seed slims it
+# down in hosts/seed/home.nix; tm20 has no Home-Manager.
 {
   imports = [
     ../daemon-profile.nix

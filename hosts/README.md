@@ -4,6 +4,8 @@ Host files are the table of contents for each machine.
 
 `tm20` is the Pi 3B+ print-host appliance: it does **not** import `profiles/core.nix` or Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
 
+`seed` is the portable x86_64 UEFI rescue stick. It does **not** import `profiles/core.nix` or `modules/home/profiles/base.nix`: it picks only the system modules it needs, defines its own `zk` user, and gets a slim Home-Manager (nushell plus the shared CLI set). It is not a `zcli` host (no address in `zcli`'s host table), so build and install it by hand. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
+
 ## Promoting mutable host config
 
 Some nxiz and zrrh app configs link into their `/etc/nixos` checkouts so GUI
@@ -64,7 +66,7 @@ Do not use `--delete`: unrelated host-local files need not be removed.
 
 | Files | Required on |
 |-------|-------------|
-| `wifi-password` | All hosts |
+| `wifi-password` | All hosts (seed needs nothing else, since the stick can be lost) |
 | `github-token`, `github-recovery-codes` | nxiz, adeck, zrrh |
 | `print-token` | tm20 |
 | `hosts/<host>/ssh_host_*` | Matching host, to preserve its SSH identity |

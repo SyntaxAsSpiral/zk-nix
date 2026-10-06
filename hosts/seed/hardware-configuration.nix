@@ -3,7 +3,8 @@
 # redistributable firmware (Wi-Fi), both CPU microcodes, and filesystems by
 # LABEL rather than by-uuid.
 #
-# Labels stay jump / JUMP-ESP. The stick is already formatted with those names.
+# Labels stay jump / JUMP-ESP (the host's old name, before the rename to seed).
+# The stick is already formatted with those names.
 #   ESP  (FAT32, ~1G, type EF00)  mkfs.fat -F 32 -n JUMP-ESP /dev/sdX1
 #   root (ext4, rest)             mkfs.ext4 -L jump /dev/sdX2
 # Or replace both devices with /dev/disk/by-uuid/... from `blkid` once the
