@@ -296,28 +296,6 @@ nh_os() {
   run_on_zrrh tty "${nh_cmd[@]}"
 }
 
-# The closure nh just built stays on zrrh. GC roots under
-# /nix/var/nix/gcroots/zcli-$target are the ones nix-collect-garbage leaves.
-# --add-root will not replace an existing symlink, so the old root is removed
-# first. This runs for the invoking host too: the old target != hostname guard
-# never pinned adeck when the command ran on adeck.
-keep_closure() {
-  local target=$1 system_path remote
-  system_path=$(run_on_zrrh plain "$NIX" eval --raw \
-    "$ZRRH_FLAKE#nixosConfigurations.$target.config.system.build.toplevel.outPath")
-  [[ "$system_path" == /nix/store/* ]] || fail "no closure path for $target"
-  printf -v remote 'sudo -n rm -f %q && sudo -n nix-store --realise %q --add-root %q' \
-    "/nix/var/nix/gcroots/zcli-$target" \
-    "$system_path" \
-    "/nix/var/nix/gcroots/zcli-$target"
-  echo "    keep zcli-$target"
-  if [[ "$HOST" == zrrh ]]; then
-    bash -c "$remote"
-  else
-    ssh_mesh run zrrh "$remote"
-  fi
-}
-
 build_image() {
   local -a image_cmd=(
     "$NIX" build
@@ -400,7 +378,6 @@ case "$cmd" in
     hold_zrrh_awake "zcli build $target"
     echo "==> build $target"
     nh_os build
-    keep_closure "$target"
     ;;
   deploy)
     [[ ${#hosts[@]} -gt 0 ]] || fail "deploy requires at least one host"
@@ -434,7 +411,18 @@ case "$cmd" in
     for target in "${ordered[@]}"; do
       echo "==> deploy $target"
       nh_os "$action"
-      keep_closure "$target"
+      # One remote string. ssh joins argv and the remote shell parses it.
+      if [[ "$HOST" == zrrh ]]; then
+        system_path=$("$NIX" eval --raw "$ZRRH_FLAKE#nixosConfigurations.$target.config.system.build.toplevel.outPath")
+        sudo nix-store --realise "$system_path" --add-root "/nix/var/nix/gcroots/zcli-$target"
+      else
+        printf -v remote '%q eval --raw %q' \
+          "$NIX" "$ZRRH_FLAKE#nixosConfigurations.$target.config.system.build.toplevel.outPath"
+        system_path=$(ssh_mesh run zrrh "$remote")
+        printf -v remote 'sudo nix-store --realise %q --add-root %q' \
+          "$system_path" "/nix/var/nix/gcroots/zcli-$target"
+        ssh_mesh run zrrh "$remote"
+      fi
     done
     if [[ "$switch" == false ]]; then
       for target in "${ordered[@]}"; do
