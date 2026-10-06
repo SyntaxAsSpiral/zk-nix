@@ -17,8 +17,8 @@ in
     deps = [ "users" "etc" ];
     text = ''
       ${lib.optionalString (config.my.host == "tm20") ''
-        # Generation 7 dropped the agenix decryption that used to finish
-        # before services opened the Ethernet port and the printer.
+        # Crucial: replaces the time agenix decryption used to take in the boot
+        # cycle. Without it tm20 reset-loops. Do not remove or move out of activation.
         echo "boot delay where agenix used to run"
         ${pkgs.coreutils}/bin/sleep 20
       ''}
