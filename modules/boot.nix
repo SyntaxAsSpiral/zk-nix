@@ -55,6 +55,14 @@ let
         "udev.log_priority=3"
       ];
     };
+    jump = {
+      # Rescue stick: plain console, stock kernel, never touch the host's NVRAM.
+      canTouchEfiVariables = false;
+      plymouth = false;
+      blacklistNouveau = false;
+      stockKernel = true;
+      kernelParams = [ "boot.shell_on_fail" ];
+    };
   };
   h = perHost.${config.my.host};
 in
@@ -69,6 +77,9 @@ in
       # Valve vendor kernel: steamdeck EC driver (battery charge limit,
       # fan hwmon) is patched in; stock kernels lack it entirely
       pkgs.linuxPackages_jovian
+    else if h.stockKernel or false then
+      # Broadest hardware support from cache.nixos.org; no CachyOS overlay needed.
+      pkgs.linuxPackages_latest
     else
       pkgs.cachyosKernels.linuxPackages-cachyos-latest;
   boot.kernelParams = h.kernelParams;

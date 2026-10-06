@@ -51,5 +51,8 @@ in
     tm20 = [
       (import ./tm20-cli.nix { inherit inputs; })
     ];
+
+    # Rescue stick: stock nixpkgs kernel and packages, all from cache.nixos.org.
+    jump = [ ];
   };
 }

@@ -8,6 +8,7 @@
       "adeck"
       "zrrh"
       "tm20"
+      "jump"
     ];
     description = "Host identifier — selects per-host blocks in shared modules";
   };
@@ -24,6 +25,7 @@
         adeck = "/etc/nixos";
         zrrh = "/etc/nixos";
         tm20 = "/etc/nixos";
+        jump = "/etc/nixos";
       }
       .${config.my.host};
 

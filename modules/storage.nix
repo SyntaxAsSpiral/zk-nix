@@ -86,6 +86,12 @@ let
         games = "/mnt/games";
       };
     };
+
+    # Rescue stick: no fixed disks, no Taildrive shares.
+    jump = {
+      local = { };
+      driveShares = { };
+    };
   };
 
   h = perHost.${config.my.host};

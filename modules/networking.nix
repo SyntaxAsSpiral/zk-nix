@@ -104,6 +104,33 @@ let
         };
       };
     };
+    jump = {
+      hostName = "jump";
+      resolvedDns = true;
+      postResumeDnsFlush = false;
+      nmEnvironmentFiles = [ "/run/secrets/wifi-password" ];
+      nmProfiles = {
+        gbz = {
+          connection = {
+            id = "GBZ";
+            type = "wifi";
+            autoconnect = true;
+            autoconnect-priority = 100;
+          };
+          wifi = {
+            mode = "infrastructure";
+            ssid = "GBZ";
+          };
+          wifi-security = {
+            auth-alg = "open";
+            key-mgmt = "wpa-psk";
+            psk = "$GBZ_PSK";
+          };
+          ipv4.method = "auto";
+          ipv6.method = "auto";
+        };
+      };
+    };
   };
   h = perHost.${config.my.host};
 in

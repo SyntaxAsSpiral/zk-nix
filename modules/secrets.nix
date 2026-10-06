@@ -5,6 +5,9 @@ let
   names = [ "wifi-password" ] ++ (
     if config.my.host == "tm20" then
       [ "print-token" ]
+    else if config.my.host == "jump" then
+      # Rescue stick may be lost or left plugged in: Wi-Fi only, no GitHub creds.
+      [ ]
     else
       [ "github-token" "github-recovery-codes" ]
   );
