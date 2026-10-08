@@ -1,7 +1,8 @@
 # NixOS configuration for seed — portable x86_64 UEFI rescue stick.
 # Boot the target, join GBZ Wi-Fi and Tailscale, SSH in, partition and install.
 # Does not import profiles/core.nix: that profile is the workstation set
-# (fonts, Playwright, PipeWire, Mesa) and blew the stick out to 8.5 GiB.
+# (Playwright, the NVIDIA/Steam desktop) and blew the stick out to 8.5 GiB.
+# XFCE is local to this file: LightDM on tty7, tty1 stays a rescue console.
 { pkgs, ... }:
 
 {
@@ -24,11 +25,6 @@
 
   documentation.enable = false;
 
-  services.openssh = {
-    enable = true;
-    extraConfig = "AcceptEnv TERM_PROGRAM";
-  };
-
   users.users.zk = {
     isNormalUser = true;
     uid = 1000;
@@ -43,8 +39,51 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfoVdWpimtBi0htouhMDsD1NXuKbIAusgzB1dxYDW4z"
     ];
   };
-  security.sudo.wheelNeedsPassword = false;
-  services.getty.autologinUser = "zk";
+  security = {
+    sudo.wheelNeedsPassword = false;
+    rtkit.enable = true;
+  };
+
+  # Same shape as the old adeck desktop module: LightDM, autologin, PipeWire.
+  # XFCE instead of Enlightenment. No 32-bit audio, no Bluetooth, no Steam.
+  # tty1 stays a console. LightDM conflicts with getty@tty7, not tty1,
+  # so a machine whose GPU never comes up still boots into a shell.
+  services = {
+    openssh = {
+      enable = true;
+      extraConfig = "AcceptEnv TERM_PROGRAM";
+    };
+    getty.autologinUser = "zk";
+
+    xserver = {
+      enable = true;
+      xkb.layout = "us";
+      desktopManager = {
+        xterm.enable = false;
+        xfce.enable = true;
+      };
+      displayManager.lightdm.enable = true;
+    };
+    displayManager = {
+      defaultSession = "xfce";
+      autoLogin = {
+        enable = true;
+        user = "zk";
+      };
+    };
+
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      pulse.enable = true;
+    };
+  };
+
+  fonts.packages = with pkgs; [
+    dejavu_fonts
+    noto-fonts-color-emoji
+    recursive
+  ];
 
   # Same handoff as the mesh: bash stays the login shell, interactive SSH and tty1 enter Nushell.
   programs.bash.interactiveShellInit = ''
@@ -76,6 +115,7 @@
     curl
     tmux
     nixos-install-tools
+    firefox
   ];
 
   system.stateVersion = "25.11";

@@ -34,10 +34,11 @@ Each `configuration.nix` sets `my.host = "<name>"` and imports profiles plus onl
 | zrrh | `profiles/core` + `profiles/desktop` | `profiles/base` + `profiles/desktop` |
 | adeck | `profiles/core` (no desktop), `jovian` via `extraModules` | `profiles/base` (no desktop) |
 | tm20 | `system`, `networking`, `ssh-identity`, `secrets`, `nh` itself. aarch64, no core profile | none |
-| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity` itself. No core profile, empty overlays | nushell + shared CLI imported directly |
+| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity` itself. No core profile, empty overlays. XFCE and LightDM are set in the host file | nushell + shared CLI imported directly |
 
-seed skips the core set because fonts, Playwright, PipeWire and Mesa bloat the stick; it defines its
-own `zk` user. Anything in a host file beyond profile imports should be unique to that host.
+seed skips the core set because that profile is the workstation set (Playwright, NVIDIA, Steam)
+and blew the stick out to 8.5 GiB. XFCE, LightDM, and PipeWire are set in the host file. It defines
+its own `zk` user. Anything in a host file beyond profile imports should be unique to that host.
 
 ## perHost: where host differences go
 
@@ -99,5 +100,5 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 - Don't put host-only config in a shared module or shared config in a host file.
 - Don't share `hardware-configuration.nix`.
 - Don't add `follows` to `nix-cachyos-kernel`. Record every pin in `overlays/README.md` in the same change.
-- Don't widen seed. It stays minimal on purpose.
+- Don't pull seed into the core profile, overlays, or a non-stock kernel. XFCE stays in `hosts/seed/configuration.nix`.
 - Fix statix and deadnix findings in the source rather than suppressing them.

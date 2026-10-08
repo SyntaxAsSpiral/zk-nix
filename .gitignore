@@ -1,15 +1,17 @@
-/reference/
+# Editor and agent state
 /.kiro/
-result
-/result/
-*.qcow2
 .vscode/
+.codex/
+/reference/
+tmp/
+scratch.txt
+
+# Build output
+result
+result-sd-*
+*.qcow2
 __pycache__/
 /modules/openrgb/config/logs/
-tmp/
-.codex/
-.codex
-result-sd-*
 
 # Local credentials are synced separately over SSH.
 /secrets/

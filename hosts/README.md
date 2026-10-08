@@ -4,7 +4,7 @@ Host files are the table of contents for each machine.
 
 `tm20` is the Pi 3B+ print-host appliance: it does **not** import `profiles/core.nix` or Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
 
-`seed` is the portable x86_64 UEFI rescue stick. It does **not** import `profiles/core.nix` or `modules/home/profiles/base.nix`: it picks only the system modules it needs, defines its own `zk` user, and gets a slim Home-Manager (nushell plus the shared CLI set). It is not a `zcli` host (no address in `zcli`'s host table), so build and install it by hand. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
+`seed` is the portable x86_64 UEFI rescue stick. It does **not** import `profiles/core.nix` or `modules/home/profiles/base.nix`: it picks only the system modules it needs, defines its own `zk` user, and gets a slim Home-Manager (nushell plus the shared CLI set). XFCE, LightDM, and autologin live in `hosts/seed/configuration.nix` only. It is not a `zcli` host (no address in `zcli`'s host table), so build and install it by hand. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
 
 ## Promoting mutable host config
 
