@@ -43,6 +43,7 @@
       nodejs_24
       lazydocker
       htop
+      firefox
     ];
 
     file.".face".source = ../../assets/adeck-face.png;
