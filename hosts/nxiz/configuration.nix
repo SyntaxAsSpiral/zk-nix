@@ -18,9 +18,6 @@
   # harmless no-op if the board's chip isn't Nuvoton
   boot.kernelModules = [ "nct6775" ];
 
-  # nxiz-only services
-  services.gnome.gnome-keyring.enable = true;
-
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;

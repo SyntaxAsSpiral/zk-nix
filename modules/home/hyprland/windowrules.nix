@@ -59,6 +59,11 @@ _:
       workspace = "special:magic silent";
     }
     {
+      name = "grok-bot-scratchpad";
+      "match:class" = "^(grok-bot)$";
+      workspace = "special:magic silent";
+    }
+    {
       name = "tui-float";
       "match:class" = "^(tui-float)$";
       float = true;

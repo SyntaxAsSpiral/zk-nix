@@ -27,6 +27,20 @@
   # Vault archiver on both vault hosts (headless-by-design; see adeck)
   programs.msgvault.enable = true;
 
+  systemd.user.services.grok-bot = {
+    Unit = {
+      Description = "Grok Bot";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.llm-agents.grok-bot}/bin/grok-bot";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
   home = {
     stateVersion = "25.11";
 

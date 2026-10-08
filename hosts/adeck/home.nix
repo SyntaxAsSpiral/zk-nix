@@ -28,6 +28,7 @@
     ../../modules/home/msgvault.nix
     ../../modules/home/cli/jolt.nix
     ../../modules/home/fsel.nix
+    ../../modules/home/otter-launcher/adeck
     ../../modules/home/awww-cycle.nix
     ../../modules/home/niri/adeck.nix
     ../../modules/home/waybar/adeck.nix

@@ -88,6 +88,11 @@ input {
     position x=1280 y=0
 }
 
+// Named workspaces must be declared or open-on-workspace is a no-op.
+// "zk" is the visible workspace; "daemon" sits behind it.
+workspace "zk"
+workspace "daemon"
+
 // 4K Monitor Placeholder (Uncomment and adjust name after running `niri msg outputs`)
 // output "DP-1" {
 //     mode "3840x2160@60.0"
@@ -715,8 +720,9 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 }
 
-// Ensure LM Studio starts quietly on a secondary workspace
 window-rule {
-    match app-id=r#"lm-studio"#
-    open-on-workspace "2"
+    match at-startup=true app-id=r#"^ai\.elementlabs\.lmstudio$"#
+    match app-id=r#"^ai\.elementlabs\.lmstudio$"#
+    open-on-workspace "daemon"
+    open-focused false
 }

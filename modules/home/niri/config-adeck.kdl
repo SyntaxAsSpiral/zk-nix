@@ -92,6 +92,16 @@ output "eDP-1" {
     position x=534 y=1080
 }
 
+// Named workspaces must be declared or open-on-workspace is a no-op.
+// "zk" is the visible deck workspace; "daemon" sits behind it.
+workspace "zk" {
+    open-on-output "eDP-1"
+}
+
+workspace "daemon" {
+    open-on-output "eDP-1"
+}
+
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Layout
@@ -255,6 +265,7 @@ layout {
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-sh-at-startup "swayidle -w timeout 300 'brightnessctl -s set 10%' resume 'brightnessctl -r' timeout 600 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'brightnessctl -s set 0'"
+spawn-sh-at-startup "grok-bot --password-store=basic"
 //spawn-at-startup "waybar"
 //spawn-sh-at-startup "alacritty -e jolt"
 //spawn-sh-at-startup "alacritty -e neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"
@@ -314,6 +325,13 @@ window-rule {
     open-fullscreen true
 }
 
+window-rule {
+    match at-startup=true app-id="grok-bot"
+    match app-id="grok-bot"
+    open-on-workspace "daemon"
+    open-focused false
+}
+
 // Open the Firefox picture-in-picture player as floating by default.
 window-rule {
     // This app-id regular expression will work for both:
@@ -360,7 +378,7 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Q hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
     Mod+S hotkey-overlay-title="screensaver" { spawn-sh "alacritty -e neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"; }    
-    Mod+R hotkey-overlay-title="Run an Application: fsel" { spawn-sh "alacritty -e fsel"; }
+    Mod+R hotkey-overlay-title="Open Otter Launcher" { spawn-sh "alacritty --title=otter-launcher -e otter-launcher"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.

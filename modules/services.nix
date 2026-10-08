@@ -1,5 +1,5 @@
 # Shared services
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   guiFileHosts = [
@@ -36,5 +36,12 @@ in
     udisks2.enable = true;
     # GUI virtual filesystem stack only on interactive GUI hosts.
     gvfs.enable = builtins.elem config.my.host guiFileHosts;
+    gnome.gnome-keyring.enable = false;
+  };
+
+  # Stop dbus from activating a login keyring anyway (Electron, portals).
+  systemd.user.services.gnome-keyring-daemon = {
+    enable = false;
+    wantedBy = lib.mkForce [ ];
   };
 }
