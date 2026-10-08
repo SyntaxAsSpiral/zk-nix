@@ -57,6 +57,7 @@
     llm-agents.gemini-cli
     llm-agents.crush
     llm-agents.grok
+    llm-agents.grok-bot
   ];
 
   systemd = {

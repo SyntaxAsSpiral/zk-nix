@@ -47,5 +47,7 @@
     '';
   };
 
+  environment.systemPackages = [ pkgs.llm-agents.grok-bot ];
+
   system.stateVersion = "25.11";
 }

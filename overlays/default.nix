@@ -37,6 +37,7 @@ in
     nxiz = [
       fromInputs.cachyosKernel
       fromInputs.hyprland
+      fromInputs.llmAgents
     ]
     ++ nixpkgsFixes
     ++ flakePackages;
