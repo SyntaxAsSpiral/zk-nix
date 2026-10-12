@@ -18,6 +18,9 @@
     # Hermes Agent (adeck only)
     ../../modules/home/daemonturgy/hermes/default.nix
 
+    # Esocortex read-only API (adeck only)
+    ../../modules/home/daemonturgy/esocortex/default.nix
+
     # Herm TUI
     ../../modules/home/daemonturgy/herm/default.nix
 
