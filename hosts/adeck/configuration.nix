@@ -55,6 +55,7 @@
     # Numtide's cached builds. shared-nixpkgs recompiles these on every nixpkgs bump.
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.beads
     llm-agents.gemini-cli
     llm-agents.crush
     llm-agents.grok

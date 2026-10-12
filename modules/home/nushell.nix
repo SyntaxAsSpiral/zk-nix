@@ -55,7 +55,7 @@ let
       '';
       agentConfig = "";
       extraConfig = ''
-        fastfetch
+        eso-fetch
         echo ""
       '';
     };

@@ -15,6 +15,24 @@ Imported by `profiles/base.nix` (nxiz, zrrh, adeck) and `hosts/seed/home.nix`
 (local models only). tm20 has no Home-Manager; `hosts/tm20/configuration.nix`
 installs the same JSON via `/etc/pi/agent/models.json` and a tmpfiles symlink.
 
+Pi packages are pinned git refs in `~/.pi/agent/settings.json`, written by
+`home.activation.piPackages`. The list is the whole `packages` array. `pi update`
+cannot move a pinned ref, and it cannot update the Pi binary when Nix provides
+it. `pi update --extensions` still installs that ref's npm dependencies into
+`~/.pi/agent/git`. Pi still compares a git checkout to origin, so a pin behind
+origin keeps the "Package Updates Available" banner until the checkout matches.
+
+`nix flake update` does not move these refs. They are strings in
+`default.nix`, not flake inputs. That command does move the `llm-agents` input,
+which is the Pi binary. To update an extension, replace its hash, switch, then
+run `pi update --extensions`.
+
+`pi-mcp-adapter` is not in the list. Pi 1.1 loads `builtin:mcp`, which reads
+`~/.pi/agent/mcp.json`. The adapter registers `/mcp` and replaces that, which
+is the startup warning. Herdr's integration file
+(`extensions/herdr-agent-state.ts`) and Herdr marketplace plugins stay Herdr's.
+Beads has no plugin list here.
+
 Binaries stay host-local:
 
 - nxiz: npx wrapper in `hosts/nxiz/home.nix`

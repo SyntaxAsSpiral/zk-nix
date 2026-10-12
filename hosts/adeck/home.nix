@@ -27,6 +27,9 @@
     # Stack-chan bridge
     ../../modules/home/daemonturgy/stackchan/default.nix
 
+    # Esotericons fetch (same module as nxiz)
+    ../../modules/home/cli/fastfetch/eso-fetch.nix
+
     # System
     ../../modules/home/msgvault.nix
     ../../modules/home/cli/jolt.nix
