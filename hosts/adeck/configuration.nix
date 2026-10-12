@@ -52,8 +52,9 @@
     swayidle
     inputs.jolt.packages.${pkgs.stdenv.hostPlatform.system}.default
     llm-agents.pi
-    # Numtide's cached build. shared-nixpkgs recompiles this on every nixpkgs bump.
+    # Numtide's cached builds. shared-nixpkgs recompiles these on every nixpkgs bump.
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr
     llm-agents.gemini-cli
     llm-agents.crush
     llm-agents.grok
