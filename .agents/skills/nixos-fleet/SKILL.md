@@ -1,12 +1,11 @@
 ---
 name: nixos-fleet
 description: >
-  REQUIRED when changing how the nix-os flake is organized across hosts. Use when asked to add or
-  change a host, share a module between hosts, stop a change landing on the wrong machine, work
-  out which modules a host imports, add a perHost entry, or decide whether config belongs in
-  modules/, modules/home/, hosts/<host>/ or overlays/. Triggers: mkHost, my.host, perHost,
-  profiles/core.nix, profiles/desktop.nix, hosts/<host>, nxiz, zrrh, adeck, tm20, seed, "new host",
-  "only on one host". Deploy mechanics are in `zcli`. Credentials are in `nixos-secrets`.
+  Use when organizing the nix-os flake across hosts: add or change a host, share a module,
+  keep a change off the wrong machine, see what a host imports, add a perHost entry, or
+  choose modules/, modules/home/, hosts/<host>/, or overlays/. Triggers: mkHost, my.host,
+  perHost, profiles/core.nix, profiles/desktop.nix, nxiz, zrrh, adeck, tm20, seed.
+  Deploy is zcli. Credentials are nixos-secrets.
 ---
 
 # nixos-fleet

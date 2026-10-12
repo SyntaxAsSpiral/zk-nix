@@ -1,12 +1,10 @@
 ---
 name: zcli
 description: >
-  REQUIRED before running or explaining `zcli` in the nix-os flake: sync, build,
-  deploy, image, wake. Use when asked to build or deploy a host, publish the flake
-  to /etc/nixos, wake zrrh, flash tm20, or when a change "didn't deploy".
-  Triggers: zcli, zcli sync, zcli build, zcli deploy, zcli image, zcli wake, nh os,
-  /etc/nixos out of date, unstaged, zrrh asleep, reboot scheduled.
-  ConSensus commands (`zcli assemble`, `zcli sync context`) are not covered here.
+  Use when running or explaining zcli in the nix-os flake: sync, build, deploy,
+  image, or wake. Also when a change did not deploy, the flake must reach
+  /etc/nixos, zrrh is asleep, or tm20 needs an image. Triggers: zcli, nh os,
+  unstaged, reboot scheduled. Does not cover zcli assemble or zcli sync context.
 ---
 
 # zcli

@@ -30,8 +30,5 @@
     sessionVariables = {
       PIP_USER = "1";
     };
-
-    # Set Python path in environment
-    sessionPath = ["${pkgs.python3}/bin"];
   };
 }

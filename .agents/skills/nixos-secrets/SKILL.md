@@ -1,13 +1,11 @@
 ---
 name: nixos-secrets
 description: >
-  REQUIRED whenever a credential has to reach a host in the nix-os flake. Use when asked to
-  add or rotate a secret, token, Wi-Fi password, API key or SSH host key, give a service a
-  credential, restore credentials after a reinstall, flash tm20, or find out why /run/secrets
-  is missing a file. Triggers: secrets, secrets/, /run/secrets, /etc/nixos/secrets, wifi-password,
-  github-token, print-token, nix-access-tokens.conf, ssh_host key, EnvironmentFile,
-  "missing secrets", reinstall, new host credentials.
-  Deploy mechanics are in the `zcli` skill. Reinstall detail is in `hosts/README.md`.
+  Use when a credential must reach a nix-os host: add, rotate, or restore a secret,
+  token, Wi-Fi password, API key, or SSH host key; flash tm20; or explain a missing
+  /run/secrets file. Triggers: secrets/, /run/secrets, /etc/nixos/secrets,
+  wifi-password, github-token, print-token, nix-access-tokens.conf, ssh_host,
+  EnvironmentFile, reinstall. Deploy is zcli.
 ---
 
 # nixos-secrets
