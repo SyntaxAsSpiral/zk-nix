@@ -4,12 +4,12 @@
 let
   names = [ "wifi-password" ] ++ (
     if config.my.host == "tm20" then
-      [ "print-token" ]
+      [ "print-token" "pi-openrouter-api-key" ]
     else if config.my.host == "seed" then
-      # Rescue stick may be lost or left plugged in: Wi-Fi only, no GitHub creds.
+      # Rescue stick may be lost or left plugged in: Wi-Fi only, no GitHub or OpenRouter.
       [ ]
     else
-      [ "github-token" "github-recovery-codes" ]
+      [ "github-token" "github-recovery-codes" "pi-openrouter-api-key" ]
   );
 in
 {
@@ -34,4 +34,13 @@ in
       )
     '';
   };
+
+  # Pi reads OPENROUTER_API_KEY. This file is Pi's OpenRouter key only.
+  # The file is not on seed; skip if missing.
+  environment.extraInit = ''
+    if [ -r /run/secrets/pi-openrouter-api-key ]; then
+      OPENROUTER_API_KEY=$(${pkgs.coreutils}/bin/tr -d '\n' < /run/secrets/pi-openrouter-api-key)
+      export OPENROUTER_API_KEY
+    fi
+  '';
 }

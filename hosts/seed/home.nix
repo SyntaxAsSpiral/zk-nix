@@ -14,6 +14,7 @@
     ../../modules/home/cli/lazygit.nix
     ../../modules/home/cli/yazi/default.nix
     ../../modules/home/cli/zcli.nix
+    ../../modules/home/daemonturgy/pi/default.nix
   ];
 
   home = {

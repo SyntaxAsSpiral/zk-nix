@@ -1,0 +1,32 @@
+{
+  "providers": {
+    "local": {
+      "baseUrl": "http://100.89.32.9:1234/v1",
+      "api": "openai-completions",
+      "apiKey": "lms",
+      "models": [
+        {
+          "id": "qwen/qwen3.8-27b",
+          "name": "Qwen3.8 27B",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 100000
+        },
+        {
+          "id": "google/gemma-4-31b",
+          "name": "Gemma 4 31B",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 100000
+        },
+        {
+          "id": "meta/muse-glimmer",
+          "name": "Muse Glimmer 30B",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 100000
+        }
+      ]
+    }
+  }
+}

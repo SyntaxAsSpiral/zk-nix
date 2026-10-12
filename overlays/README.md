@@ -46,5 +46,5 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 - `adeck`: llm-agents, cached Codex, fsel, llama-tts binary.
 - `nxiz`: CachyOS kernel, Hyprland pin, llm-agents, HyprPanel, tumbler, LM Studio, fsel, sonic-pi checks disabled.
 - `zrrh`: CachyOS kernel, llm-agents, cached Codex, HyprPanel overlay, tumbler, LM Studio, `nixpkgs-llm`, noctalia tag, OpenRGB 1.0rc3.1.
-- `tm20`: tm20-cli. `tm20-source` is a branch input and moves on `nix flake update`.
+- `tm20`: tm20-cli, llm-agents (pi). `tm20-source` is a branch input and moves on `nix flake update`.
 - `seed`: no overlays. Stock nixpkgs kernel and packages, all from cache.nixos.org.

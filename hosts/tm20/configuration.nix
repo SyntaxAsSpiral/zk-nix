@@ -83,6 +83,15 @@
     libusb1
     liberation_ttf
     tm20-cli
+    llm-agents.pi
+  ];
+
+  environment.etc."pi/agent/models.json".source = ../../modules/home/daemonturgy/pi/models.json;
+
+  systemd.tmpfiles.rules = [
+    "d /home/zk/.pi 0755 zk users -"
+    "d /home/zk/.pi/agent 0755 zk users -"
+    "L+ /home/zk/.pi/agent/models.json - zk users - /etc/pi/agent/models.json"
   ];
 
   system.stateVersion = "25.11";

@@ -22,6 +22,8 @@
     # Editors
     ../editors/nano.nix
     ../editors/zed.nix
+
+    ../daemonturgy/pi/default.nix
   ];
 
   home.username = "zk";
