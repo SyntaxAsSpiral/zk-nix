@@ -1,4 +1,14 @@
-"""Wake zrrh before forwarding inference to adeck's LM Studio server."""
+"""Wake zrrh before forwarding inference to adeck's LM Studio server.
+
+Noctalia suspends zrrh after 30 minutes without seat input. A loaded model
+does not count as input, so the weight host can enter S3 under an open
+prediction and LM Link reports peer_keepalive_timeout. While any model is
+loaded on zrrh, hold a sleep inhibitor there. The inhibitor is a transient
+unit that exits after LEASE seconds. This process refreshes it. If the
+process stops, the unit is stopped, and if that stop never arrives the
+lease still ends. An unbounded `sleep infinity` lock is how the last one
+outlived the job that took it.
+"""
 import asyncio
 import json
 import logging
@@ -14,6 +24,19 @@ HOP = {'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
 INFERENCE = {'/v1/chat/completions', '/v1/completions', '/v1/embeddings',
              '/v1/responses', '/api/v0/chat/completions', '/api/v0/completions',
              '/api/v0/embeddings', '/api/v1/chat', '/api/v1/models/load'}
+# Shorter than Noctalia's 30 minute idle, long enough that one missed poll
+# does not open a gap. Refresh halfway so a failed refresh still overlaps.
+LEASE = 90
+REFRESH = 45
+HOLD = (
+    'sudo -n systemctl stop inference-awake.service || true; '
+    'sudo -n systemd-run --collect --unit=inference-awake '
+    "--description='LM Studio model loaded' "
+    '/run/current-system/sw/bin/systemd-inhibit --what=sleep --who=inference-wake '
+    "--why='LM Studio model loaded' --mode=block "
+    f'/run/current-system/sw/bin/sleep {LEASE}'
+)
+DROP = 'sudo -n systemctl stop inference-awake.service'
 
 
 class Wake:
@@ -77,6 +100,76 @@ class Wake:
             raise web.HTTPServiceUnavailable(text='zrrh did not reconnect to LM Link within 120 seconds.\n')
 
 
+class SleepLock:
+    """Block zrrh suspend while one of its models is loaded. Lease, not a latch."""
+
+    def __init__(self):
+        self.held = 0
+
+    async def exec(self, *args):
+        process = await asyncio.create_subprocess_exec(
+            *args, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL)
+        try:
+            output, _ = await asyncio.wait_for(process.communicate(), 20)
+        except asyncio.TimeoutError:
+            process.kill()
+            await process.wait()
+            raise
+        if process.returncode != 0:
+            raise OSError(process.returncode)
+        return output
+
+    async def lms_json(self, *args):
+        return json.loads(await self.exec(os.environ['LMS'], *args))
+
+    async def remote(self, script):
+        ssh = os.environ.get('SSH', '/run/current-system/sw/bin/ssh')
+        await self.exec(ssh, '-F', '/dev/null', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10',
+                        '-o', 'HostKeyAlias=zrrh', 'zk@100.77.90.79', script)
+
+    async def zrrh_loaded(self):
+        status = await self.lms_json('link', 'status', '--json')
+        ident = next((p.get('deviceIdentifier') for p in status.get('peers', [])
+                      if p.get('deviceName') == 'zrrh' and p.get('status') == 'connected'), None)
+        if ident is None:
+            return False
+        loaded = await self.lms_json('ps', '--json')
+        return any(model.get('deviceIdentifier') == ident for model in loaded)
+
+    async def hold(self):
+        await self.remote(HOLD)
+        self.held = time.monotonic()
+
+    async def drop(self):
+        if not self.held:
+            return
+        await self.remote(DROP)
+        self.held = 0
+
+    async def tick(self):
+        if not await self.zrrh_loaded():
+            await self.drop()
+            return
+        if time.monotonic() - self.held >= REFRESH:
+            await self.hold()
+
+    async def run(self):
+        try:
+            while True:
+                try:
+                    await self.tick()
+                except asyncio.CancelledError:
+                    raise
+                except (OSError, asyncio.TimeoutError, ValueError):
+                    logging.exception('sleep lock')
+                await asyncio.sleep(15)
+        finally:
+            try:
+                await self.drop()
+            except (OSError, asyncio.TimeoutError):
+                logging.exception('sleep lock release')
+
+
 def headers(values):
     excluded = HOP | {v.strip().lower() for v in values.get('Connection', '').split(',')}
     return [(k, v) for k, v in values.items() if k.lower() not in excluded]
@@ -134,16 +227,24 @@ async def relay(request):
 
 
 async def lifespan(app):
-    async with aiohttp.ClientSession(auto_decompress=False,
-                                    timeout=aiohttp.ClientTimeout(total=None, sock_connect=10, sock_read=600)) as client:
-        app['client'] = client
-        yield
+    lock = app['sleep']
+    task = asyncio.create_task(lock.run()) if lock is not None else None
+    try:
+        async with aiohttp.ClientSession(auto_decompress=False,
+                                        timeout=aiohttp.ClientTimeout(total=None, sock_connect=10, sock_read=600)) as client:
+            app['client'] = client
+            yield
+    finally:
+        if task is not None:
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
 
 
-def make_app(wake=None, upstream='http://127.0.0.1:1235'):
+def make_app(wake=None, upstream='http://127.0.0.1:1235', sleep=None):
     app = web.Application(client_max_size=64 * 1024 * 1024)
     app['wake'] = wake or Wake()
     app['upstream'] = upstream
+    app['sleep'] = sleep
     app.cleanup_ctx.append(lifespan)
     app.router.add_route('*', '/{path:.*}', relay)
     return app
@@ -153,5 +254,5 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     # A caller timeout must cancel this handler. Otherwise the upstream
     # prediction keeps its LM Studio slot and the next request opens another.
-    web.run_app(make_app(), host='0.0.0.0', port=1234, access_log=None,
+    web.run_app(make_app(sleep=SleepLock()), host='0.0.0.0', port=1234, access_log=None,
                 handler_cancellation=True)
