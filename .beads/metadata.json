@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "nix_os",
+  "project_id": "4bfb72b0-6e37-4671-b631-0ab170555565"
+}
