@@ -23,7 +23,7 @@ let
         if ($env | get -o TERM_PROGRAM | default "") == "vscode" {
           fastfetch
         } else {
-          eso-fetch
+          esofetch
         }
         echo ""
         echo ""
@@ -55,7 +55,7 @@ let
       '';
       agentConfig = "";
       extraConfig = ''
-        eso-fetch
+        esofetch
         echo ""
       '';
     };
