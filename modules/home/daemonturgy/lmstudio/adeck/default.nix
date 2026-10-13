@@ -62,6 +62,7 @@ in
   };
 
   # Keep the public API stable; gate inference on the router-LAN WoL relay.
+  # The process also refreshes a 90s sleep lease on zrrh while a model is loaded there.
   systemd.user.services.inference-wake = {
     Unit = {
       Description = "Wake zrrh before local inference";
@@ -70,7 +71,10 @@ in
     };
     Service = {
       ExecStart = "${pkgs.python3.withPackages (p: [ p.aiohttp ])}/bin/python ${./inference-wake.py}";
-      Environment = [ "LMS=${lms}/bin/lms" ];
+      Environment = [
+        "LMS=${lms}/bin/lms"
+        "SSH=/run/current-system/sw/bin/ssh"
+      ];
       Restart = "on-failure";
       RestartSec = 3;
     };

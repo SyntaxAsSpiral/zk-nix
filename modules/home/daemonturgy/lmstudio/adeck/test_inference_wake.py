@@ -110,6 +110,63 @@ class Tests(unittest.IsolatedAsyncioTestCase):
                     await ws.send_str('hello')
                     self.assertEqual((await ws.receive()).data, 'hello')
 
+    def zrrh(self, models):
+        lock = relay.SleepLock()
+        lock.lms_json = AsyncMock(side_effect=[
+            {'peers': [{'deviceName': 'zrrh', 'status': 'connected', 'deviceIdentifier': 'z'}]},
+            models,
+        ])
+        lock.remote = AsyncMock()
+        return lock
+
+    async def test_loaded_model_takes_a_finite_lease(self):
+        lock = self.zrrh([{'deviceIdentifier': 'z', 'identifier': 'qwen/qwen3.8-27b'}])
+        await lock.tick()
+        script = lock.remote.await_args.args[0]
+        self.assertIn(f'sleep {relay.LEASE}', script)
+        self.assertIn('--what=sleep', script)
+        self.assertNotIn('infinity', script)
+        self.assertGreater(lock.held, 0)
+
+    async def test_adeck_model_does_not_lock_zrrh(self):
+        lock = self.zrrh([{'deviceIdentifier': 'adeck', 'identifier': 'nomic'}])
+        await lock.tick()
+        lock.remote.assert_not_called()
+        self.assertEqual(lock.held, 0)
+
+    async def test_unload_stops_the_unit(self):
+        lock = self.zrrh([])
+        lock.held = 1
+        await lock.tick()
+        lock.remote.assert_awaited_once_with(relay.DROP)
+        self.assertEqual(lock.held, 0)
+
+    async def test_lease_is_not_refreshed_early(self):
+        lock = self.zrrh([{'deviceIdentifier': 'z'}])
+        lock.held = relay.time.monotonic()
+        await lock.tick()
+        lock.remote.assert_not_called()
+
+    async def test_disconnected_peer_does_not_lock(self):
+        lock = relay.SleepLock()
+        lock.lms_json = AsyncMock(return_value={
+            'peers': [{'deviceName': 'zrrh', 'status': 'disconnected', 'deviceIdentifier': 'z'}]})
+        lock.remote = AsyncMock()
+        await lock.tick()
+        lock.remote.assert_not_called()
+        self.assertEqual(lock.lms_json.await_count, 1)
+
+    async def test_stopping_the_loop_drops_the_lease(self):
+        lock = relay.SleepLock()
+        lock.held = 5
+        lock.tick = AsyncMock()
+        lock.drop = AsyncMock()
+        task = asyncio.create_task(lock.run())
+        await asyncio.sleep(0)
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+        lock.drop.assert_awaited()
+
     def test_magic_packet(self):
         sock = MagicMock()
         with patch.object(relay.socket, 'socket') as factory:
