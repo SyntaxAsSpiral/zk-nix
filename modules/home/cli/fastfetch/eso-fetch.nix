@@ -2,7 +2,7 @@
 
 let
   esoFetch = pkgs.writeShellApplication {
-    name = "eso-fetch";
+    name = "esofetch";
     runtimeInputs = with pkgs; [
       fastfetch
       jq
@@ -10,7 +10,7 @@ let
     text = ''
       mapfile -t ICONS < <(find ${inputs.esotericons} -maxdepth 1 -type f -name '*.png')
       if [ "''${#ICONS[@]}" -eq 0 ]; then
-        echo "eso-fetch: no icons found in ${inputs.esotericons}" >&2
+        echo "esofetch: no icons found in ${inputs.esotericons}" >&2
         exit 1
       fi
 
