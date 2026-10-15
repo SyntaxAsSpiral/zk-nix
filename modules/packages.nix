@@ -1,6 +1,25 @@
 # System packages not managed in Home Manager
 { pkgs, ... }:
 
+let
+  # One-command Playwright: the python lib and the Nix-patched browsers come from
+  # the same pkgs, so their versions cannot drift apart.
+  pw-run = pkgs.writeShellApplication {
+    name = "pw-run";
+    runtimeInputs = [ pkgs.coreutils (pkgs.python3.withPackages (ps: [ ps.playwright ])) ];
+    text = ''
+      export PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright-driver.browsers}"
+      export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+      export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+      if [ "''${1:-}" = --check ]; then
+        python3 -c 'import importlib.metadata as m; print("playwright lib", m.version("playwright"))'
+        echo "browsers: $PLAYWRIGHT_BROWSERS_PATH"; ls "$PLAYWRIGHT_BROWSERS_PATH"
+        exit 0
+      fi
+      exec python3 "$@"
+    '';
+  };
+in
 {
   environment.systemPackages = with pkgs; [
     # Core POSIX
@@ -77,6 +96,7 @@
 
     # Browser automation
     playwright-driver.browsers
+    pw-run # `pw-run script.py`: Playwright with matching lib + browsers
 
     # Nix tooling
     manix
@@ -89,5 +109,6 @@
   environment.sessionVariables = {
     PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
     PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 }
