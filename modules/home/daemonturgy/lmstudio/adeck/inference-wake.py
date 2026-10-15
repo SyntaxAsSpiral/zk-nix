@@ -1,18 +1,15 @@
 """Wake zrrh before forwarding inference to adeck's LM Studio server.
 
-Noctalia suspends zrrh after 30 minutes without seat input. A loaded model
-does not count as input, so the weight host can enter S3 under an open
-prediction and LM Link reports peer_keepalive_timeout. While any model is
-loaded on zrrh, hold a sleep inhibitor there. The inhibitor is a transient
-unit that exits after LEASE seconds. This process refreshes it. If the
-process stops, the unit is stopped, and if that stop never arrives the
-lease still ends. An unbounded `sleep infinity` lock is how the last one
-outlived the job that took it.
+While a model is loaded on zrrh, run `zcli awake hold`. That is zcli's
+zcli-awake unit. SIGTERM runs its EXIT trap, which stops the unit. The
+unit's process holds both the logind sleep inhibit and niri's idle inhibit;
+both die with that process.
 """
 import asyncio
 import json
 import logging
 import os
+import signal
 import socket
 import time
 
@@ -24,19 +21,6 @@ HOP = {'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
 INFERENCE = {'/v1/chat/completions', '/v1/completions', '/v1/embeddings',
              '/v1/responses', '/api/v0/chat/completions', '/api/v0/completions',
              '/api/v0/embeddings', '/api/v1/chat', '/api/v1/models/load'}
-# Shorter than Noctalia's 30 minute idle, long enough that one missed poll
-# does not open a gap. Refresh halfway so a failed refresh still overlaps.
-LEASE = 90
-REFRESH = 45
-HOLD = (
-    'sudo -n systemctl stop inference-awake.service || true; '
-    'sudo -n systemd-run --collect --unit=inference-awake '
-    "--description='LM Studio model loaded' "
-    '/run/current-system/sw/bin/systemd-inhibit --what=sleep --who=inference-wake '
-    "--why='LM Studio model loaded' --mode=block "
-    f'/run/current-system/sw/bin/sleep {LEASE}'
-)
-DROP = 'sudo -n systemctl stop inference-awake.service'
 
 
 class Wake:
@@ -101,10 +85,10 @@ class Wake:
 
 
 class SleepLock:
-    """Block zrrh suspend while one of its models is loaded. Lease, not a latch."""
+    """Hold zcli-awake while one of zrrh's models is loaded."""
 
     def __init__(self):
-        self.held = 0
+        self.proc = None
 
     async def exec(self, *args):
         process = await asyncio.create_subprocess_exec(
@@ -122,11 +106,6 @@ class SleepLock:
     async def lms_json(self, *args):
         return json.loads(await self.exec(os.environ['LMS'], *args))
 
-    async def remote(self, script):
-        ssh = os.environ.get('SSH', '/run/current-system/sw/bin/ssh')
-        await self.exec(ssh, '-F', '/dev/null', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10',
-                        '-o', 'HostKeyAlias=zrrh', 'zk@100.77.90.79', script)
-
     async def zrrh_loaded(self):
         status = await self.lms_json('link', 'status', '--json')
         ident = next((p.get('deviceIdentifier') for p in status.get('peers', [])
@@ -137,24 +116,38 @@ class SleepLock:
         return any(model.get('deviceIdentifier') == ident for model in loaded)
 
     async def hold(self):
-        await self.remote(HOLD)
-        self.held = time.monotonic()
+        if self.proc is not None and self.proc.returncode is None:
+            return
+        self.proc = await asyncio.create_subprocess_exec(
+            'zcli', 'awake', 'hold', 'LM Studio model loaded',
+            stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
 
     async def drop(self):
-        if not self.held:
+        proc = self.proc
+        if proc is None or proc.returncode is not None:
             return
-        await self.remote(DROP)
-        self.held = 0
+        proc.send_signal(signal.SIGTERM)
+        try:
+            await asyncio.wait_for(proc.wait(), 20)
+        except asyncio.TimeoutError:
+            proc.kill()
+            await proc.wait()
+        self.proc = None
 
     async def tick(self):
-        if not await self.zrrh_loaded():
-            await self.drop()
-            return
-        if time.monotonic() - self.held >= REFRESH:
+        if await self.zrrh_loaded():
             await self.hold()
+        else:
+            await self.drop()
 
     async def run(self):
         try:
+            try:
+                await self.exec('zcli', 'awake', 'release')
+            except asyncio.CancelledError:
+                raise
+            except (OSError, asyncio.TimeoutError):
+                logging.exception('sleep lock release')
             while True:
                 try:
                     await self.tick()
