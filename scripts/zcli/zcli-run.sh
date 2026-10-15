@@ -10,6 +10,49 @@ INHIBIT=${ZCLI_INHIBIT:-/run/current-system/sw/bin/systemd-inhibit}
 # A system unit's PATH does not include this. `sleep` alone fails with
 # "Failed to execute 'sleep': No such file or directory".
 SLEEP=${ZCLI_SLEEP:-/run/current-system/sw/bin/sleep}
+AWAKE_PERL='use IO::Socket::UNIX;
+my $why = $ARGV[0] // "zcli";
+my $path = $ENV{DBUS_SESSION_BUS_ADDRESS};
+$path =~ s/^unix:path=//;
+my $s = IO::Socket::UNIX->new(Peer => $path) or die "socket $!\n";
+binmode $s; $s->autoflush(1);
+syswrite $s, "\0AUTH EXTERNAL " . unpack("H*", "$<") . "\r\n";
+my $buf = "";
+while ($buf !~ /\n/) { sysread($s, my $c, 256) or die "auth eof\n"; $buf .= $c }
+die "auth $buf\n" unless $buf =~ /^OK /;
+syswrite $s, "BEGIN\r\n";
+sub align { my ($b,$n)=@_; my $p=length($b)%$n; $b.("\0"x($p?$n-$p:0)) }
+sub put_str { my ($b,$v)=@_; $b=align($b,4); $b.pack("V",length $v).$v."\0" }
+sub put_sig { my ($b,$g)=@_; $b.pack("C",length $g).$g."\0" }
+sub field {
+  my ($b,$code,$sig,$val)=@_;
+  $b = align($b,8).pack("C",$code);
+  $b = put_sig($b,$sig);
+  return $sig eq "g" ? put_sig($b,$val) : put_str($b,$val);
+}
+my $serial = 1;
+sub call {
+  my ($dest,$opath,$iface,$member,@args)=@_;
+  my ($body,$sig)=("","");
+  for my $a (@args) { $sig .= "s"; $body = put_str($body,$a) }
+  my $fields = "";
+  $fields = field($fields,1,"o",$opath);
+  $fields = field($fields,2,"s",$iface);
+  $fields = field($fields,3,"s",$member);
+  $fields = field($fields,6,"s",$dest);
+  $fields = field($fields,8,"g",$sig) if $sig ne "";
+  my $header = pack("CCCCVV", ord("l"),1,0,1,length $body,$serial++);
+  $header .= pack("V", length $fields).$fields;
+  $header = align($header,8);
+  syswrite $s, $header.$body;
+  my $got = "";
+  while (length $got < 16) { sysread($s, my $c, 512) or die "eof\n"; $got .= $c }
+  return ord substr($got,1,1);
+}
+die "hello\n" unless call("org.freedesktop.DBus","/org/freedesktop/DBus","org.freedesktop.DBus","Hello") == 2;
+die "inhibit\n" unless call("org.freedesktop.ScreenSaver","/org/freedesktop/ScreenSaver","org.freedesktop.ScreenSaver","Inhibit","zcli",$why) == 2;
+sleep 86400 while 1;
+'
 WAKE=${ZCLI_WAKE:-/run/current-system/sw/bin/wakeonlan}
 SYNC=${ZCLI_SYNC:-zcli-sync}
 CANONICAL=${ZCLI_CANONICAL:-/mnt/echo/nix-os}
@@ -213,21 +256,34 @@ hold_zrrh_awake() {
   # An SSH session is not an active seat, so logind demands a polkit prompt
   # for a blocking sleep lock. sudo -n is the same passwordless path as reboot.
   # One remote string: ssh joins argv, and a spaced --why must stay one word.
+  # The perl client holds niri ScreenSaver.Inhibit and then sleeps. The dbus
+  # connection closes when this process dies, which is what re-arms Noctalia.
+  # --what=sleep alone does not.
+  # Bare sudo, env, and perl fail in this unit: its PATH is the narrow
+  # ManagerEnvironment, the same reason sleep is an absolute path.
   if [[ "$HOST" == zrrh ]]; then
     sudo -n systemd-run --collect --unit=zcli-awake --description="$why" \
       "$INHIBIT" --what=sleep --who=zcli --why="$why" --mode=block \
-      "$SLEEP" infinity
+      /run/wrappers/bin/sudo -n -u zk /run/current-system/sw/bin/env \
+        XDG_RUNTIME_DIR=/run/user/1000 \
+        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus \
+        /run/current-system/sw/bin/perl -e "$AWAKE_PERL" -- "$why"
     sudo -n systemctl is-active --quiet zcli-awake.service || fail "zrrh refused the sleep lock"
   else
-    printf -v remote 'sudo -n systemd-run --collect --unit=%q --description=%q %q --what=sleep --who=zcli --why=%q --mode=block %q infinity' \
-      zcli-awake "$why" "$INHIBIT" "$why" "$SLEEP"
+    printf -v remote 'sudo -n systemd-run --collect --unit=%q --description=%q %q --what=sleep --who=zcli --why=%q --mode=block /run/wrappers/bin/sudo -n -u zk /run/current-system/sw/bin/env XDG_RUNTIME_DIR=/run/user/1000 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus /run/current-system/sw/bin/perl -e %q -- %q' \
+      zcli-awake "$why" "$INHIBIT" "$why" "$AWAKE_PERL" "$why"
     ssh_mesh run zrrh "$remote"
     ssh_mesh run zrrh "sudo -n systemctl is-active --quiet zcli-awake.service" || fail "zrrh refused the sleep lock"
   fi
 }
-trap release_zrrh_awake EXIT
-trap 'release_zrrh_awake; exit 130' INT
-trap 'release_zrrh_awake; exit 143' TERM
+sleeper=
+stop_sleeper() {
+  [[ -z "${sleeper:-}" ]] || kill "$sleeper" 2>/dev/null || true
+  sleeper=
+}
+trap 'release_zrrh_awake; stop_sleeper' EXIT
+trap 'release_zrrh_awake; stop_sleeper; exit 130' INT
+trap 'release_zrrh_awake; stop_sleeper; exit 143' TERM
 
 zrrh_ready() {
   local err status
@@ -378,6 +434,27 @@ case "$cmd" in
   wake)
     [[ ${#hosts[@]} -eq 0 && "$dry" == false ]] || fail "wake takes no arguments"
     wake_zrrh
+    ;;
+  awake)
+    case "${hosts[0]:-}" in
+      hold)
+        hold_zrrh_awake "${hosts[1]:-inference}"
+        # Foreground sleep defers this shell's TERM trap until it returns.
+        # A follow-up SIGKILL then skips the trap and leaves zcli-awake up.
+        # wait is interrupted, so SIGTERM stops the unit now.
+        while true; do
+          "$SLEEP" 3600 &
+          sleeper=$!
+          wait "$sleeper" || true
+          sleeper=
+        done
+        ;;
+      release)
+        AWAKE_HELD=1
+        release_zrrh_awake
+        ;;
+      *) fail "awake takes hold or release" ;;
+    esac
     ;;
   build)
     [[ ${#hosts[@]} -eq 1 ]] || fail "build requires exactly one host"

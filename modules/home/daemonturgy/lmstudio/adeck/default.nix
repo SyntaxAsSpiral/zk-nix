@@ -62,7 +62,7 @@ in
   };
 
   # Keep the public API stable; gate inference on the router-LAN WoL relay.
-  # The process also refreshes a 90s sleep lease on zrrh while a model is loaded there.
+  # While a zrrh model is loaded, a child `zcli awake hold` keeps zcli-awake.
   systemd.user.services.inference-wake = {
     Unit = {
       Description = "Wake zrrh before local inference";

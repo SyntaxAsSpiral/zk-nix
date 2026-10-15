@@ -1,5 +1,6 @@
 import asyncio
 import importlib.util
+import signal
 import unittest
 from pathlib import Path
 from unittest.mock import patch, MagicMock, AsyncMock
@@ -116,55 +117,60 @@ class Tests(unittest.IsolatedAsyncioTestCase):
             {'peers': [{'deviceName': 'zrrh', 'status': 'connected', 'deviceIdentifier': 'z'}]},
             models,
         ])
-        lock.remote = AsyncMock()
         return lock
 
-    async def test_loaded_model_takes_a_finite_lease(self):
+    async def test_loaded_model_holds_zcli_awake(self):
         lock = self.zrrh([{'deviceIdentifier': 'z', 'identifier': 'qwen/qwen3.8-27b'}])
-        await lock.tick()
-        script = lock.remote.await_args.args[0]
-        self.assertIn(f'sleep {relay.LEASE}', script)
-        self.assertIn('--what=sleep', script)
-        self.assertNotIn('infinity', script)
-        self.assertGreater(lock.held, 0)
+        proc = MagicMock(returncode=None)
+        with patch.object(relay.asyncio, 'create_subprocess_exec', new=AsyncMock(return_value=proc)) as spawn:
+            await lock.tick()
+        self.assertEqual(spawn.await_args.args[:4], ('zcli', 'awake', 'hold', 'LM Studio model loaded'))
+        self.assertIs(lock.proc, proc)
 
     async def test_adeck_model_does_not_lock_zrrh(self):
         lock = self.zrrh([{'deviceIdentifier': 'adeck', 'identifier': 'nomic'}])
-        await lock.tick()
-        lock.remote.assert_not_called()
-        self.assertEqual(lock.held, 0)
+        with patch.object(relay.asyncio, 'create_subprocess_exec', new=AsyncMock()) as spawn:
+            await lock.tick()
+        spawn.assert_not_called()
+        self.assertIsNone(lock.proc)
 
-    async def test_unload_stops_the_unit(self):
+    async def test_unload_stops_the_holder(self):
         lock = self.zrrh([])
-        lock.held = 1
+        proc = MagicMock(returncode=None)
+        proc.wait = AsyncMock()
+        lock.proc = proc
         await lock.tick()
-        lock.remote.assert_awaited_once_with(relay.DROP)
-        self.assertEqual(lock.held, 0)
+        proc.send_signal.assert_called_once_with(signal.SIGTERM)
+        proc.wait.assert_awaited()
+        self.assertIsNone(lock.proc)
 
-    async def test_lease_is_not_refreshed_early(self):
+    async def test_hold_is_taken_once(self):
         lock = self.zrrh([{'deviceIdentifier': 'z'}])
-        lock.held = relay.time.monotonic()
-        await lock.tick()
-        lock.remote.assert_not_called()
+        proc = MagicMock(returncode=None)
+        lock.proc = proc
+        with patch.object(relay.asyncio, 'create_subprocess_exec', new=AsyncMock()) as spawn:
+            await lock.tick()
+        spawn.assert_not_called()
 
     async def test_disconnected_peer_does_not_lock(self):
         lock = relay.SleepLock()
         lock.lms_json = AsyncMock(return_value={
             'peers': [{'deviceName': 'zrrh', 'status': 'disconnected', 'deviceIdentifier': 'z'}]})
-        lock.remote = AsyncMock()
-        await lock.tick()
-        lock.remote.assert_not_called()
+        with patch.object(relay.asyncio, 'create_subprocess_exec', new=AsyncMock()) as spawn:
+            await lock.tick()
+        spawn.assert_not_called()
         self.assertEqual(lock.lms_json.await_count, 1)
 
-    async def test_stopping_the_loop_drops_the_lease(self):
+    async def test_stopping_the_loop_releases_and_drops(self):
         lock = relay.SleepLock()
-        lock.held = 5
         lock.tick = AsyncMock()
         lock.drop = AsyncMock()
+        lock.exec = AsyncMock()
         task = asyncio.create_task(lock.run())
         await asyncio.sleep(0)
         task.cancel()
         await asyncio.gather(task, return_exceptions=True)
+        lock.exec.assert_awaited_once_with('zcli', 'awake', 'release')
         lock.drop.assert_awaited()
 
     def test_magic_packet(self):

@@ -75,7 +75,7 @@ in
           fi
           printf '☠☠☠ >>> DEPLOY·PROTOCOL·INITIATED ☠☠☠\n'
           exec ${run}/bin/zcli-run "$@" ;;
-        build|image|wake)
+        build|image|wake|awake)
           printf '☠☠☠ >>> %s·PROTOCOL·INITIATED ☠☠☠\n' "''${1^^}"
           exec ${run}/bin/zcli-run "$@" ;;
         *)
