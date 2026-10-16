@@ -6,8 +6,8 @@
     ../../modules/home/profiles/base.nix
 
     # adeck-specific
-    # bb-server (Bitburner WS sync + MCP)
-    ../../modules/home/bb-server.nix
+    # bb-server (Bitburner WS sync + MCP); off while not playing
+    # ../../modules/home/bb-server.nix
 
     # Dev
     ../../modules/home/python.nix
