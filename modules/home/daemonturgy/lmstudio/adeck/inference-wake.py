@@ -120,7 +120,7 @@ class SleepLock:
             return
         self.proc = await asyncio.create_subprocess_exec(
             'zcli', 'awake', 'hold', 'LM Studio model loaded',
-            stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
+            stdout=asyncio.subprocess.DEVNULL)
 
     async def drop(self):
         proc = self.proc

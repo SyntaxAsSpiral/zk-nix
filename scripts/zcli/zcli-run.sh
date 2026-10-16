@@ -438,15 +438,31 @@ case "$cmd" in
   awake)
     case "${hosts[0]:-}" in
       hold)
-        hold_zrrh_awake "${hosts[1]:-inference}"
+        why=${hosts[1]:-inference}
+        hold_zrrh_awake "$why"
         # Foreground sleep defers this shell's TERM trap until it returns.
         # A follow-up SIGKILL then skips the trap and leaves zcli-awake up.
         # wait is interrupted, so SIGTERM stops the unit now.
+        # The lock lives on zrrh, not in this shell. A reboot, a dead perl
+        # client, or a lost session ends it there while this loop sleeps on.
+        # So look every AWAKE_CHECK seconds and take it again when it is gone.
+        # An unreachable zrrh is skipped: the wake path brings it back first.
         while true; do
-          "$SLEEP" 3600 &
+          "$SLEEP" "${ZCLI_AWAKE_CHECK:-60}" &
           sleeper=$!
           wait "$sleeper" || true
           sleeper=
+          [[ "$HOST" == zrrh ]] && continue
+          set +e
+          ssh_mesh probe zrrh "systemctl is-active --quiet zcli-awake.service"
+          state=$?
+          set -e
+          # 3 is inactive/failed; 255 is ssh failure (asleep or rebooting).
+          if [[ "$state" -ne 0 && "$state" -ne 255 ]]; then
+            echo "zcli-awake is gone on zrrh (is-active $state); taking it again" >&2
+            # Subshell: fail exits only this attempt, and bash resets the EXIT trap there.
+            ( hold_zrrh_awake "$why" ) || echo "zcli-awake retake failed; next check in ${ZCLI_AWAKE_CHECK:-60}s" >&2
+          fi
         done
         ;;
       release)
