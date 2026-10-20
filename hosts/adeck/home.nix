@@ -27,6 +27,9 @@
     # Stack-chan bridge
     ../../modules/home/daemonturgy/stackchan/default.nix
 
+    # Festin kitchen (adeck only)
+    ../../modules/home/festin.nix
+
     # Esotericons fetch (same module as nxiz)
     ../../modules/home/cli/fastfetch/eso-fetch.nix
 

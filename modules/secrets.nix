@@ -10,7 +10,7 @@ let
       [ ]
     else
       [ "github-token" "github-recovery-codes" "pi-openrouter-api-key" ]
-  );
+  ) ++ lib.optional (config.my.host == "adeck") "festin-openrouter-api-key";
 in
 {
   system.activationScripts.mesh-secrets = {
