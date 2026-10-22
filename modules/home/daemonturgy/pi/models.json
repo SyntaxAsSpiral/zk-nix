@@ -10,7 +10,7 @@
           "name": "Qwen3.8 27B",
           "reasoning": true,
           "input": ["text"],
-          "contextWindow": 100000
+          "contextWindow": 145000
         },
         {
           "id": "google/gemma-4-31b",
