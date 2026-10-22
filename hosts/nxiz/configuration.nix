@@ -1,5 +1,5 @@
 # NixOS configuration for nxiz
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -44,7 +44,11 @@
     '';
   };
 
-  environment.systemPackages = [ pkgs.llm-agents.grok-bot ];
+  environment.systemPackages = [
+    pkgs.llm-agents.grok-bot
+    # Numtide's cached build; shared-nixpkgs would recompile it on every bump.
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr
+  ];
 
   system.stateVersion = "25.11";
 }
