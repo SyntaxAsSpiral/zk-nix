@@ -47,11 +47,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    noctalia = {
-      url = "github:noctalia-dev/noctalia/v4.7.7";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     tm20-source = {
       url = "github:bjornpagen/tm20";
       flake = false;
@@ -68,7 +63,7 @@
     };
 
     nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel/26da04e24aef2993ea256917be42d18f83ce8e8b";
+      url = "github:xddxdd/nix-cachyos-kernel/02ba4db52e62e1fbece80402d369127ae77cbbeb";
       # Do NOT follow nixpkgs — patches are pinned to flake's own nixpkgs
     };
 

@@ -19,6 +19,14 @@
     };
   })
 
+  # pywal16 (HyprPanel dep) passes "--prefix PATH : …" as one makeWrapperArgs
+  # string. Under structuredAttrs it is no longer word-split, so split it here.
+  (_final: prev: {
+    pywal16 = prev.pywal16.overrideAttrs (old: {
+      makeWrapperArgs = prev.lib.concatMap (prev.lib.splitString " ") old.makeWrapperArgs;
+    });
+  })
+
   # Build tumbler without EPUB thumbnailer (libgepub) to avoid webkitgtk
   (_final: prev: {
     tumbler = prev.tumbler.overrideAttrs (old: {

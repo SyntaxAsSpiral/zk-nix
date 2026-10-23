@@ -198,7 +198,10 @@ in
       "systemd-resolved.service"
       "network-online.target"
     ];
-    wants = [ "tailscaled.service" ];
+    wants = [
+      "tailscaled.service"
+      "network-online.target"
+    ];
     requires = [ "systemd-resolved.service" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {

@@ -3,7 +3,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
 
@@ -31,7 +30,7 @@
       zathura
       lmstudio
 
-      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+      noctalia-shell
     ];
 
     file = {

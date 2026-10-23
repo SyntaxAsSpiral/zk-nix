@@ -1,5 +1,11 @@
 # NixOS configuration for nxiz
-{ pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -23,6 +29,11 @@
     xwayland.enable = true;
     withUWSM = true;
   };
+
+  # The pinned 0.56.2 bin/Hyprland is a wrapProgram script. The capability
+  # wrapper must target an ELF, so point it at the unwrapped binary.
+  security.wrappers.Hyprland.source =
+    lib.mkForce "${config.programs.hyprland.package}/bin/.Hyprland-wrapped";
 
   xdg.portal = {
     enable = true;

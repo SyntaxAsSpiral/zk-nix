@@ -81,7 +81,7 @@ in
       if config.my.host == "adeck" then
         # Valve vendor kernel: steamdeck EC driver (battery charge limit,
         # fan hwmon) is patched in; stock kernels lack it entirely
-        pkgs.linuxPackages_jovian
+        pkgs.jovianPackages.linuxPackages
       else if h.stockKernel or false then
         # Broadest hardware support from cache.nixos.org; no CachyOS overlay needed.
         pkgs.linuxPackages_latest
