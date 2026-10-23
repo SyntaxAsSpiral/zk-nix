@@ -15,6 +15,10 @@ let
     openrgb = _final: _prev: {
       openrgb-with-all-plugins = inputs.nixpkgs-openrgb.legacyPackages.${system}.openrgb-with-all-plugins;
     };
+    # Rides the OpenRGB rev: its noctalia-qs predates Qt 6.12 and is cached.
+    noctalia = _final: _prev: {
+      noctalia-shell = inputs.nixpkgs-openrgb.legacyPackages.${system}.noctalia-shell;
+    };
     # Upstream dropped overlays.default; shared-nixpkgs is pkgs.llm-agents.*.
     llmAgents = inputs.llm-agents.overlays.shared-nixpkgs;
   };
@@ -46,6 +50,7 @@ in
       fromInputs.cachyosKernel
       fromInputs.llmAgents
       fromInputs.openrgb
+      fromInputs.noctalia
     ]
     ++ nixpkgsFixes;
 
