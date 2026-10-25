@@ -12,7 +12,6 @@
       "--group-directories-first"
       "--no-quotes"
       "--header" # Show header row
-      "--git-ignore"
       "--icons=always"
       # "--time-style=long-iso" # ISO 8601 extended format for time
       "--classify" # append indicator (/, *, =, @, |)
