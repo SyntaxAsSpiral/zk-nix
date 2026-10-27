@@ -128,7 +128,7 @@ cmd = "fzf-emoji"
 [[modules]]
 description = "run commands"
 prefix = "sh"
-cmd = "niri msg action spawn -- ghostty -e fish -ic '{}'"
+cmd = "niri msg action spawn -- ghostty -e nu -e '{}'"
 with_argument = true
 
 [[modules]]

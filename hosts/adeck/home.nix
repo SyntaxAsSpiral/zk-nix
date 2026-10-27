@@ -15,27 +15,15 @@
     # LM Studio (relay)
     ../../modules/home/daemonturgy/lmstudio/adeck/default.nix
 
-    # Hermes Agent (adeck only)
-    ../../modules/home/daemonturgy/hermes/default.nix
-
-    # Esocortex read-only API (adeck only)
-    ../../modules/home/daemonturgy/esocortex/default.nix
-
-    # Herm TUI
-    ../../modules/home/daemonturgy/herm/default.nix
-
-    # Stack-chan bridge
-    ../../modules/home/daemonturgy/stackchan/default.nix
-
     # Festin kitchen (adeck only)
     ../../modules/home/festin.nix
 
     # Esotericons fetch (same module as nxiz)
-    ../../modules/home/cli/fastfetch/eso-fetch.nix
+    ../../modules/home/shell/fastfetch/eso-fetch.nix
 
     # System
     ../../modules/home/msgvault.nix
-    ../../modules/home/cli/jolt.nix
+    ../../modules/home/shell/jolt.nix
     ../../modules/home/fsel.nix
     ../../modules/home/otter-launcher/adeck
     ../../modules/home/awww-cycle.nix

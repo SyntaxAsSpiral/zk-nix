@@ -9,6 +9,6 @@
     ../icons.nix
     ../spotify.nix
     ../thunar.nix
-    ../cli/fzf-emoji.nix
+    ../shell/fzf-emoji.nix
   ];
 }

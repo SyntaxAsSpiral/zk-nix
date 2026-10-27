@@ -11,7 +11,7 @@
     ../../modules/home/profiles/desktop.nix
 
     # nxiz-specific
-    ../../modules/home/cli/fastfetch/eso-fetch.nix
+    ../../modules/home/shell/fastfetch/eso-fetch.nix
     ../../modules/home/editors/obsidian.nix
     ../../modules/home/fsel.nix
     ../../modules/home/otter-launcher/otter-launcher.nix

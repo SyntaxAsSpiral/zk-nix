@@ -3,17 +3,17 @@
 {
   imports = [
     ../../modules/home/nushell.nix
-    ../../modules/home/cli/bat.nix
-    ../../modules/home/cli/btop.nix
-    ../../modules/home/cli/eza.nix
-    ../../modules/home/cli/fastfetch/default.nix
-    ../../modules/home/cli/fun.nix
-    ../../modules/home/cli/fzf.nix
-    ../../modules/home/cli/gh.nix
-    ../../modules/home/cli/git.nix
-    ../../modules/home/cli/lazygit.nix
-    ../../modules/home/cli/yazi/default.nix
-    ../../modules/home/cli/zcli.nix
+    ../../modules/home/shell/bat.nix
+    ../../modules/home/shell/btop.nix
+    ../../modules/home/shell/eza.nix
+    ../../modules/home/shell/fastfetch/default.nix
+    ../../modules/home/shell/fun.nix
+    ../../modules/home/shell/fzf.nix
+    ../../modules/home/shell/gh.nix
+    ../../modules/home/shell/git.nix
+    ../../modules/home/shell/lazygit.nix
+    ../../modules/home/shell/yazi/default.nix
+    ../../modules/home/shell/zcli.nix
     ../../modules/home/daemonturgy/pi/default.nix
   ];
 

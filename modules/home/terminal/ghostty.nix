@@ -10,7 +10,7 @@
       background-opacity = 0.92;
       window-padding-x = 8;
       window-padding-y = 8;
-      command = "${pkgs.fish}/bin/fish";
+      command = "${pkgs.nushell}/bin/nu";
       window-decoration = true;
       theme = "Rose Pine Moon";
     };

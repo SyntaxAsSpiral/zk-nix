@@ -34,7 +34,6 @@ in
 
     # Shells
     bash
-    fish
     nushell
     zsh
 

@@ -6,18 +6,18 @@
     ../nushell.nix
     ../xdg.nix
 
-    # CLI tools
-    ../cli/bat.nix
-    ../cli/btop.nix
-    ../cli/eza.nix
-    ../cli/fastfetch/default.nix
-    ../cli/fun.nix
-    ../cli/fzf.nix
-    ../cli/gh.nix
-    ../cli/git.nix
-    ../cli/lazygit.nix
-    ../cli/yazi/default.nix
-    ../cli/zcli.nix
+    # Shell tools
+    ../shell/bat.nix
+    ../shell/btop.nix
+    ../shell/eza.nix
+    ../shell/fastfetch/default.nix
+    ../shell/fun.nix
+    ../shell/fzf.nix
+    ../shell/gh.nix
+    ../shell/git.nix
+    ../shell/lazygit.nix
+    ../shell/yazi/default.nix
+    ../shell/zcli.nix
 
     # Editors
     ../editors/nano.nix

@@ -26,7 +26,6 @@
       detect_urls = true;
       shell = "${pkgs.nushell}/bin/nu";
     };
-    shellIntegration.enableFishIntegration = true;
     shellIntegration.mode = "enabled";
     extraConfig = ''
       url_prefixes file ftp ftps gemini git gopher http https irc ircs kitty sftp ssh

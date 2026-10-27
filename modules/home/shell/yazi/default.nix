@@ -7,7 +7,7 @@ in {
     enable = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
-    enableFishIntegration = true;
+    enableNushellIntegration = true;
     shellWrapperName = "yy";
     inherit settings;
     inherit keymap;

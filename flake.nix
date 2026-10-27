@@ -67,20 +67,6 @@
       # Do NOT follow nixpkgs — patches are pinned to flake's own nixpkgs
     };
 
-    hermes-agent = {
-      url = "github:NousResearch/hermes-agent";
-    };
-
-    herm-source = {
-      url = "github:liftaris/herm/main";
-      flake = false;
-    };
-
-    bun2nix = {
-      url = "github:nix-community/bun2nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
     };

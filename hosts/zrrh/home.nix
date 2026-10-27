@@ -12,7 +12,6 @@
     ../../modules/home/profiles/desktop.nix
 
     # zrrh-specific
-    ../../modules/home/cli/fish/default.nix
     ../../modules/home/daemonturgy/lmstudio/zrrh/default.nix
     ../../modules/home/otter-launcher/zrrh/default.nix
     ../../modules/home/niri/zrrh.nix
@@ -43,10 +42,10 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-      enableFishIntegration = true;
+      enableNushellIntegration = true;
     };
 
-    fish.shellAliases = {
+    nushell.shellAliases = {
       deck-torrents-sync = "ssh zk@adeck '/etc/nixos/scripts/qbt-sync-zrrh.sh'";
     };
 
