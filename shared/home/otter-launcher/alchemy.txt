@@ -1,0 +1,116 @@
+quintessence
+air
+fire
+earth
+water
+aquafortis
+aqua regia
+aqua regia-2
+aqua vitae
+aqua vitae-2
+vinegar
+vinegar-2
+vinegar-3
+sulfur
+philosophers sulfur
+black sulfur
+mercury sublimate
+mercury sublimate-2
+mercury sublimate-3
+cinnabar
+salt
+nitre
+vitriol
+vitriol-2
+rock salt
+rock salt-2
+gold
+silver
+iron ore
+iron ore-2
+crocus of iron
+regulus of iron
+copper ore
+iron-copper ore
+sublimate of copper
+crocus of copper
+crocus of copper-2
+copper antimoniate
+salt of copper antimoniate
+sublimate of salt of copper
+verdigris
+tin ore
+lead ore
+antimony ore
+sublimate of antimony
+salt of antimony
+sublimate of salt of antimony
+vinegar of antimony
+regulus of antimony
+regulus of antimony-2
+regulus
+regulus-2
+regulus-3
+regulus-4
+alkali
+alkali-2
+marcasite
+sal-ammoniac
+arsenic
+realgar
+realgar-2
+auripigment
+bismuth ore
+tartar
+tartar-2
+quick lime
+borax
+borax-2
+borax-3
+alum
+oil
+spirit
+tincture
+gum
+wax
+powder
+calx
+tutty
+caput mortuum
+scepter of jove
+caduceus
+trident
+starred trident
+lodestone
+soap
+urine
+horse dung
+ashes
+pot ashes
+brick
+powdered brick
+amalgam
+stratum super stratum
+stratum super stratum-2
+sublimation
+precipitate
+distill
+dissolve
+dissolve-2
+purify
+putrefaction
+crucible
+crucible-2
+crucible-3
+crucible-4
+crucible-5
+alembic
+bath of mary
+bath of vapours
+retort
+hour
+night
+day-night
+month
+half dram
+half ounce

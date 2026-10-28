@@ -1,8 +1,8 @@
 # One otter-launcher config for every host. Terminal-only: each module runs in the
 # terminal otter was started in, using shell kit tools (fd, fzf, bat, eza, yazi, nano,
-# glow, mods, nh, lazygit, btop, rg). Run a module without the TUI: otter-launcher nx ripgrep
+# glow, nh, lazygit, btop, rg). Run a module without the TUI: otter-launcher nx ripgrep
 [general]
-height = 10 # lines otter occupies; the logo is the same height
+height = 16 # lines otter occupies: the 10-line header, the prompt, and the list
 default_module = "nx" # text with no known prefix searches nixpkgs
 empty_module = "fo" # Enter on an empty prompt picks a file
 exec_cmd = "bash -c" # modules are bash
@@ -12,7 +12,7 @@ cheatsheet_viewer = "less -R; clear" # command to show cheatsheet; through pipin
 external_editor = "nano" # TUI editor for prompt editing (ctrl+x ctrl+e)
 
 [interface]
-header = "  $USER@$(echo $HOSTNAME)     \u001B[31m\u001B[0m $(free -h | awk 'FNR == 2 {print $3}' | sed 's/i//')\n  "
+header = "$(otter-header)\n"
 list_prefix = "  "
 selection_prefix = "\u001B[31;1m> "
 placeholder = "type & search"
@@ -21,25 +21,11 @@ suggestion_position = "bottom" # the list sits below the prompt
 prefix_padding = 3
 prefix_color = "#74c7ec"
 
-# The NixOS logo. "symbol" draws with terminal characters, so it works in every
-# terminal and on a console. kitty and sixel need graphics support (alacritty has none).
-[image]
-format = "symbol"
-path = "$HOME/.config/otter-launcher/nixos.png"
-width = 20
-position = "left"
-
 # nh search lists the best match last, so less starts at the end.
 [[modules]]
 description = "search nixpkgs packages (nh)"
 prefix = "nx"
 cmd = "nh search packages '{}' --limit 25 2>&1 | less -R +G"
-with_argument = true
-
-[[modules]]
-description = "search NixOS and home-manager options (nh)"
-prefix = "no"
-cmd = "nh search options '{}' --limit 25 2>&1 | less -R +G"
 with_argument = true
 
 [[modules]]
@@ -89,12 +75,6 @@ file=${sel%%:*}
 rest=${sel#*:}
 nano "+${rest%%:*}" "$file"
 '''
-
-[[modules]]
-description = "ask the gateway (mods, glow)"
-prefix = "ai"
-cmd = "mods -f '{}' | glow -p -"
-with_argument = true
 
 [[modules]]
 description = "run a command in nushell"
