@@ -105,6 +105,7 @@ in
     pkgs.yazi
     pkgs.fastfetch
     pkgs.mods
+    pkgs.glow
     pkgs.tmux
     pkgs.ripgrep
     pkgs.fd

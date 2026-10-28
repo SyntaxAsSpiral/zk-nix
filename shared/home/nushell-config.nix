@@ -27,6 +27,18 @@
 
   $env.PATH = ($env.PATH | append "/home/zk/.local/bin")
 
+  # eza keeps its own names so nushell's table ls stays.
+  def ll [path: path = "."] {
+    eza $path -l --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=relative --hyperlink --no-permissions --loc --short-nix
+  }
+  def la [path: path = "."] {
+    eza $path -l -a --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=default --hyperlink --loc --short-nix
+  }
+  alias lt = eza --tree --level=2 --group-directories-first --icons=auto --short-nix
+
+  # eza --code prints nothing without a path argument, so lc supplies "."
+  def lc [path: path = "."] { eza --code -l $path --short-nix }
+
   esofetch
   echo ""
 ''

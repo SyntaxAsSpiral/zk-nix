@@ -65,7 +65,6 @@ in
 
     # File/text tools
     chafa
-    tree
     yq
     ncdu
 
