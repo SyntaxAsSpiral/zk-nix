@@ -27,7 +27,7 @@ _:
       "$mainMod, P, exec, hyprpicker -a" # troubleshooting needed
       "$mainMod, M, exec, hyprpanel -q; hyprpanel"
         "$mainMod SHIFT, M, exec, hyprctl dispatch exit"      
-      "$mainMod, period, exec, kitty --class tui-float --title otter-launcher -e otter-launcher em"
+      "$mainMod, period, exec, kitty --class tui-float --title emoji -e fzf-emoji"
       "$mainMod, DELETE, exec, kitty --class tui-float -e btop"
 
       # Screenshots

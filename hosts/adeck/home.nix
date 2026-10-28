@@ -9,6 +9,7 @@
     ../../shared/home/fastfetch/default.nix
     ../../shared/home/fun.nix
     ../../shared/home/gh.nix
+    ../../shared/home/otter-launcher.nix
     ../../shared/home/zcli.nix
     ../../shared/home/editors/nano.nix
     ../../shared/home/editors/zed.nix
@@ -21,7 +22,6 @@
     ./desk-env/lmstudio/default.nix
     ./desk-env/festin.nix
     ./desk-env/jolt.nix
-    ./desk-env/otter
     ./desk-env/awww-cycle.nix
     ../../shared/home/niri.nix
     ./desk-env/waybar.nix

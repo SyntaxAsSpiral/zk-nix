@@ -1,0 +1,108 @@
+# One otter-launcher config for every host. Terminal-only: each module runs in the
+# terminal otter was started in, using shell kit tools (fd, fzf, bat, eza, yazi, nano,
+# glow, mods, nh, lazygit, btop, rg). Run a module without the TUI: otter-launcher nx ripgrep
+[general]
+height = 10 # lines otter occupies; the logo is the same height
+default_module = "nx" # text with no known prefix searches nixpkgs
+empty_module = "fo" # Enter on an empty prompt picks a file
+exec_cmd = "bash -c" # modules are bash
+vi_mode = true # set true to use vi keybinds, false emacs keybinds
+cheatsheet_entry = "?" # when prompted, will show a list of configured modules
+cheatsheet_viewer = "less -R; clear" # command to show cheatsheet; through piping stdout
+external_editor = "nano" # TUI editor for prompt editing (ctrl+x ctrl+e)
+
+[interface]
+header = "  $USER@$(echo $HOSTNAME)     \u001B[31m\u001B[0m $(free -h | awk 'FNR == 2 {print $3}' | sed 's/i//')\n  "
+list_prefix = "  "
+selection_prefix = "\u001B[31;1m> "
+placeholder = "type & search"
+suggestion_mode = "list"
+suggestion_position = "bottom" # the list sits below the prompt
+prefix_padding = 3
+prefix_color = "#74c7ec"
+
+# The NixOS logo. "symbol" draws with terminal characters, so it works in every
+# terminal and on a console. kitty and sixel need graphics support (alacritty has none).
+[image]
+format = "symbol"
+path = "$HOME/.config/otter-launcher/nixos.png"
+width = 20
+position = "left"
+
+# nh search lists the best match last, so less starts at the end.
+[[modules]]
+description = "search nixpkgs packages (nh)"
+prefix = "nx"
+cmd = "nh search packages '{}' --limit 25 2>&1 | less -R +G"
+with_argument = true
+
+[[modules]]
+description = "search NixOS and home-manager options (nh)"
+prefix = "no"
+cmd = "nh search options '{}' --limit 25 2>&1 | less -R +G"
+with_argument = true
+
+[[modules]]
+description = "open a directory in yazi (fd, fzf, eza)"
+prefix = "do"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(fd --type d --max-depth 3 . "$HOME" /mnt/*/ 2>/dev/null | fzf --prompt '❱ ' --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'eza --tree --level=2 --icons=always --color=always {}') || exit 0
+yazi "$sel"
+'''
+
+[[modules]]
+description = "edit a file in nano (fd, fzf, bat)"
+prefix = "fo"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(fd --type f . "$HOME" /mnt/*/ 2>/dev/null | fzf --prompt '❱ ' --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'bat --color=always --style=numbers --line-range=:200 {}') || exit 0
+nano "$sel"
+'''
+
+[[modules]]
+description = "read a markdown file in glow (fd, fzf, bat)"
+prefix = "md"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(fd --type f --extension md . "$HOME" /mnt/*/ 2>/dev/null | fzf --prompt '❱ ' --info-command 'printf " markdown ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'bat --color=always --style=plain --language=markdown {}') || exit 0
+glow -p "$sel"
+'''
+
+[[modules]]
+description = "open a git repo in lazygit (fd, fzf)"
+prefix = "lg"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(fd --type d --hidden --no-ignore --max-depth 4 '^\.git$' "$HOME" /mnt/*/ 2>/dev/null | sed 's|/\.git/$||' | fzf --prompt '❱ ' --info-command 'printf " repos ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'git -C {} log --oneline --color=always -n 20') || exit 0
+lazygit -p "$sel"
+'''
+
+[[modules]]
+description = "grep the current directory, edit the match in nano (rg, fzf, bat)"
+prefix = "gr"
+with_argument = true
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(rg --line-number --no-heading --color=always --smart-case -- '{}' | fzf --ansi --delimiter : --prompt '❱ ' --info-command 'printf " matches ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'bat --color=always --highlight-line {2} {1}' --preview-window '+{2}-5') || exit 0
+file=${sel%%:*}
+rest=${sel#*:}
+nano "+${rest%%:*}" "$file"
+'''
+
+[[modules]]
+description = "ask the gateway (mods, glow)"
+prefix = "ai"
+cmd = "mods -f '{}' | glow -p -"
+with_argument = true
+
+[[modules]]
+description = "run a command in nushell"
+prefix = "sh"
+cmd = "nu -e '{}'"
+with_argument = true
+
+[[modules]]
+description = "system monitor (btop)"
+prefix = "top"
+cmd = "btop"

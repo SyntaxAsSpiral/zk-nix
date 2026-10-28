@@ -13,6 +13,7 @@
     ../../shared/home/fastfetch/default.nix
     ../../shared/home/fun.nix
     ../../shared/home/gh.nix
+    ../../shared/home/otter-launcher.nix
     ../../shared/home/zcli.nix
     ../../shared/home/editors/nano.nix
     ../../shared/home/editors/zed.nix
@@ -30,7 +31,6 @@
     ../../shared/home/python.nix
 
     ./desk-env/obsidian.nix
-    ./desk-env/otter-launcher.nix
     ./desk-env/hyprland/hyprland.nix
     ./desk-env/awww.nix
     ./desk-env/lmstudio-autorun.nix

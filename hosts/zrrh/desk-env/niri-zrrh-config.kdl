@@ -645,8 +645,8 @@ binds {
     // Expel the bottom window from the focused column to the right.
     Mod+Ctrl+Period { expel-window-from-column; }
 
-    // Emoji picker via otter-launcher fzf module (must run in terminal/pty)
-    Mod+Period { spawn-sh "ghostty --title=otter-launcher -e otter-launcher em"; }
+    // Emoji picker (fzf-emoji must run in terminal/pty)
+    Mod+Period { spawn-sh "ghostty --title=otter-launcher -e fzf-emoji"; }
 
     // Rebound: Mod+R is used for launcher to match Hyprland.
     // Mod+R { switch-preset-column-width; }

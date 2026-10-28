@@ -13,6 +13,7 @@
     ../../shared/home/fastfetch/default.nix
     ../../shared/home/fun.nix
     ../../shared/home/gh.nix
+    ../../shared/home/otter-launcher.nix
     ../../shared/home/zcli.nix
     ../../shared/home/editors/nano.nix
     ../../shared/home/editors/zed.nix
@@ -27,7 +28,6 @@
 
     ./desk-env/lmstudio-autorun.nix
     ../../shared/home/niri.nix
-    ./desk-env/otter/default.nix
     ./desk-env/ghostty.nix
   ];
 

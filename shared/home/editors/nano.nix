@@ -1,8 +1,6 @@
-{ pkgs, ... }: {
-  # Ensure nano is installed for the user
-  home.packages = [ pkgs.nano ];
-
-  # Manage ~/.nanorc with a Catppuccin-like dark UI and sensible defaults
+_: {
+  # nano itself comes from the shell kit (shared/system/shell.nix).
+  # Colours are named ANSI colours, so they follow the terminal's palette.
   home.file.".nanorc".text = ''
     # Syntax highlighting files from NixOS path
     include /run/current-system/sw/share/nano/*.nanorc
@@ -15,10 +13,7 @@
 
     # Editing Assistance
     set softwrap
-    set tabsize 4
-    set tabstospaces
     set autoindent
-    set backup
     set whitespace "»·"
     set matchbrackets "(<[{)>]}"
 
@@ -26,10 +21,9 @@
     unset casesensitive
 
     # File Management
-    set locking
     set multibuffer
 
-    # Interface (Catppuccin-like dark)
+    # Interface
     set titlecolor white,brightblack
     set statuscolor white,brightblack
     set errorcolor white,brightblack

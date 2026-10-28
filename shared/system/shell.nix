@@ -106,6 +106,7 @@ in
     pkgs.fastfetch
     pkgs.mods
     pkgs.glow
+    pkgs.nano
     pkgs.tmux
     pkgs.ripgrep
     pkgs.fd
