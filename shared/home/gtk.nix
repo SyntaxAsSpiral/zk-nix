@@ -25,7 +25,10 @@ let
 in
 {
   # The other seven themes are on the picker. A switch puts this name back.
+  # The same switch replaces gtk.css when nwg-look or an app has rewritten it.
   home.packages = [ frappe ];
+
+  xdg.configFile."gtk-4.0/gtk.css".force = true;
 
   gtk = {
     enable = true;
