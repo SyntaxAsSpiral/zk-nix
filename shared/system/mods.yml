@@ -1,0 +1,41 @@
+# mods as a bare harness: one endpoint, the adeck gateway. Weights run on zrrh.
+# The gateway caps context at 100k, so max-input-chars stays near 392000.
+default-api: adeck
+default-model: gpt-oss-20b-heretic
+format-text:
+  markdown: "Format the response as markdown without enclosing backticks."
+  json: "Format the response as json without enclosing backticks."
+roles:
+  "default": []
+role: "default"
+format: false
+raw: false
+quiet: false
+temp: 1.0
+topp: 1.0
+topk: 50
+word-wrap: 80
+max-retries: 5
+fanciness: 10
+status-text: Generating
+theme: charm
+apis:
+  adeck:
+    base-url: http://100.89.32.9:1234/v1
+    api-key: lmstudio
+    models:
+      "gpt-oss-20b-heretic":
+        aliases: ["heretic", "gpt-oss", "zrrh"]
+        max-input-chars: 392000
+      "qwen/qwen3.8-27b":
+        aliases: ["qwen", "qwen3"]
+        max-input-chars: 392000
+      "google/gemma-4-31b":
+        aliases: ["gemma"]
+        max-input-chars: 392000
+      "meta/muse-glimmer":
+        aliases: ["muse"]
+        max-input-chars: 392000
+      "dolphin-mistral-24b-venice-i1":
+        aliases: ["dolphin"]
+        max-input-chars: 32000

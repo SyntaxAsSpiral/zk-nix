@@ -33,7 +33,6 @@
     ./desk-env/otter-launcher.nix
     ./desk-env/hyprland/hyprland.nix
     ./desk-env/awww.nix
-    ./desk-env/mods/mods.nix
     ./desk-env/lmstudio-autorun.nix
     ./desk-env/kitty.nix
   ];

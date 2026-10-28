@@ -29,8 +29,6 @@
     ../../shared/home/niri.nix
     ./desk-env/otter/default.nix
     ./desk-env/ghostty.nix
-    ./desk-env/noctalia/default.nix
-    ./desk-env/openrgb.nix
   ];
 
   programs.home-manager.enable = true;

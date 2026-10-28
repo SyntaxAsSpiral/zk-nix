@@ -13,11 +13,13 @@ one-way from adeck, so a GUI write through that link was replaced on the next
 sync. The first switch after this change copies each of those links out to a
 real file, and later switches leave the file alone:
 
-- nxiz: HyprPanel, mods, LM Studio settings, presets, and http server config
-- zrrh: Noctalia, Niri, OpenRGB, LM Studio settings, presets, and http server config
+- nxiz: HyprPanel, LM Studio settings, presets, and http server config
+- zrrh: Noctalia, OpenRGB, LM Studio settings, presets, and http server config
 
 The copies in this repo are the snapshot that copy uses. After the switch they
-are not the live files. adeck LM Studio stays declarative (`force = true`); that
+are not the live files. `noctalia/*.json` and `hyprpanel/*` are kept as backups,
+unwired. mods is declared on every host by `shared/system/shell.nix`. Niri is
+declared by `shared/home/niri.nix`. adeck LM Studio stays declarative (`force = true`); that
 host has no UI for those settings. Pi `models.json` stays declarative. `gh`
 stays declarative.
 

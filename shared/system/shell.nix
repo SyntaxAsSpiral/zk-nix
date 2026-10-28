@@ -1,4 +1,4 @@
-# Core shell kit for remote use. Headless hosts (seed, tm20) do not build
+# Core shell kit for remote use, mods included. Headless hosts (seed, tm20) do not build
 # themselves. No Wayland tools. btop's own config is not managed.
 # btop compiles GPU support by default. cudaSupport adds the NVIDIA driver
 # runpath. rocmSupport adds the ROCm SMI rpath, and that library is x86_64-only,
@@ -116,6 +116,15 @@ in
     btop
     pkgs.yazi
     pkgs.fastfetch
+    pkgs.mods
+  ];
+
+  # mods reads only ~/.config/mods/mods.yml and writes it when absent. L+ replaces
+  # whatever is there, so the file is declared on every host, tm20 included.
+  systemd.tmpfiles.rules = [
+    "d /home/zk/.config 0755 zk users -"
+    "d /home/zk/.config/mods 0755 zk users -"
+    "L+ /home/zk/.config/mods/mods.yml - - - - ${./mods.yml}"
   ];
 
   system.activationScripts.shellKit = lib.mkIf installNushellConfig {
