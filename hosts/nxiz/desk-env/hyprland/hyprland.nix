@@ -77,7 +77,7 @@
 
     font_family            = RecMonoCasual Nerd Font
     font_family_monospace  = RecMonoCasual Nerd Font Mono
-    icon_theme             = Tela-circle-dracula
+    icon_theme             = Papirus-Dark
     big_rounding           = 12
     small_rounding         = 8
   '';

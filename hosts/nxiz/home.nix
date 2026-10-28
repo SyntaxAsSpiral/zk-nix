@@ -19,6 +19,7 @@
     ../../shared/home/pi/default.nix
 
     ../../shared/home/browser/firefox.nix
+    ../../shared/home/gtk.nix
     ../../shared/home/icons.nix
     ../../shared/home/spotify.nix
     ../../shared/home/thunar.nix

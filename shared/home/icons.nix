@@ -1,11 +1,6 @@
 { pkgs, ... }:
 
 {
-    home.file = {
-    ".icons/Tela-circle-dracula".source = ../../assets/icons/Tela-circle-dracula;
-    ".local/share/icons/Tela-circle-dracula".source = ../../assets/icons/Tela-circle-dracula;
-    };
-
   home.packages = with pkgs; [
     # Cursors
     catppuccin-cursors.mochaBlue
@@ -25,7 +20,9 @@
     catppuccin-cursors.mochaTeal
     catppuccin-cursors.mochaYellow
 
-    # Icons
+    # Installed so nwg-look can switch to it. gtk.nix selects Papirus.
     nordzy-icon-theme
+
+    nwg-look
   ];
 }
