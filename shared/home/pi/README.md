@@ -3,7 +3,8 @@
 Shared local-provider config: `models.json` → `~/.pi/agent/models.json`.
 
 - Endpoint: `http://100.89.32.9:1234/v1`
-- `api`: `openai-completions`, `apiKey`: `lms`, `contextWindow`: 100000
+- `api`: `openai-completions`, `apiKey`: `lms`
+- `contextWindow`: `qwen/qwen3.8-27b` is 145000. `google/gemma-4-31b` and `meta/muse-glimmer` are 100000.
 - Models: `qwen/qwen3.8-27b`, `google/gemma-4-31b`, `meta/muse-glimmer`
 
 OpenRouter is Pi's built-in provider. The API key is not in Nix. It lives in
@@ -11,7 +12,7 @@ gitignored `secrets/pi-openrouter-api-key` (Pi's OpenRouter key only; plain key,
 no `KEY=` prefix), stages to `/run/secrets/pi-openrouter-api-key`, and is
 exported as `OPENROUTER_API_KEY` at login. Hosts: nxiz, zrrh, adeck. Not seed or tm20.
 
-Imported by the home files of nxiz, zrrh, adeck, and seed.
+Imported by the home files of nxiz, zrrh, and adeck.
 
 Pi packages are pinned git refs in `~/.pi/agent/settings.json`, written by
 `home.activation.piPackages`. The list is the whole `packages` array. `pi update`

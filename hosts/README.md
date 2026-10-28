@@ -21,14 +21,13 @@ are not the live files. adeck LM Studio stays declarative (`force = true`); that
 host has no UI for those settings. Pi `models.json` stays declarative. `gh`
 stays declarative.
 
-## Credentials and Reinstalls
+## Credentials and reinstalls
 
 The editing copy is `/mnt/echo/nix-os` on adeck; hosts build from `/etc/nixos`.
 `secrets/` is ignored by Git. `zcli sync` copies it onto each target's
 `/etc/nixos/secrets`; tm20 receives that copy and nothing else. Keep a separate
 backup, because a Git clone cannot restore credentials. The rsync below is for
 a reinstall, before `zcli` exists on the target.
-Existing Git history is unchanged.
 
 For an existing host, the order is **pull config, sync secrets, then deploy**.
 The first pull that removes secrets from Git tracking can remove the old tracked
@@ -56,11 +55,13 @@ Do not use `--delete`: unrelated host-local files need not be removed.
 |-------|-------------|
 | `wifi-password` | All hosts (seed needs nothing else, since the stick can be lost) |
 | `github-token`, `github-recovery-codes` | nxiz, adeck, zrrh |
+| `pi-openrouter-api-key` | nxiz, adeck, zrrh |
+| `festin-openrouter-api-key` | adeck |
 | `print-token` | tm20 |
 | `hosts/<host>/ssh_host_*` | Matching host, to preserve its SSH identity |
 | `nix-access-tokens.conf` | Hosts fetching private Nix inputs; tm20 provisions an empty file |
 
-The decrypted files retain their original contents, including environment-file
+The staged files keep their original contents, including environment-file
 syntax where applicable. `shared/nixos/secrets.nix` copies required credentials into
 `/run/secrets` during activation with mode `0400`, owned by `zk`. The print token
 uses group `plugdev`; other credentials use `users`. Missing or empty source
@@ -90,7 +91,7 @@ Start here when asking:
 - `hardware-configuration.nix` is generated hardware state. Keep hardware facts there.
 - Host-local assets, such as monitor XML, stay beside the host that owns them.
 
-## What Belongs Here
+## What belongs here
 
 Put config in `hosts/<host>/configuration.nix` when it is only true for that host:
 
@@ -106,7 +107,7 @@ Put config in `hosts/<host>/home.nix` when it is user-level and host-only:
 - host-specific Home Manager imports
 - one-off wrappers or derivations used only there
 
-## What Belongs Elsewhere
+## What belongs elsewhere
 
 - Shared system behavior belongs in `shared/nixos/`.
 - Shared user behavior belongs in `shared/home/`.
@@ -114,4 +115,4 @@ Put config in `hosts/<host>/home.nix` when it is user-level and host-only:
 - Package pins and overrides belong in `overlays/`. The registry, including when each hold can come off, is `overlays/README.md`.
 - Host divergence inside a shared module should usually be a visible `perHost` map keyed by `config.my.host`.
 
-The goal is not fewer lines. The goal is fast orientation: open the host file, see what the host is made of, then follow imports to the shared policy.
+Open the host file, see what the host is made of, then follow imports to the shared policy.

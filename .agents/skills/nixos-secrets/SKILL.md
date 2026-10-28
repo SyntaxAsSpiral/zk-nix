@@ -48,6 +48,8 @@ this table.
 |---|---|---|
 | `wifi-password` | all | NetworkManager `nmEnvironmentFiles` in `shared/nixos/networking.nix` (nxiz, tm20, seed) |
 | `github-token`, `github-recovery-codes` | nxiz, adeck, zrrh | staged only; no consumer found in this repo |
+| `pi-openrouter-api-key` | nxiz, adeck, zrrh | `OPENROUTER_API_KEY` in `shared/nixos/secrets.nix` and `shared/home/pi/default.nix` |
+| `festin-openrouter-api-key` | adeck | `FESTIN_MODEL_KEY_FILE` in `hosts/adeck/desk-env/festin.nix` |
 | `print-token` | tm20 | `EnvironmentFile` of `print-receiver` in `hosts/tm20/` |
 | `hosts/<host>/ssh_host_{ed25519,rsa}_key[.pub]` | the matching host | `shared/nixos/ssh-identity.nix`; silently skipped when absent (seed has none) |
 | `nix-access-tokens.conf` | hosts fetching private inputs | `!include` in `shared/nixos/system.nix`; tm20 gets an empty file from `hosts/tm20/` |
@@ -57,8 +59,8 @@ tm20 has a deliberate 20 s wait in this activation step. See the next section be
 
 ## tm20 boot delay
 
-The 20 s `sleep` at the start of tm20's `mesh-secrets` activation (`shared/nixos/secrets.nix`) is crucial.
-It replaces the time agenix decryption used to take in the boot cycle, and without it tm20 reset-loops.
+The 20 s `sleep` at the start of tm20's `mesh-secrets` activation (`shared/nixos/secrets.nix`) stands in for the old agenix decrypt time.
+Without it tm20 reset-loops.
 Do not remove, shorten, or move it out of activation.
 
 ## Adding a secret

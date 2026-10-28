@@ -23,7 +23,7 @@ Pins and holds are in `overlays/README.md`. Read those before restructuring.
 - hostPlatform and the overlay list `meshOverlays.hosts.<name>` (from `overlays/default.nix`)
 - `hosts/<name>/configuration.nix`
 - unless `homeManager = false`: Home-Manager as a NixOS module, user `zk`, importing
-  `nix-colors` and `hosts/<name>/home.nix`. A rebuild applies system and home together.
+  `hosts/<name>/home.nix`. A rebuild applies system and home together.
 - `extraModules` for host-only flake inputs (adeck passes `jovian`).
 
 Each `configuration.nix` and `home.nix` is the profile: it lists the shared modules that
@@ -32,10 +32,10 @@ machine imports. There is no shared profile.
 | Host | System | Home-Manager |
 |---|---|---|
 | nxiz | shared nixos leaves, including nvidia, steam, performance; `./greetd.nix` | shared home leaves, including firefox and gtk; `./desk-env/` |
-| zrrh | same workstation leaves; `./openrgb` | shared home leaves; `./desk-env/` |
-| adeck | shared nixos leaves, no nvidia or steam; llama-tts, pulse, qbittorrent. `jovian` via `extraModules` | shared home leaves, no firefox or gtk; `./desk-env/` |
-| tm20 | `system`, `networking`, `ssh-identity`, `secrets`, `nh`. aarch64 | none |
-| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity`. Empty overlays. XFCE and LightDM are set in the host file | nushell and the shell tools, named in `home.nix` |
+| zrrh | same workstation leaves; `./openrgb` and pia | shared home leaves; `./desk-env/` |
+| adeck | shared nixos leaves, no nvidia or steam; llama-tts, pulse, qbittorrent. `jovian` via `extraModules` | shared home leaves; firefox package in `home.nix`, no gtk module; `./desk-env/` |
+| tm20 | `system`, `networking`, `ssh-identity`, `secrets`, `nh`, `shell`, `./print-receiver.nix`. aarch64 | none |
+| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity`, `shell`. Empty overlays. XFCE and LightDM are set in the host file | nushell, fastfetch, gh, and zcli, named in `home.nix` |
 
 seed skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.
 XFCE, LightDM, and PipeWire are set in the host file. It defines its own `zk` user.
@@ -75,8 +75,8 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 4. `flake.nix`: add `<name> = mkHost "<name>" { ... };`.
 5. `perHost` entries in every shared module the host imports (`boot`, `networking`,
    `storage` when imported; `nushell`, `thunar`, `xdg` when imported. `xdg` keys wallpapers by host).
-6. `shared/nixos/secrets.nix`: the default branch hands out `github-token` and `github-recovery-codes`.
-   Check it is what the host should get. Put its SSH keys in `secrets/hosts/<name>/`.
+6. `shared/nixos/secrets.nix`: the default branch hands out `github-token`, `github-recovery-codes`, and `pi-openrouter-api-key`.
+   adeck also gets `festin-openrouter-api-key`. Check that list is what the host should get. Put its SSH keys in `secrets/hosts/<name>/`.
    See `nixos-secrets`.
 7. zcli: see the "Adding a host to zcli" section of the `zcli` skill.
 8. Update the Hosts table in `AGENTS.md` and `hosts/README.md`.

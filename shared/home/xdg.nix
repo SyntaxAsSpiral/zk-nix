@@ -1,5 +1,5 @@
 # XDG base directories, user-dirs, and MIME defaults
-# Shared by adeck, nxiz, and zrrh (base profile) — remote content via Taildrive bookmarks
+# Shared by adeck, nxiz, and zrrh. Remote content via Taildrive bookmarks.
 {
   config,
   lib,
@@ -174,7 +174,7 @@ in
   };
 
   home = {
-    # Create only local dirs — remote content accessed via Taildrive
+    # Create only local dirs. Remote content is accessed via Taildrive.
     activation.createLocalXdgDirs = config.lib.dag.entryAfter [ "writeBoundary" ] (
       ''
         mkdir -p "${home}/Downloads"

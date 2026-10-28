@@ -17,9 +17,9 @@ in
     deps = [ "users" "etc" ];
     text = ''
       ${lib.optionalString (config.my.host == "tm20") ''
-        # Crucial: replaces the time agenix decryption used to take in the boot
-        # cycle. Without it tm20 reset-loops. Do not remove or move out of activation.
-        echo "boot delay where agenix used to run"
+        # Stands in for the old agenix decrypt time. Without it tm20 reset-loops.
+        # Do not remove or move out of activation.
+        echo "tm20 boot delay"
         ${pkgs.coreutils}/bin/sleep 20
       ''}
       (

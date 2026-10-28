@@ -1,4 +1,4 @@
-# Sunset Gradient — Arctic Liquid Freezer III 360 A-RGB
+# Sunset gradient for the Arctic Liquid Freezer III 360 A-RGB
 
 48 LEDs: pump head (12) + 3x fans (12 each), per-device gradient repeated 4x.
 
@@ -31,6 +31,6 @@ openrgb --noautoconnect -d 0 -z 1 --size 48 --mode Direct --color \
 
 ## Notes
 
-- Direct mode does NOT persist across power loss — must be re-applied
+- Direct mode does not persist across power loss. Re-apply it.
 - Detector flags in `OpenRGB.json` are a per-device allow list. `Gigabyte GeForce RTX 4090 GAMING OC` and the ASUS Aura USB and motherboard entries this build uses are enabled. `Gigabyte RGB Fusion 2 SMBus` stays disabled.
-- Do NOT run `openrgb -sp` after setting Direct mode colors — it saves all-black
+- Do not run `openrgb -sp` after setting Direct mode colors. It saves all-black.

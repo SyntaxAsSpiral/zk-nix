@@ -17,7 +17,7 @@ Start here when asking:
 - A NixOS module used by one host lives next to that host's `configuration.nix`.
 - `overlays/**` is for package pins, input overlays, and local package patches.
 
-## Divergence Pattern
+## Divergence pattern
 
 Prefer visible host maps over scattered conditionals:
 
@@ -37,11 +37,9 @@ in
 
 Use `my.*` options when a feature should be explicitly toggled by a host. This keeps host intent visible in `hosts/<host>/configuration.nix` while keeping the implementation reusable.
 
-## Placement Rule
+## Placement rule
 
 - One host only: keep it in that host file unless it is large enough to need its own module.
 - Two or more hosts: consider a shared module with a `perHost` map.
 - Package version or package surgery: put it in `overlays/`.
 - User apps and dotfiles used by two or more hosts: put them under `shared/home/` and import them from each `hosts/<host>/home.nix`. One host only: put them in that host's `desk-env/`.
-
-Keep modules boring and named by ownership. Future edits should answer "where do I go?" before they answer "how clever can this be?"
