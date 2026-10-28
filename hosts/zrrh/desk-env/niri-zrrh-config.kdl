@@ -269,7 +269,7 @@ spawn-at-startup "noctalia-shell"
 spawn-at-startup "openrgb" "--startminimized"
 
 // LM Studio starts from the user systemd unit in
-// hosts/zrrh/desk-env/lmstudio/default.nix.
+// hosts/zrrh/desk-env/lmstudio-autorun.nix.
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 //spawn-sh-at-startup "ls"
@@ -456,6 +456,8 @@ binds {
     Mod+R hotkey-overlay-title="Toggle Noctalia Launcher" { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
     Super+B hotkey-overlay-title="Open Firefox" { spawn "firefox"; }
     Super+V hotkey-overlay-title="Open Thunar" { spawn "thunar"; }
+    Super+E hotkey-overlay-title="Open Zed" { spawn "zeditor"; }
+    Mod+Delete hotkey-overlay-title="Open btop" { spawn "ghostty" "-e" "btop"; }
     Super+A allow-inhibiting=false hotkey-overlay-title="Open Otter Launcher" { spawn-sh "ghostty --title=otter-launcher -e otter-launcher"; }
     Super+D hotkey-overlay-title="Duplicate App in Column" { spawn-sh "src_id=$(niri msg -j focused-window | jq -r '.id // empty'); app_id=$(niri msg -j focused-window | jq -r '.app_id // empty'); before=$(niri msg -j windows | jq 'length'); case \"$app_id\" in com.mitchellh.ghostty) niri msg action spawn -- ghostty ;; firefox|org.mozilla.firefox) niri msg action spawn -- firefox ;; thunar|org.xfce.Thunar) niri msg action spawn -- thunar ;; vlc|org.videolan.VLC) niri msg action spawn -- vlc ;; spotify) niri msg action spawn -- spotify ;; *) exit 0 ;; esac; for _ in 1 2 3 4 5 6 7 8 9 10; do now=$(niri msg -j windows | jq 'length'); [ \"$now\" -gt \"$before\" ] && break; sleep 0.01; done; niri msg action focus-window --id \"$src_id\"; niri msg action consume-window-into-column; niri msg action focus-window --id \"$src_id\"; niri msg action center-column"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen" { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }

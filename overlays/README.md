@@ -39,8 +39,8 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 
 | Hold | Where | Why |
 | --- | --- | --- |
-| numtide substituter priority 100 | `shared/nixos/system.nix` | numtide advertises priority 30, which would beat cache.nixos.org. CUDA substitutes come from `cache.nixos-cuda.org` after the cuda-maintainers Cachix started returning 401. |
-| `NIX_CURL_FLAGS=--user-agent Nixpkgs` | `shared/nixos/system.nix` | crates.io/Fastly returns 403 for User-Agents that start with `curl/`. |
+| numtide substituter priority 100 | `shared/system/system.nix` | numtide advertises priority 30, which would beat cache.nixos.org. CUDA substitutes come from `cache.nixos-cuda.org` after the cuda-maintainers Cachix started returning 401. |
+| `NIX_CURL_FLAGS=--user-agent Nixpkgs` | `shared/system/system.nix` | crates.io/Fastly returns 403 for User-Agents that start with `curl/`. |
 | llama-tts `b11077` Vulkan binary | `hosts/adeck/llama-tts.nix` | Prebuilt tarball. adeck does not compile llama.cpp. |
 
 ## Host map

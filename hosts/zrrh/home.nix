@@ -25,9 +25,9 @@
     ../../shared/home/thunar.nix
     ../../shared/home/fzf-emoji.nix
 
-    ./desk-env/lmstudio/default.nix
+    ./desk-env/lmstudio-autorun.nix
+    ../../shared/home/niri.nix
     ./desk-env/otter/default.nix
-    ./desk-env/niri.nix
     ./desk-env/ghostty.nix
     ./desk-env/noctalia/default.nix
     ./desk-env/openrgb.nix

@@ -18,7 +18,7 @@ adeck, `zcli sync` copies them to each host, and an activation script stages the
 
 `/nix/store` is world-readable and everything a Nix expression reads ends up in it.
 **Never put a secret value in a `.nix` file.** Read it at runtime from `/run/secrets/<name>`
-(`EnvironmentFile`, a `*File` option, `networking` environment files). `shared/nixos/secrets.nix`
+(`EnvironmentFile`, a `*File` option, `networking` environment files). `shared/system/secrets.nix`
 opens with the same warning.
 
 ## How a credential travels
@@ -27,7 +27,7 @@ opens with the same warning.
 adeck:/mnt/echo/nix-os/secrets/   (gitignored, editing copy)
   → zcli sync <host>              rsync, no --delete: host-local files survive
   → <host>:/etc/nixos/secrets/
-  → activation (shared/nixos/secrets.nix, shared/nixos/ssh-identity.nix)
+  → activation (shared/system/secrets.nix, shared/system/ssh-identity.nix)
   → /run/secrets/<name>           0400, owner zk, group users (print-token: plugdev)
   → /etc/ssh/ssh_host_*           from secrets/hosts/<host>/, if present
 ```
@@ -41,32 +41,32 @@ adeck:/mnt/echo/nix-os/secrets/   (gitignored, editing copy)
 
 ## Which files each host needs
 
-The source of truth is the `names` list in `shared/nixos/secrets.nix`. Read that file before trusting
+The source of truth is the `names` list in `shared/system/secrets.nix`. Read that file before trusting
 this table.
 
 | File | Hosts | Consumer |
 |---|---|---|
-| `wifi-password` | all | NetworkManager `nmEnvironmentFiles` in `shared/nixos/networking.nix` (nxiz, tm20, seed) |
+| `wifi-password` | all | NetworkManager `nmEnvironmentFiles` in `shared/system/networking.nix` (nxiz, tm20, seed) |
 | `github-token`, `github-recovery-codes` | nxiz, adeck, zrrh | staged only; no consumer found in this repo |
-| `pi-openrouter-api-key` | nxiz, adeck, zrrh | `OPENROUTER_API_KEY` in `shared/nixos/secrets.nix` and `shared/home/pi/default.nix` |
+| `pi-openrouter-api-key` | nxiz, adeck, zrrh | `OPENROUTER_API_KEY` in `shared/system/secrets.nix` and `shared/home/pi/default.nix` |
 | `festin-openrouter-api-key` | adeck | `FESTIN_MODEL_KEY_FILE` in `hosts/adeck/desk-env/festin.nix` |
 | `print-token` | tm20 | `EnvironmentFile` of `print-receiver` in `hosts/tm20/` |
-| `hosts/<host>/ssh_host_{ed25519,rsa}_key[.pub]` | the matching host | `shared/nixos/ssh-identity.nix`; silently skipped when absent (seed has none) |
-| `nix-access-tokens.conf` | hosts fetching private inputs | `!include` in `shared/nixos/system.nix`; tm20 gets an empty file from `hosts/tm20/` |
+| `hosts/<host>/ssh_host_{ed25519,rsa}_key[.pub]` | the matching host | `shared/system/ssh-identity.nix`; silently skipped when absent (seed has none) |
+| `nix-access-tokens.conf` | hosts fetching private inputs | `!include` in `shared/system/system.nix`; tm20 gets an empty file from `hosts/tm20/` |
 
 seed gets `wifi-password` only, because the stick can be lost or left plugged in. Do not widen that.
 tm20 has a deliberate 20 s wait in this activation step. See the next section before touching it.
 
 ## tm20 boot delay
 
-The 20 s `sleep` at the start of tm20's `mesh-secrets` activation (`shared/nixos/secrets.nix`) stands in for the old agenix decrypt time.
+The 20 s `sleep` at the start of tm20's `mesh-secrets` activation (`shared/system/secrets.nix`) stands in for the old agenix decrypt time.
 Without it tm20 reset-loops.
 Do not remove, shorten, or move it out of activation.
 
 ## Adding a secret
 
 1. Create the file in `/mnt/echo/nix-os/secrets/`, mode `0600`. It is never staged or committed.
-2. Add its name to `names` in `shared/nixos/secrets.nix`, under the host condition that needs it.
+2. Add its name to `names` in `shared/system/secrets.nix`, under the host condition that needs it.
    Use a non-default group only when a service user needs it (as `print-token` does).
 3. Consume it from `/run/secrets/<name>`, not from the source path or a Nix string.
 4. `zcli sync <host>` for every host that needs it, then `zcli build <host>` to check eval,
@@ -116,7 +116,7 @@ of `secrets/`. Order for an existing host: **pull config, sync secrets, then dep
 
 - No secret values in Nix expressions, ever.
 - `secrets/` stays gitignored. Do not stage it.
-- `names` in `shared/nixos/secrets.nix` decides what a host receives. Keep seed minimal.
+- `names` in `shared/system/secrets.nix` decides what a host receives. Keep seed minimal.
 - Sync secrets to the target before the deploy that needs them.
 - Keep existing `hosts/<host>/` SSH identities and `nix-access-tokens.conf` when touching `secrets/`.
 - Never remove tm20's 20 s activation wait, or move it out of activation.

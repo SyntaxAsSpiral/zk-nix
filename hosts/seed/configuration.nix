@@ -8,13 +8,13 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../shared/nixos/system.nix
-    ../../shared/nixos/boot.nix
-    ../../shared/nixos/nh.nix
-    ../../shared/nixos/secrets.nix
-    ../../shared/nixos/networking.nix
-    ../../shared/nixos/ssh-identity.nix
-    ../../shared/nixos/shell.nix
+    ../../shared/system/system.nix
+    ../../shared/system/boot.nix
+    ../../shared/system/nh.nix
+    ../../shared/system/secrets.nix
+    ../../shared/system/networking.nix
+    ../../shared/system/ssh-identity.nix
+    ../../shared/system/shell.nix
   ];
 
   my.host = "seed";

@@ -10,7 +10,7 @@ Start here when asking:
 
 ## Boundaries
 
-- `shared/nixos/` is NixOS system behavior.
+- `shared/system/` is NixOS system behavior.
 - `shared/home/` is Home Manager user behavior.
 - `hosts/<host>/configuration.nix` and `home.nix` are that host's profile.
 - `hosts/<host>/desk-env/` is Home Manager behavior used by that host only.

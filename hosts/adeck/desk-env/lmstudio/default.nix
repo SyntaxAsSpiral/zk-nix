@@ -10,7 +10,7 @@ let
   };
 in
 {
-  imports = [ ../../../../shared/home/lmstudio/log-retention.nix ];
+  imports = [ ../../../../shared/home/lmstudio-logs.nix ];
 
   # LM Studio on adeck: llmster only (no GUI/AppImage).
   # Installed via `curl` — Nix manages dirs, settings, and server config.
@@ -24,10 +24,6 @@ in
     file = {
       ".lmstudio/settings.json" = {
         source = ./settings.json;
-        force = true;
-      };
-      ".lmstudio/config-presets" = {
-        source = ../../../../shared/home/lmstudio/config-presets;
         force = true;
       };
       ".lmstudio/.internal/http-server-config.json" = {

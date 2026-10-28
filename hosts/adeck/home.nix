@@ -23,7 +23,7 @@
     ./desk-env/jolt.nix
     ./desk-env/otter
     ./desk-env/awww-cycle.nix
-    ./desk-env/niri.nix
+    ../../shared/home/niri.nix
     ./desk-env/waybar.nix
     ./desk-env/alacritty.nix
   ];

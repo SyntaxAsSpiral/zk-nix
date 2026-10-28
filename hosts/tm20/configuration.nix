@@ -9,12 +9,12 @@
 {
   imports = [
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
-    ../../shared/nixos/system.nix
-    ../../shared/nixos/networking.nix
-    ../../shared/nixos/ssh-identity.nix
-    ../../shared/nixos/secrets.nix
-    ../../shared/nixos/nh.nix
-    ../../shared/nixos/shell.nix
+    ../../shared/system/system.nix
+    ../../shared/system/networking.nix
+    ../../shared/system/ssh-identity.nix
+    ../../shared/system/secrets.nix
+    ../../shared/system/nh.nix
+    ../../shared/system/shell.nix
     ./print-receiver.nix
   ];
 

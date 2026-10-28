@@ -62,7 +62,7 @@ Do not use `--delete`: unrelated host-local files need not be removed.
 | `nix-access-tokens.conf` | Hosts fetching private Nix inputs; tm20 provisions an empty file |
 
 The staged files keep their original contents, including environment-file
-syntax where applicable. `shared/nixos/secrets.nix` copies required credentials into
+syntax where applicable. `shared/system/secrets.nix` copies required credentials into
 `/run/secrets` during activation with mode `0400`, owned by `zk`. The print token
 uses group `plugdev`; other credentials use `users`. Missing or empty source
 files fail that activation step before it replaces any runtime credentials.
@@ -109,7 +109,7 @@ Put config in `hosts/<host>/home.nix` when it is user-level and host-only:
 
 ## What belongs elsewhere
 
-- Shared system behavior belongs in `shared/nixos/`.
+- Shared system behavior belongs in `shared/system/`.
 - Shared user behavior belongs in `shared/home/`.
 - A module with one importer belongs in that host's directory, under `desk-env/` when it is Home Manager.
 - Package pins and overrides belong in `overlays/`. The registry, including when each hold can come off, is `overlays/README.md`.

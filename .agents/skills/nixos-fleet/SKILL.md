@@ -3,7 +3,7 @@ name: nixos-fleet
 description: >
   Use when organizing the nix-os flake across hosts: add or change a host, share a module,
   keep a change off the wrong machine, see what a host imports, add a perHost entry, or
-  choose shared/nixos/, shared/home/, hosts/<host>/, hosts/<host>/desk-env/, or overlays/.
+  choose shared/system/, shared/home/, hosts/<host>/, hosts/<host>/desk-env/, or overlays/.
   Triggers: mkHost, my.host, perHost, nxiz, zrrh, adeck, tm20, seed.
   Deploy is zcli. Credentials are nixos-secrets.
 ---
@@ -58,7 +58,7 @@ is an eval error.** Find the tables with `grep -rn 'perHost' shared hosts`.
 | Situation | Put it in |
 |---|---|
 | True for one host only | `hosts/<host>/` for NixOS, `hosts/<host>/desk-env/` for Home Manager |
-| Two or more hosts | `shared/nixos/` or `shared/home/`, with a `perHost` entry when the values differ |
+| Two or more hosts | `shared/system/` or `shared/home/`, with a `perHost` entry when the values differ |
 | Package version, pin, or patch | `overlays/`, with a row in `overlays/README.md` and its removal condition |
 | Hardware facts | `hosts/<host>/hardware-configuration.nix`. Never share it |
 | User app or dotfile | `shared/home/` when two hosts use it, otherwise `desk-env/`. The host `home.nix` imports it |
@@ -70,12 +70,12 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 
 1. `hosts/<name>/configuration.nix` (sets `my.host`, imports, `stateVersion`), `hardware-configuration.nix`,
    and `home.nix` (skip for an appliance with `homeManager = false`).
-2. `shared/nixos/system.nix`: add the name to the `my.host` enum **and** to the `my.flakePath` map.
+2. `shared/system/system.nix`: add the name to the `my.host` enum **and** to the `my.flakePath` map.
 3. `overlays/default.nix`: add `hosts.<name>` (`[ ]` is fine). `mkHost` indexes it.
 4. `flake.nix`: add `<name> = mkHost "<name>" { ... };`.
 5. `perHost` entries in every shared module the host imports (`boot`, `networking`,
    `storage` when imported; `nushell`, `thunar`, `xdg` when imported. `xdg` keys wallpapers by host).
-6. `shared/nixos/secrets.nix`: the default branch hands out `github-token`, `github-recovery-codes`, and `pi-openrouter-api-key`.
+6. `shared/system/secrets.nix`: the default branch hands out `github-token`, `github-recovery-codes`, and `pi-openrouter-api-key`.
    adeck also gets `festin-openrouter-api-key`. Check that list is what the host should get. Put its SSH keys in `secrets/hosts/<name>/`.
    See `nixos-secrets`.
 7. zcli: see the "Adding a host to zcli" section of the `zcli` skill.
@@ -88,7 +88,7 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 | Symptom | Cause |
 |---|---|
 | `attribute '<host>' missing` from a `perHost` or `wpSource` lookup | The host has no entry in that module's table |
-| `value "<host>" is not ... enum` | The name is not in `my.host` in `shared/nixos/system.nix` |
+| `value "<host>" is not ... enum` | The name is not in `my.host` in `shared/system/system.nix` |
 | `attribute '<host>' missing` in `overlays/default.nix` | Add `hosts.<name>` |
 | New file has no effect, or `path ... does not exist` | Untracked. `git add` it |
 | A change reached the wrong host | It went into a shared module without a `perHost` split |

@@ -11,22 +11,22 @@
   imports = [
     ./hardware-configuration.nix
 
-    ../../shared/nixos/system.nix
-    ../../shared/nixos/boot.nix
-    ../../shared/nixos/nh.nix
-    ../../shared/nixos/user.nix
-    ../../shared/nixos/secrets.nix
-    ../../shared/nixos/services.nix
-    ../../shared/nixos/storage.nix
-    ../../shared/nixos/packages.nix
-    ../../shared/nixos/networking.nix
-    ../../shared/nixos/fonts.nix
-    ../../shared/nixos/ssh-identity.nix
-    ../../shared/nixos/shell.nix
+    ../../shared/system/system.nix
+    ../../shared/system/boot.nix
+    ../../shared/system/nh.nix
+    ../../shared/system/user.nix
+    ../../shared/system/secrets.nix
+    ../../shared/system/services.nix
+    ../../shared/system/storage.nix
+    ../../shared/system/packages.nix
+    ../../shared/system/networking.nix
+    ../../shared/system/fonts.nix
+    ../../shared/system/ssh-identity.nix
+    ../../shared/system/shell.nix
 
-    ../../shared/nixos/nvidia.nix
-    ../../shared/nixos/steam.nix
-    ../../shared/nixos/performance.nix
+    ../../shared/system/nvidia.nix
+    ../../shared/system/steam.nix
+    ../../shared/system/performance.nix
 
     # Login manager playground (inert by default).
     # Activate explicitly: my.login.greetd.enable = true;
