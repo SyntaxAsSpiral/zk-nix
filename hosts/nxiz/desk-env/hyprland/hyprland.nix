@@ -36,7 +36,7 @@
     configType = "hyprlang";
     settings = {
       "$terminal" = "kitty";
-      "$fileManager" = "kitty --class tui-float -e yazi";
+      "$fileManager" = "thunar";
       "$menu" = "kitty --class launcher -e fsel -d";
       "$search" = "kitty --class launcher -e otter-launcher";
       "$browser" = "firefox";
