@@ -4,24 +4,12 @@
 # runpath. rocmSupport adds the ROCm SMI rpath, and that library is x86_64-only,
 # so tm20 does not get it.
 {
-  config,
-  lib,
   pkgs,
   inputs,
   ...
 }:
 
 let
-  # Home Manager writes this same file on the other hosts. tm20 has no Home Manager.
-  nushellConfig = import ../home/nushell-config.nix;
-  perHost = {
-    nxiz.installNushellConfig = false;
-    zrrh.installNushellConfig = false;
-    adeck.installNushellConfig = false;
-    seed.installNushellConfig = false;
-    tm20.installNushellConfig = true;
-  };
-  installNushellConfig = perHost.${config.my.host}.installNushellConfig;
   btop = pkgs.btop.override {
     cudaSupport = true;
     rocmSupport = pkgs.stdenv.hostPlatform.isx86_64;
@@ -126,12 +114,4 @@ in
     "d /home/zk/.config/mods 0755 zk users -"
     "L+ /home/zk/.config/mods/mods.yml - - - - ${./mods.yml}"
   ];
-
-  system.activationScripts.shellKit = lib.mkIf installNushellConfig {
-    deps = [ "users" ];
-    text = ''
-      install -d -m 0755 -o zk -g users /home/zk/.config/nushell
-      install -m 0644 -o zk -g users ${pkgs.writeText "config.nu" nushellConfig} /home/zk/.config/nushell/config.nu
-    '';
-  };
 }

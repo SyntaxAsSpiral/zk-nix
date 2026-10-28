@@ -2,9 +2,9 @@
 
 Host files are the table of contents for each machine.
 
-`tm20` is the Pi 3B+ print-host appliance: its `configuration.nix` names a short list of shared system modules, and it has no Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
+`tm20` is the Pi 3B+ print-host appliance: its `configuration.nix` names a short list of shared system modules, and its `home.nix` carries the shell only. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
 
-`seed` is the portable x86_64 UEFI rescue stick. Its `configuration.nix` and `home.nix` name the shared modules it wants and skip the rest (no `packages.nix`, no NVIDIA, no Zed). XFCE, LightDM, and autologin live in `hosts/seed/configuration.nix` only. It is not a `zcli` host (no address in `zcli`'s host table), so build and install it by hand. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
+`seed` is the portable x86_64 UEFI stick. It is the core: the base a new host is copied from, then extended, and also the rescue stick. Its `configuration.nix` and `home.nix` name the shared modules it wants and skip the rest (no `packages.nix`, no NVIDIA, no Zed). It is console only: no display server, and autologin is the tty getty. It is a `zcli` host (`zcli deploy seed`), but it is left out of `zcli sync all`, since the stick is often offline. A booted seed has `zcli`, so it can deploy itself from zrrh. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
 
 ## Host-local app config
 

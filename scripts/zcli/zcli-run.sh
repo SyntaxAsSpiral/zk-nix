@@ -185,14 +185,15 @@ address() {
     nxiz) printf '%s\n' 100.115.135.104 ;;
     zrrh) printf '%s\n' 100.77.90.79 ;;
     tm20) printf '%s\n' 100.123.184.5 ;;
-    *) fail "unknown host: $1 (valid: nxiz zrrh adeck tm20)" ;;
+    seed) printf '%s\n' 100.91.23.75 ;;
+    *) fail "unknown host: $1 (valid: nxiz zrrh adeck tm20 seed)" ;;
   esac
 }
 
 valid_host() {
   case "$1" in
-    nxiz|zrrh|adeck|tm20) ;;
-    *) fail "unknown host: $1 (valid: nxiz zrrh adeck tm20)" ;;
+    nxiz|zrrh|adeck|tm20|seed) ;;
+    *) fail "unknown host: $1 (valid: nxiz zrrh adeck tm20 seed)" ;;
   esac
 }
 

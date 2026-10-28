@@ -23,6 +23,7 @@ let
       }
     '';
     seed.loginFile = "";
+    tm20.loginFile = "";
   };
 in
 {

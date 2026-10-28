@@ -18,11 +18,11 @@ Pins and holds are in `overlays/README.md`. Read those before restructuring.
 
 ## Shape
 
-`flake.nix` builds every host with `mkHost "<name>" { extraModules, hostPlatform, homeManager }`:
+`flake.nix` builds every host with `mkHost "<name>" { extraModules, hostPlatform }`:
 
 - hostPlatform and the overlay list `meshOverlays.hosts.<name>` (from `overlays/default.nix`)
 - `hosts/<name>/configuration.nix`
-- unless `homeManager = false`: Home-Manager as a NixOS module, user `zk`, importing
+- Home-Manager as a NixOS module, user `zk`, importing
   `hosts/<name>/home.nix`. A rebuild applies system and home together.
 - `extraModules` for host-only flake inputs (adeck passes `jovian`).
 
@@ -34,11 +34,11 @@ machine imports. There is no shared profile.
 | nxiz | shared nixos leaves, including nvidia, steam, performance; `./greetd.nix` | shared home leaves, including firefox and gtk; `./desk-env/` |
 | zrrh | same workstation leaves; `./openrgb` and pia | shared home leaves; `./desk-env/` |
 | adeck | shared nixos leaves, no nvidia or steam; llama-tts, pulse, qbittorrent. `jovian` via `extraModules` | shared home leaves; firefox package in `home.nix`, no gtk module; `./desk-env/` |
-| tm20 | `system`, `networking`, `ssh-identity`, `secrets`, `nh`, `shell`, `./print-receiver.nix`. aarch64 | none |
-| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity`, `shell`. Empty overlays. XFCE and LightDM are set in the host file | nushell, fastfetch, gh, and zcli, named in `home.nix` |
+| tm20 | `system`, `networking`, `ssh-identity`, `secrets`, `nh`, `shell`, `./print-receiver.nix`. aarch64 | nushell, named in `home.nix` |
+| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity`, `shell`. Empty overlays. Console only | nushell, fastfetch, gh, and zcli, named in `home.nix` |
 
-seed skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.
-XFCE, LightDM, and PipeWire are set in the host file. It defines its own `zk` user.
+seed is the core a new host is copied from. It skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.
+Seed is console only, with no display server. It defines its own `zk` user in the host file.
 
 ## perHost: where host differences go
 
@@ -69,7 +69,7 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 ## Adding a host
 
 1. `hosts/<name>/configuration.nix` (sets `my.host`, imports, `stateVersion`), `hardware-configuration.nix`,
-   and `home.nix` (skip for an appliance with `homeManager = false`).
+   and `home.nix`.
 2. `shared/system/system.nix`: add the name to the `my.host` enum **and** to the `my.flakePath` map.
 3. `overlays/default.nix`: add `hosts.<name>` (`[ ]` is fine). `mkHost` indexes it.
 4. `flake.nix`: add `<name> = mkHost "<name>" { ... };`.
@@ -92,7 +92,7 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 | `attribute '<host>' missing` in `overlays/default.nix` | Add `hosts.<name>` |
 | New file has no effect, or `path ... does not exist` | Untracked. `git add` it |
 | A change reached the wrong host | It went into a shared module without a `perHost` split |
-| Home-Manager change does nothing on seed or tm20 | seed imports its own list in `hosts/seed/home.nix`; tm20 has no Home-Manager |
+| Home-Manager change does nothing on seed or tm20 | seed and tm20 import their own lists in `hosts/<host>/home.nix` |
 
 ## Rules
 
@@ -100,5 +100,5 @@ a commit or tag stays put. `nix-cachyos-kernel` has its own nixpkgs and **no `fo
 - Don't put host-only config in a shared module or shared config in a host file.
 - Don't share `hardware-configuration.nix`.
 - Don't add `follows` to `nix-cachyos-kernel`. Record every pin in `overlays/README.md` in the same change.
-- Don't give seed `packages.nix`, the NVIDIA or Steam modules, overlays, or a non-stock kernel. XFCE stays in `hosts/seed/configuration.nix`.
+- Don't give seed `packages.nix`, the NVIDIA or Steam modules, overlays, or a non-stock kernel.
 - Fix statix and deadnix findings in the source rather than suppressing them.

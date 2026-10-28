@@ -12,7 +12,7 @@ description: >
 The canonical flake is `adeck:/mnt/echo/nix-os`. zcli publishes a snapshot of it to
 `/etc/nixos` on the target, and every eval and build runs on **zrrh** through `nh`.
 Source: `scripts/zcli/zcli-sync.sh` and `scripts/zcli/zcli-run.sh`, wired up by
-`shared/home/zcli.nix`. Valid hosts: `nxiz zrrh adeck tm20`. `seed` is not a zcli host.
+`shared/home/zcli.nix`. Valid hosts: `nxiz zrrh adeck tm20 seed`. A booted seed can run `zcli deploy seed` to deploy itself from zrrh.
 
 ## Read this first: what gets published
 
@@ -39,7 +39,7 @@ The snapshot is **adeck's git index**, not its working tree, plus local git hist
 | Make the tm20 SD card | `zcli image tm20 [--dry]` |
 | Wake zrrh and wait for nix | `zcli wake` |
 
-`sync` with no host means the invoking host; `all` means the four zcli hosts. `--dry` previews.
+`sync` with no host means the invoking host; `all` means `adeck nxiz zrrh tm20`; seed is a removable stick, so name it. `--dry` previews.
 A flag a command does not take is an error (`--dry` is for `sync` and `image`, `--switch` for `deploy`).
 
 ## Behavior

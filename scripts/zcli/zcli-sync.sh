@@ -16,7 +16,8 @@ address() {
     nxiz) echo 100.115.135.104 ;;
     zrrh) echo 100.77.90.79 ;;
     tm20) echo 100.123.184.5 ;;
-    *) fail "unknown host: $1 (valid: adeck nxiz zrrh tm20 all)" ;;
+    seed) echo 100.91.23.75 ;;
+    *) fail "unknown host: $1 (valid: adeck nxiz zrrh tm20 seed all)" ;;
   esac
 }
 
@@ -160,6 +161,7 @@ for arg in "$@"; do
       echo 'Flake hosts receive committed + staged content, local git history, and secrets.'
       echo 'A clean canonical checkout is clean after sync. Staged changes stay staged.'
       echo 'Destination edits to snapshot files are overwritten. tm20 receives only secrets.'
+      echo 'all means adeck nxiz zrrh tm20. seed is a removable stick, so name it.'
       exit 0 ;;
     all) targets+=(adeck nxiz zrrh tm20) ;;
     *) address "$arg" >/dev/null; targets+=("$arg") ;;

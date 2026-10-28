@@ -1,4 +1,4 @@
-# Seed home: nushell and the shared CLI set. XFCE is system-level. No Zed.
+# Seed home: nushell and the shared CLI set. Console only. No Zed.
 { pkgs, ... }:
 {
   imports = [

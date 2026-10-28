@@ -1,5 +1,5 @@
 # NixOS configuration for tm20 — Pi 3B+ print-host appliance.
-# Minimal: firmware, NM, Tailscale, SSH, Epson USB. No desktop, no Home-Manager.
+# Minimal: firmware, NM, Tailscale, SSH, Epson USB. No desktop; Home-Manager carries the shell only.
 {
   pkgs,
   modulesPath,

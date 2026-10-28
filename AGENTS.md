@@ -1,6 +1,6 @@
 # AGENTS.md
 
-NixOS flake for the `zk` Tailscale mesh. Shared leaf modules live in `shared/`. Each host file is that machine's profile. Host-only modules live in `hosts/<host>/`, with the graphical ones under `desk-env/`. Home-Manager is wired into every host in `flake.nix` except tm20.
+NixOS flake for the `zk` Tailscale mesh. Shared leaf modules live in `shared/`. Each host file is that machine's profile. Host-only modules live in `hosts/<host>/`, with the graphical ones under `desk-env/`. Home-Manager is wired into every host in `flake.nix`.
 
 ## Hosts
 
@@ -9,8 +9,8 @@ NixOS flake for the `zk` Tailscale mesh. Shared leaf modules live in `shared/`. 
 | nxiz  | Primary workstation, Hyprland, RTX 3070 | CachyOS kernel |
 | zrrh  | Central builder (every `zcli` build runs here), Niri, RTX 4090 | CachyOS kernel; binfmt aarch64 (deploy zrrh once) |
 | adeck | Agentic server on Steam Deck hardware, Niri | Jovian kernel and module |
-| tm20  | Pi 3B+ print-host appliance | aarch64, no Home-Manager, SD image |
-| seed  | Portable x86_64 rescue stick | XFCE via LightDM. No `packages.nix`, NVIDIA, or Steam. Not a `zcli` host |
+| tm20  | Pi 3B+ print-host appliance | aarch64, SD image |
+| seed  | Portable x86_64 core and rescue stick; the base a new host is copied from | Console only. No `packages.nix`, NVIDIA, or Steam. A `zcli` host, but not in `sync all` |
 
 ## Skills
 
@@ -22,7 +22,7 @@ Load before working in the area: `zcli` (build, deploy, sync, image), `nixos-fle
 - `zcli deploy` reboots hosts unless `--switch` is given. Confirm hosts and order first.
 - Extend a module's `perHost` attrset for host differences. Do not branch on `hostName`.
 - `nix-cachyos-kernel` has its own nixpkgs and no `follows` line; do not add one. Record every pin or hold in `overlays/README.md`, with its removal condition, in the same change.
-- seed stays off `packages.nix`, the NVIDIA and Steam modules, overlays, and the CachyOS kernel. XFCE lives only in `hosts/seed/configuration.nix`.
+- seed stays off `packages.nix`, the NVIDIA and Steam modules, overlays, and the CachyOS kernel.
 - `nix flake check` runs statix and deadnix and fails on any finding. Fix the source rather than suppressing.
 - `docs/` is edit-on-request only. Do not create it without an explicit ask.
 
