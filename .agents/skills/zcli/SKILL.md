@@ -12,7 +12,7 @@ description: >
 The canonical flake is `adeck:/mnt/echo/nix-os`. zcli publishes a snapshot of it to
 `/etc/nixos` on the target, and every eval and build runs on **zrrh** through `nh`.
 Source: `scripts/zcli/zcli-sync.sh` and `scripts/zcli/zcli-run.sh`, wired up by
-`shared/home/shell/zcli.nix`. Valid hosts: `nxiz zrrh adeck tm20`. `seed` is not a zcli host.
+`shared/home/zcli.nix`. Valid hosts: `nxiz zrrh adeck tm20`. `seed` is not a zcli host.
 
 ## Read this first: what gets published
 
@@ -80,7 +80,7 @@ The host tables are hard-coded in the scripts. A host missing from them is rejec
 - `scripts/zcli/zcli-sync.sh`: the `address` case (Tailscale IP) and the `all)` expansion.
 - `scripts/zcli/zcli-run.sh`: the `address` and `valid_host` cases, and the "valid:" error text.
 - Help text in both files, and `scripts/zcli/test_zcli_sync.py` if it asserts the host list.
-- The host must import `shared/home/shell/zcli.nix` from its `home.nix`, as seed does.
+- The host must import `shared/home/zcli.nix` from its `home.nix`, as seed does.
 - Flake hosts must have `/etc/nixos` as a git checkout. Appliances like tm20 get secrets only.
 - Then update this skill's host list.
 

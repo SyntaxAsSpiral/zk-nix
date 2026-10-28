@@ -10,11 +10,10 @@
     ../../shared/home/daemon-profile.nix
     ../../shared/home/nushell.nix
     ../../shared/home/xdg.nix
-    ../../shared/home/shell/fastfetch/default.nix
+    ../../shared/home/fastfetch/default.nix
     ../../shared/home/fun.nix
-    ../../shared/home/shell/gh.nix
-    ../../shared/home/shell/lazygit.nix
-    ../../shared/home/shell/zcli.nix
+    ../../shared/home/gh.nix
+    ../../shared/home/zcli.nix
     ../../shared/home/editors/nano.nix
     ../../shared/home/editors/zed.nix
     ../../shared/home/pi/default.nix

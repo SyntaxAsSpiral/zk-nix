@@ -109,6 +109,7 @@ in
     esofetch
     pkgs.git
     pkgs.gh
+    pkgs.lazygit
     pkgs.eza
     pkgs.bat
     pkgs.fzf
