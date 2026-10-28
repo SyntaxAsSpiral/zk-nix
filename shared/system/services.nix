@@ -21,10 +21,6 @@ in
   security.rtkit.enable = true;
 
   services = {
-    openssh = {
-      enable = true;
-      extraConfig = "AcceptEnv TERM_PROGRAM";
-    };
     pulseaudio.enable = false;
     pipewire = {
       enable = true;

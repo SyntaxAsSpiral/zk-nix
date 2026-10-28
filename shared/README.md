@@ -1,6 +1,6 @@
 # Shared
 
-`shared/` holds leaf modules used by more than one host. It does not hold profiles. The import list for a machine is `hosts/<host>/configuration.nix` and `hosts/<host>/home.nix`.
+`shared/` holds leaf modules used by more than one host. It holds one shared base, `system/core.nix`, and otherwise no profiles. The import list for a machine is `hosts/<host>/configuration.nix` and `hosts/<host>/home.nix`, which start from `core.nix` and add their own.
 
 Start here when asking:
 

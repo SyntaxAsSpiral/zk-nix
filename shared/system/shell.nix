@@ -105,6 +105,11 @@ in
     pkgs.yazi
     pkgs.fastfetch
     pkgs.mods
+    pkgs.tmux
+    pkgs.ripgrep
+    pkgs.fd
+    pkgs.jq
+    pkgs.file
   ];
 
   # mods reads only ~/.config/mods/mods.yml and writes it when absent. L+ replaces

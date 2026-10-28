@@ -1,16 +1,10 @@
-# User and shell configuration
-{ config, pkgs, ... }:
+# The workstation login: the extras on top of core.nix.
+{ pkgs, ... }:
 
 {
   users.users.zk = {
-    isNormalUser = true;
-    uid = 1000;
-    description = "zk@${config.my.host}";
-    shell = pkgs.bash;
     linger = true;
     extraGroups = [
-      "networkmanager"
-      "wheel"
       "audio"
       "video"
       "input"
@@ -21,28 +15,7 @@
   };
 
   users.defaultUserShell = pkgs.bash;
-  security.sudo.wheelNeedsPassword = false;
 
   # Keep zsh available for tools/apps that probe it.
   programs.zsh.enable = true;
-
-  # Default shell behavior:
-  # - SSH interactive sessions: hand off to Nushell (mesh shell)
-  # - Local TTY1 autologin: enter Nushell login flow (per-host compositor logic lives there)
-  programs.bash = {
-    enable = true;
-    interactiveShellInit = ''
-      if [[ $- == *i* && -t 0 ]]; then
-        if [[ -n "$SSH_CONNECTION" && -z "$NUSHELL_VERSION" ]]; then
-          exec ${pkgs.nushell}/bin/nu --login
-        fi
-
-        if [[ "$(tty)" == "/dev/tty1" ]]; then
-          exec ${pkgs.nushell}/bin/nu --login
-        fi
-      fi
-    '';
-  };
-
-  services.getty.autologinUser = "zk";
 }

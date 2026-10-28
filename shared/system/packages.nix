@@ -24,7 +24,6 @@ in
   environment.systemPackages = with pkgs; [
     # Core POSIX
     coreutils
-    file
     findutils
     gawk
     gnugrep
@@ -34,7 +33,6 @@ in
 
     # Shells
     bash
-    nushell
     zsh
 
     # Archives
@@ -66,12 +64,7 @@ in
     ffmpeg
 
     # File/text tools
-    bat
     chafa
-    eza
-    fd
-    jq
-    ripgrep
     tree
     yq
     ncdu
@@ -79,7 +72,6 @@ in
     # System monitors
     duf
     dust
-    fastfetch
     lm_sensors
     nvtopPackages.full
     procs
@@ -91,7 +83,6 @@ in
     # Dev tools
     direnv
     just
-    tmux
 
     # Browser automation
     playwright-driver.browsers

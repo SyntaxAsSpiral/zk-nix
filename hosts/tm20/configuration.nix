@@ -9,12 +9,7 @@
 {
   imports = [
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
-    ../../shared/system/system.nix
-    ../../shared/system/networking.nix
-    ../../shared/system/ssh-identity.nix
-    ../../shared/system/secrets.nix
-    ../../shared/system/nh.nix
-    ../../shared/system/shell.nix
+    ../../shared/system/core.nix
     ./print-receiver.nix
   ];
 
@@ -40,12 +35,7 @@
 
   users.groups.plugdev = { };
   users.users.zk = {
-    isNormalUser = true;
-    uid = 1000;
-    description = "zk@tm20";
     extraGroups = [
-      "wheel"
-      "networkmanager"
       "plugdev"
       "dialout"
     ];
@@ -54,27 +44,8 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfoVdWpimtBi0htouhMDsD1NXuKbIAusgzB1dxYDW4z"
     ];
   };
-  security.sudo.wheelNeedsPassword = false;
-
-  # Same handoff as the mesh: bash stays the login shell, interactive SSH and tty1 enter Nushell.
-  programs.bash = {
-    enable = true;
-    interactiveShellInit = ''
-      if [[ $- == *i* && -t 0 ]]; then
-        if [[ -n "$SSH_CONNECTION" && -z "$NUSHELL_VERSION" ]]; then
-          exec ${pkgs.nushell}/bin/nu --login
-        fi
-        if [[ "$(tty)" == "/dev/tty1" ]]; then
-          exec ${pkgs.nushell}/bin/nu --login
-        fi
-      fi
-    '';
-  };
 
   services = {
-    getty.autologinUser = "zk";
-    openssh.enable = true;
-
     udev.extraRules = ''
       # Epson TM-T20III (04b8:0e28) — raw USB for tm20/nusb, not CUPS.
       SUBSYSTEM=="usb", ATTR{idVendor}=="04b8", ATTR{idProduct}=="0e28", MODE="0660", GROUP="plugdev", TAG+="uaccess"
@@ -91,9 +62,6 @@
 
   environment.systemPackages = with pkgs; [
     coreutils
-    git
-    tmux
-    ripgrep
     curl
     usbutils
     libusb1

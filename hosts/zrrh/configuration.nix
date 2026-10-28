@@ -19,18 +19,13 @@ in
   imports = [
     ./hardware-configuration.nix
 
-    ../../shared/system/system.nix
+    ../../shared/system/core.nix
     ../../shared/system/boot.nix
-    ../../shared/system/nh.nix
     ../../shared/system/user.nix
-    ../../shared/system/secrets.nix
     ../../shared/system/services.nix
     ../../shared/system/storage.nix
     ../../shared/system/packages.nix
-    ../../shared/system/networking.nix
     ../../shared/system/fonts.nix
-    ../../shared/system/ssh-identity.nix
-    ../../shared/system/shell.nix
 
     ../../shared/system/nvidia.nix
     ../../shared/system/steam.nix

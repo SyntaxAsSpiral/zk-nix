@@ -27,17 +27,19 @@ Pins and holds are in `overlays/README.md`. Read those before restructuring.
 - `extraModules` for host-only flake inputs (adeck passes `jovian`).
 
 Each `configuration.nix` and `home.nix` is the profile: it lists the shared modules that
-machine imports. There is no shared profile.
+machine imports. There is one shared base, `shared/system/core.nix`: every host imports it for
+`system`, `nh`, `secrets`, `networking`, `ssh-identity`, `shell`, the `zk` user, passwordless sudo,
+openssh, tty1 autologin, and the SSH-to-nushell handoff. There are no other shared profiles.
 
 | Host | System | Home-Manager |
 |---|---|---|
 | nxiz | shared nixos leaves, including nvidia, steam, performance; `./greetd.nix` | shared home leaves, including firefox and gtk; `./desk-env/` |
 | zrrh | same workstation leaves; `./openrgb` and pia | shared home leaves; `./desk-env/` |
 | adeck | shared nixos leaves, no nvidia or steam; llama-tts, pulse, qbittorrent. `jovian` via `extraModules` | shared home leaves; firefox package in `home.nix`, no gtk module; `./desk-env/` |
-| tm20 | `system`, `networking`, `ssh-identity`, `secrets`, `nh`, `shell`, `./print-receiver.nix`. aarch64 | nushell, named in `home.nix` |
-| seed | `system`, `boot`, `nh`, `secrets`, `networking`, `ssh-identity`, `shell`. Empty overlays. Console only | nushell, fastfetch, gh, and zcli, named in `home.nix` |
+| tm20 | `core`, `./print-receiver.nix`. aarch64 | nushell, named in `home.nix` |
+| seed | `core`, `boot`. Empty overlays. Console only | nushell, fastfetch, gh, and zcli, named in `home.nix` |
 
-seed is the core a new host is copied from. It skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.
+seed is `core` plus the stick, and a new host starts from it. It skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.
 Seed is console only, with no display server. It defines its own `zk` user in the host file.
 
 ## perHost: where host differences go
