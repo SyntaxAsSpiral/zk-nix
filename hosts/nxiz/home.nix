@@ -7,22 +7,39 @@
 
 {
   imports = [
-    ../../modules/home/profiles/base.nix
-    ../../modules/home/profiles/desktop.nix
+    ../../shared/home/daemon-profile.nix
+    ../../shared/home/nushell.nix
+    ../../shared/home/xdg.nix
+    ../../shared/home/shell/fastfetch/default.nix
+    ../../shared/home/fun.nix
+    ../../shared/home/shell/gh.nix
+    ../../shared/home/shell/lazygit.nix
+    ../../shared/home/shell/zcli.nix
+    ../../shared/home/editors/nano.nix
+    ../../shared/home/editors/zed.nix
+    ../../shared/home/pi/default.nix
 
-    # nxiz-specific
-    ../../modules/home/shell/fastfetch/eso-fetch.nix
-    ../../modules/home/editors/obsidian.nix
-    ../../modules/home/fsel.nix
-    ../../modules/home/otter-launcher/otter-launcher.nix
-    ../../modules/home/hyprland/hyprland.nix
-    ../../modules/home/awww.nix
-    ../../modules/home/daemonturgy/mods/mods.nix
-    ../../modules/home/daemonturgy/lmstudio/nxiz/default.nix
-    ../../modules/home/msgvault.nix
-    ../../modules/home/python.nix
-    ../../modules/home/terminal/kitty.nix
+    ../../shared/home/catppuccin.nix
+    ../../shared/home/browser/firefox.nix
+    ../../shared/home/icons.nix
+    ../../shared/home/spotify.nix
+    ../../shared/home/thunar.nix
+    ../../shared/home/fzf-emoji.nix
+
+    ../../shared/home/fsel.nix
+    ../../shared/home/msgvault.nix
+    ../../shared/home/python.nix
+
+    ./desk-env/obsidian.nix
+    ./desk-env/otter-launcher.nix
+    ./desk-env/hyprland/hyprland.nix
+    ./desk-env/awww.nix
+    ./desk-env/mods/mods.nix
+    ./desk-env/lmstudio/default.nix
+    ./desk-env/kitty.nix
   ];
+
+  programs.home-manager.enable = true;
 
   # Vault archiver on both vault hosts (headless-by-design; see adeck)
   programs.msgvault.enable = true;
@@ -42,6 +59,8 @@
   };
 
   home = {
+    username = "zk";
+    homeDirectory = "/home/zk";
     stateVersion = "25.11";
 
     # User packages
@@ -72,15 +91,6 @@
       nixd
       nil
       nixfmt
-
-      (writeShellApplication {
-        name = "pi";
-        runtimeInputs = [ nodejs ];
-        text = ''
-          set -euo pipefail
-          exec npx --yes @earendil-works/pi-coding-agent "$@"
-        '';
-      })
     ];
 
     activation.ensureLocalBin = config.lib.dag.entryAfter [ "writeBoundary" ] ''

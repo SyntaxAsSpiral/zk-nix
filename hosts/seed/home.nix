@@ -2,19 +2,11 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../modules/home/nushell.nix
-    ../../modules/home/shell/bat.nix
-    ../../modules/home/shell/btop.nix
-    ../../modules/home/shell/eza.nix
-    ../../modules/home/shell/fastfetch/default.nix
-    ../../modules/home/shell/fun.nix
-    ../../modules/home/shell/fzf.nix
-    ../../modules/home/shell/gh.nix
-    ../../modules/home/shell/git.nix
-    ../../modules/home/shell/lazygit.nix
-    ../../modules/home/shell/yazi/default.nix
-    ../../modules/home/shell/zcli.nix
-    ../../modules/home/daemonturgy/pi/default.nix
+    ../../shared/home/nushell.nix
+    ../../shared/home/shell/fastfetch/default.nix
+    ../../shared/home/shell/gh.nix
+    ../../shared/home/shell/lazygit.nix
+    ../../shared/home/shell/zcli.nix
   ];
 
   home = {

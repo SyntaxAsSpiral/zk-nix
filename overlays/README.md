@@ -27,12 +27,11 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 | astal-cava input map | `nixpkgs-fixes.nix`, `patches/astal-cava-input-map.patch` | nxiz, zrrh (the HyprPanel overlay) | astal `fd94e333` casts `AstalCavaInput` onto libcava 1.0.0. Pipewire is 2 in Astal and coreaudio is 2 in libcava, so startup calls `strlen` on a null source and the panel dumps core. | nixpkgs astal maps the input through `astal_input_to_cava` (upstream `main` already does). |
 | pywal16 split wrapper args | `nixpkgs-fixes.nix` | nxiz, zrrh (HyprPanel dep) | nixpkgs passes `"--prefix PATH : …"` as one `makeWrapperArgs` string. Since structuredAttrs (nixpkgs 2026-10-20), makeWrapper gets it unsplit and dies. Master is still unfixed on 2026-10-23. | nixpkgs pywal16 lists the wrapper args separately. |
 | tumbler without libgepub | `nixpkgs-fixes.nix` | nxiz, zrrh | The EPUB thumbnailer pulls webkitgtk. | EPUB thumbnails are worth that build. |
-| LM Studio `/etc/nixos` bind | `nixpkgs-fixes.nix` | nxiz, zrrh | Upstream bwrap skips `/etc`, so `~/.lmstudio` symlinks into the flake fail. The old rpath patchelf workaround came off after nixpkgs#511533. | The upstream wrapper binds `/etc`, or those symlinks leave `/etc/nixos`. |
 | fsel desktop-entry cache | `flake-packages.nix`, `patches/fsel-disable-desktop-entry-cache.patch` | adeck, nxiz | The cache hides newly installed desktop files. | Upstream fsel stops serving a stale file list. |
 | sonic-pi `doCheck = false` | `hosts/nxiz/home.nix` | nxiz | Uses root nixpkgs. Ruby 3.3 and Boost 1.86 are upstream since nixpkgs#514802. The checkPhase still starts `jackd`, which the sandbox cannot do. | The upstream check stops requiring a live JACK server. |
-| Codex from `llm-agents.packages` | `hosts/adeck/configuration.nix`, `hosts/zrrh/configuration.nix` | adeck, zrrh | The Rust workspace is too expensive to rebuild on every nixpkgs bump. This takes the build numtide published for llm-agents' own nixpkgs. pi, gemini-cli, crush, grok, and grok-bot stay on `shared-nixpkgs`. | Codex leaves the system packages, or a nixpkgs bump is worth compiling it again. |
-| herdr from `llm-agents.packages` | `hosts/adeck/configuration.nix` | adeck | Rust plus Zig (`libghostty-vt`). Same cache as Codex: numtide's nixpkgs build, not `shared-nixpkgs`. | herdr leaves adeck, or a nixpkgs bump is worth compiling it again. |
-| beads from `llm-agents.packages` | `hosts/adeck/configuration.nix` | adeck | Go source (`bd` 1.3.1). Same cache as Codex. | beads leaves adeck, or a nixpkgs bump is worth compiling it again. |
+| Codex from `llm-agents.packages` | `hosts/adeck/configuration.nix`, `hosts/nxiz/configuration.nix`, `hosts/zrrh/configuration.nix` | adeck, nxiz, zrrh | The Rust workspace is too expensive to rebuild on every nixpkgs bump. This takes the build numtide published for llm-agents' own nixpkgs. gemini-cli and crush stay on `shared-nixpkgs`. | Codex leaves those hosts, or a nixpkgs bump is worth compiling it again. |
+| herdr from `llm-agents.packages` | `hosts/adeck/configuration.nix`, `hosts/nxiz/configuration.nix`, `hosts/zrrh/configuration.nix` | adeck, nxiz, zrrh | Rust plus Zig (`libghostty-vt`). Same cache as Codex: numtide's nixpkgs build, not `shared-nixpkgs`. | herdr leaves those hosts, or a nixpkgs bump is worth compiling it again. |
+| beads from `llm-agents.packages` | `hosts/adeck/configuration.nix`, `hosts/nxiz/configuration.nix`, `hosts/zrrh/configuration.nix` | adeck, nxiz, zrrh | Go source (`bd` 1.3.1). Same cache as Codex. | beads leaves those hosts, or a nixpkgs bump is worth compiling it again. |
 | OpenRGB 1.0rc3.1 | `nixpkgs-openrgb` `34ab99075` (2026-08-31), `overlays/default.nix` | zrrh | 1.0 renamed `Aura Addressable 1` and will not keep Hypnotoad's custom colors or the pump/fan segments. | 1.0 loads those segments and saves the effect's custom colors. |
 | noctalia-shell 4.7.7 | `nixpkgs-openrgb` `34ab99075` (2026-08-31), `overlays/default.nix` | zrrh | On Qt 6.12, noctalia-qs 0.0.12 (archived fork of quickshell) fails `TypeIsCompleteOrVoid` on its pipewire metatypes. Hydra has no build at nixpkgs 2026-10-20. That rev has one in cache.nixos.org. | nixpkgs noctalia-qs builds on current Qt, or OpenRGB moves its rev (then repin or drop). |
 
@@ -40,14 +39,14 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 
 | Hold | Where | Why |
 | --- | --- | --- |
-| numtide substituter priority 100 | `modules/system.nix` | numtide advertises priority 30, which would beat cache.nixos.org. CUDA substitutes come from `cache.nixos-cuda.org` after the cuda-maintainers Cachix started returning 401. |
-| `NIX_CURL_FLAGS=--user-agent Nixpkgs` | `modules/system.nix` | crates.io/Fastly returns 403 for User-Agents that start with `curl/`. |
-| llama-tts `b11077` Vulkan binary | `modules/llama-tts.nix` on adeck | Prebuilt tarball. adeck does not compile llama.cpp. |
+| numtide substituter priority 100 | `shared/nixos/system.nix` | numtide advertises priority 30, which would beat cache.nixos.org. CUDA substitutes come from `cache.nixos-cuda.org` after the cuda-maintainers Cachix started returning 401. |
+| `NIX_CURL_FLAGS=--user-agent Nixpkgs` | `shared/nixos/system.nix` | crates.io/Fastly returns 403 for User-Agents that start with `curl/`. |
+| llama-tts `b11077` Vulkan binary | `hosts/adeck/llama-tts.nix` | Prebuilt tarball. adeck does not compile llama.cpp. |
 
 ## Host map
 
 - `adeck`: llm-agents, cached Codex, cached herdr, cached beads, fsel, llama-tts binary.
-- `nxiz`: CachyOS kernel, Hyprland pin, llm-agents, HyprPanel, tumbler, LM Studio, fsel, sonic-pi checks disabled.
-- `zrrh`: CachyOS kernel, llm-agents, cached Codex, HyprPanel overlay, tumbler, LM Studio, `nixpkgs-llm`, OpenRGB 1.0rc3.1, noctalia-shell from the OpenRGB rev.
-- `tm20`: tm20-cli, llm-agents (pi). `tm20-source` is a branch input and moves on `nix flake update`.
+- `nxiz`: CachyOS kernel, Hyprland pin, llm-agents, cached Codex, cached herdr, cached beads, HyprPanel, tumbler, LM Studio, fsel, sonic-pi checks disabled.
+- `zrrh`: CachyOS kernel, llm-agents, cached Codex, cached herdr, cached beads, HyprPanel overlay, tumbler, LM Studio, `nixpkgs-llm`, OpenRGB 1.0rc3.1, noctalia-shell from the OpenRGB rev.
+- `tm20`: tm20-cli. `tm20-source` is a branch input and moves on `nix flake update`.
 - `seed`: no overlays. Stock nixpkgs kernel and packages, all from cache.nixos.org.

@@ -9,10 +9,23 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/profiles/core.nix
-    ../../modules/llama-tts.nix
-    ../../modules/pulse-generator.nix
-    ../../modules/qbittorrent.nix
+
+    ../../shared/nixos/system.nix
+    ../../shared/nixos/boot.nix
+    ../../shared/nixos/nh.nix
+    ../../shared/nixos/user.nix
+    ../../shared/nixos/secrets.nix
+    ../../shared/nixos/services.nix
+    ../../shared/nixos/storage.nix
+    ../../shared/nixos/packages.nix
+    ../../shared/nixos/networking.nix
+    ../../shared/nixos/fonts.nix
+    ../../shared/nixos/ssh-identity.nix
+    ../../shared/nixos/shell.nix
+
+    ./llama-tts.nix
+    ./pulse-generator.nix
+    ./qbittorrent.nix
   ];
 
   my.host = "adeck";

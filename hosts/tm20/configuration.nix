@@ -9,11 +9,12 @@
 {
   imports = [
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
-    ../../modules/system.nix
-    ../../modules/networking.nix
-    ../../modules/ssh-identity.nix
-    ../../modules/secrets.nix
-    ../../modules/nh.nix
+    ../../shared/nixos/system.nix
+    ../../shared/nixos/networking.nix
+    ../../shared/nixos/ssh-identity.nix
+    ../../shared/nixos/secrets.nix
+    ../../shared/nixos/nh.nix
+    ../../shared/nixos/shell.nix
     ./print-receiver.nix
   ];
 
@@ -55,6 +56,21 @@
   };
   security.sudo.wheelNeedsPassword = false;
 
+  # Same handoff as the mesh: bash stays the login shell, interactive SSH and tty1 enter Nushell.
+  programs.bash = {
+    enable = true;
+    interactiveShellInit = ''
+      if [[ $- == *i* && -t 0 ]]; then
+        if [[ -n "$SSH_CONNECTION" && -z "$NUSHELL_VERSION" ]]; then
+          exec ${pkgs.nushell}/bin/nu --login
+        fi
+        if [[ "$(tty)" == "/dev/tty1" ]]; then
+          exec ${pkgs.nushell}/bin/nu --login
+        fi
+      fi
+    '';
+  };
+
   services = {
     getty.autologinUser = "zk";
     openssh.enable = true;
@@ -83,15 +99,6 @@
     libusb1
     liberation_ttf
     tm20-cli
-    llm-agents.pi
-  ];
-
-  environment.etc."pi/agent/models.json".source = ../../modules/home/daemonturgy/pi/models.json;
-
-  systemd.tmpfiles.rules = [
-    "d /home/zk/.pi 0755 zk users -"
-    "d /home/zk/.pi/agent 0755 zk users -"
-    "L+ /home/zk/.pi/agent/models.json - zk users - /etc/pi/agent/models.json"
   ];
 
   system.stateVersion = "25.11";

@@ -3,36 +3,37 @@
 
 {
   imports = [
-    ../../modules/home/profiles/base.nix
+    ../../shared/home/daemon-profile.nix
+    ../../shared/home/nushell.nix
+    ../../shared/home/xdg.nix
+    ../../shared/home/shell/fastfetch/default.nix
+    ../../shared/home/fun.nix
+    ../../shared/home/shell/gh.nix
+    ../../shared/home/shell/lazygit.nix
+    ../../shared/home/shell/zcli.nix
+    ../../shared/home/editors/nano.nix
+    ../../shared/home/editors/zed.nix
+    ../../shared/home/pi/default.nix
 
-    # adeck-specific
-    # bb-server (Bitburner WS sync + MCP); off while not playing
-    # ../../modules/home/bb-server.nix
+    ../../shared/home/python.nix
+    ../../shared/home/msgvault.nix
+    ../../shared/home/fsel.nix
 
-    # Dev
-    ../../modules/home/python.nix
-
-    # LM Studio (relay)
-    ../../modules/home/daemonturgy/lmstudio/adeck/default.nix
-
-    # Festin kitchen (adeck only)
-    ../../modules/home/festin.nix
-
-    # Esotericons fetch (same module as nxiz)
-    ../../modules/home/shell/fastfetch/eso-fetch.nix
-
-    # System
-    ../../modules/home/msgvault.nix
-    ../../modules/home/shell/jolt.nix
-    ../../modules/home/fsel.nix
-    ../../modules/home/otter-launcher/adeck
-    ../../modules/home/awww-cycle.nix
-    ../../modules/home/niri/adeck.nix
-    ../../modules/home/waybar/adeck.nix
-    ../../modules/home/terminal/alacritty.nix
+    ./desk-env/lmstudio/default.nix
+    ./desk-env/festin.nix
+    ./desk-env/jolt.nix
+    ./desk-env/otter
+    ./desk-env/awww-cycle.nix
+    ./desk-env/niri.nix
+    ./desk-env/waybar.nix
+    ./desk-env/alacritty.nix
   ];
 
+  programs.home-manager.enable = true;
+
   home = {
+    username = "zk";
+    homeDirectory = "/home/zk";
     stateVersion = "24.11";
 
     packages = with pkgs; [

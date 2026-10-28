@@ -2,36 +2,24 @@
 
 Host files are the table of contents for each machine.
 
-`tm20` is the Pi 3B+ print-host appliance: it does **not** import `profiles/core.nix` or Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
+`tm20` is the Pi 3B+ print-host appliance: its `configuration.nix` names a short list of shared system modules, and it has no Home-Manager. First boot is an sdImage (`zcli image tm20`), not a systemd-boot desktop install.
 
-`seed` is the portable x86_64 UEFI rescue stick. It does **not** import `profiles/core.nix` or `modules/home/profiles/base.nix`: it picks only the system modules it needs, defines its own `zk` user, and gets a slim Home-Manager (nushell plus the shared CLI set). XFCE, LightDM, and autologin live in `hosts/seed/configuration.nix` only. It is not a `zcli` host (no address in `zcli`'s host table), so build and install it by hand. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
+`seed` is the portable x86_64 UEFI rescue stick. Its `configuration.nix` and `home.nix` name the shared modules it wants and skip the rest (no `packages.nix`, no NVIDIA, no Zed). XFCE, LightDM, and autologin live in `hosts/seed/configuration.nix` only. It is not a `zcli` host (no address in `zcli`'s host table), so build and install it by hand. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
 
-## Promoting mutable host config
+## Host-local app config
 
-Some nxiz and zrrh app configs link into their `/etc/nixos` checkouts so GUI
-changes take effect without a rebuild. Adeck's `/mnt/echo/nix-os` remains the
-canonical copy. `zcli sync` sends adeck's committed and staged files to a host;
-it does not bring host edits back, and it replaces edits to managed files.
+nxiz and zrrh GUI configs used to be symlinks into `/etc/nixos`. `zcli sync` is
+one-way from adeck, so a GUI write through that link was replaced on the next
+sync. The first switch after this change copies each of those links out to a
+real file, and later switches leave the file alone:
 
-For a deliberate config change on nxiz or zrrh:
+- nxiz: HyprPanel, mods, LM Studio settings, presets, and http server config
+- zrrh: Noctalia, Niri, OpenRGB, LM Studio settings, presets, and http server config
 
-1. From adeck, run `zcli sync <host> --dry`. Review every `replaced:` path and
-   promote any host edit worth keeping through steps 3-5 before the real sync.
-   Then preview again.
-2. Run `zcli sync <host>` from adeck.
-3. Make the app change on the host. In `/etc/nixos`, inspect the diff and commit
-   only the selected config paths. Use `git commit --only -- <paths>` so staged
-   files received from adeck are not included by accident.
-4. Push the host commit to the existing `trunk` branch on GitHub. If the push is
-   rejected because `trunk` advanced, reconcile the histories before retrying;
-   do not force-push. Check selected files for credentials before publishing.
-5. Pull the commit into adeck's canonical checkout before the next sync. Review
-   that commit there, then sync hosts as needed.
-
-Host-specific files usually avoid content conflicts, but separate commits can
-still diverge in Git history. Automatic app rewrites are optional changes: review
-them before committing rather than pushing every local difference. Saving these
-config edits does not require a NixOS rebuild.
+The copies in this repo are the snapshot that copy uses. After the switch they
+are not the live files. adeck LM Studio stays declarative (`force = true`); that
+host has no UI for those settings. Pi `models.json` stays declarative. `gh`
+stays declarative.
 
 ## Credentials and Reinstalls
 
@@ -73,7 +61,7 @@ Do not use `--delete`: unrelated host-local files need not be removed.
 | `nix-access-tokens.conf` | Hosts fetching private Nix inputs; tm20 provisions an empty file |
 
 The decrypted files retain their original contents, including environment-file
-syntax where applicable. `modules/secrets.nix` copies required credentials into
+syntax where applicable. `shared/nixos/secrets.nix` copies required credentials into
 `/run/secrets` during activation with mode `0400`, owned by `zk`. The print token
 uses group `plugdev`; other credentials use `users`. Missing or empty source
 files fail that activation step before it replaces any runtime credentials.
@@ -120,8 +108,9 @@ Put config in `hosts/<host>/home.nix` when it is user-level and host-only:
 
 ## What Belongs Elsewhere
 
-- Shared system behavior belongs in `modules/`.
-- Shared user behavior belongs in `modules/home/`.
+- Shared system behavior belongs in `shared/nixos/`.
+- Shared user behavior belongs in `shared/home/`.
+- A module with one importer belongs in that host's directory, under `desk-env/` when it is Home Manager.
 - Package pins and overrides belong in `overlays/`. The registry, including when each hold can come off, is `overlays/README.md`.
 - Host divergence inside a shared module should usually be a visible `perHost` map keyed by `config.my.host`.
 

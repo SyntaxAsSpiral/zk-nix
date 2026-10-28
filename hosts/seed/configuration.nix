@@ -1,19 +1,20 @@
 # NixOS configuration for seed — portable x86_64 UEFI rescue stick.
 # Boot the target, join GBZ Wi-Fi and Tailscale, SSH in, partition and install.
-# Does not import profiles/core.nix: that profile is the workstation set
-# (Playwright, the NVIDIA/Steam desktop) and blew the stick out to 8.5 GiB.
+# Names its own shared modules. packages.nix and the NVIDIA/Steam desktop
+# blew the stick out to 8.5 GiB, so they are not in this list.
 # XFCE is local to this file: LightDM on tty7, tty1 stays a rescue console.
 { pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/system.nix
-    ../../modules/boot.nix
-    ../../modules/nh.nix
-    ../../modules/secrets.nix
-    ../../modules/networking.nix
-    ../../modules/ssh-identity.nix
+    ../../shared/nixos/system.nix
+    ../../shared/nixos/boot.nix
+    ../../shared/nixos/nh.nix
+    ../../shared/nixos/secrets.nix
+    ../../shared/nixos/networking.nix
+    ../../shared/nixos/ssh-identity.nix
+    ../../shared/nixos/shell.nix
   ];
 
   my.host = "seed";
@@ -88,7 +89,7 @@
   # Same handoff as the mesh: bash stays the login shell, interactive SSH and tty1 enter Nushell.
   programs.bash.interactiveShellInit = ''
     if [[ $- == *i* && -t 0 ]]; then
-      if [[ -n "$SSH_CONNECTION" && -z "$NUSHELL_VERSION" && -z "$VSCODE_RESOLVING_ENVIRONMENT" ]]; then
+      if [[ -n "$SSH_CONNECTION" && -z "$NUSHELL_VERSION" ]]; then
         exec ${pkgs.nushell}/bin/nu --login
       fi
       if [[ "$(tty)" == "/dev/tty1" ]]; then

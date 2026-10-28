@@ -55,7 +55,6 @@ in
     ++ nixpkgsFixes;
 
     tm20 = [
-      fromInputs.llmAgents
       (import ./tm20-cli.nix { inherit inputs; })
     ];
 

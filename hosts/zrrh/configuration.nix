@@ -18,13 +18,43 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/profiles/core.nix
-    ../../modules/profiles/desktop.nix
-    ../../modules/openrgb
+
+    ../../shared/nixos/system.nix
+    ../../shared/nixos/boot.nix
+    ../../shared/nixos/nh.nix
+    ../../shared/nixos/user.nix
+    ../../shared/nixos/secrets.nix
+    ../../shared/nixos/services.nix
+    ../../shared/nixos/storage.nix
+    ../../shared/nixos/packages.nix
+    ../../shared/nixos/networking.nix
+    ../../shared/nixos/fonts.nix
+    ../../shared/nixos/ssh-identity.nix
+    ../../shared/nixos/shell.nix
+
+    ../../shared/nixos/nvidia.nix
+    ../../shared/nixos/steam.nix
+    ../../shared/nixos/performance.nix
+
+    ./openrgb
     inputs.pia.nixosModules.default
   ];
 
   my.host = "zrrh";
+  my.performance.enable = true;
+
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs; [
+      thunar-volman
+      thunar-archive-plugin
+    ];
+  };
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
 
   boot = {
     # qemu-user so this builder can realize aarch64 closures (tm20 / Pi 3B+).
@@ -98,8 +128,9 @@ in
     xwayland-satellite
     pkgsLlm.llama-cpp
     llm-agents.pi
-    # Numtide's cached build. shared-nixpkgs recompiles this on every nixpkgs bump.
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.beads
     llm-agents.gemini-cli
     llm-agents.crush
     llm-agents.grok

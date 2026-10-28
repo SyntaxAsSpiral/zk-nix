@@ -11,7 +11,7 @@ result
 result-sd-*
 *.qcow2
 __pycache__/
-/modules/openrgb/config/logs/
+/hosts/zrrh/openrgb/config/logs/
 
 # Local credentials are synced separately over SSH.
 /secrets/

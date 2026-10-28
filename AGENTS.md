@@ -1,6 +1,6 @@
 # AGENTS.md
 
-NixOS flake for the `zk` Tailscale mesh. Shared modules live in `modules/`, per-host config in `hosts/<host>/`, and Home-Manager is wired into every host in `flake.nix` except tm20.
+NixOS flake for the `zk` Tailscale mesh. Shared leaf modules live in `shared/`. Each host file is that machine's profile. Host-only modules live in `hosts/<host>/`, with the graphical ones under `desk-env/`. Home-Manager is wired into every host in `flake.nix` except tm20.
 
 ## Hosts
 
@@ -26,4 +26,4 @@ Load before working in the area: `zcli` (build, deploy, sync, image), `nixos-fle
 - `nix flake check` runs statix and deadnix and fails on any finding. Fix the source rather than suppressing.
 - `docs/` is edit-on-request only. Do not create it without an explicit ask.
 
-Ownership rules are in `modules/README.md`, host files in `hosts/README.md`, pins in `overlays/README.md`. `scripts/zcli/` is the source for `zcli`; its ConSensus commands (`zcli assemble`, `zcli sync context`, `zcli deploy context`) run `zcli-context.sh`.
+Ownership rules are in `shared/README.md`, host files in `hosts/README.md`, pins in `overlays/README.md`. `scripts/zcli/` is the source for `zcli`; its ConSensus commands (`zcli assemble`, `zcli sync context`, `zcli deploy context`) run `zcli-context.sh`.

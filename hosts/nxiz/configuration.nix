@@ -10,15 +10,44 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/profiles/core.nix
-    ../../modules/profiles/desktop.nix
+
+    ../../shared/nixos/system.nix
+    ../../shared/nixos/boot.nix
+    ../../shared/nixos/nh.nix
+    ../../shared/nixos/user.nix
+    ../../shared/nixos/secrets.nix
+    ../../shared/nixos/services.nix
+    ../../shared/nixos/storage.nix
+    ../../shared/nixos/packages.nix
+    ../../shared/nixos/networking.nix
+    ../../shared/nixos/fonts.nix
+    ../../shared/nixos/ssh-identity.nix
+    ../../shared/nixos/shell.nix
+
+    ../../shared/nixos/nvidia.nix
+    ../../shared/nixos/steam.nix
+    ../../shared/nixos/performance.nix
 
     # Login manager playground (inert by default).
     # Activate explicitly: my.login.greetd.enable = true;
-    ../../modules/greetd.nix
+    ./greetd.nix
   ];
 
   my.host = "nxiz";
+  my.performance.enable = true;
+
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs; [
+      thunar-volman
+      thunar-archive-plugin
+    ];
+  };
+
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
 
   # Super I/O fan/RPM sensors (case fans on motherboard headers);
   # harmless no-op if the board's chip isn't Nuvoton
@@ -56,9 +85,15 @@
   };
 
   environment.systemPackages = [
+    pkgs.llm-agents.grok
     pkgs.llm-agents.grok-bot
-    # Numtide's cached build; shared-nixpkgs would recompile it on every bump.
+    pkgs.llm-agents.pi
+    pkgs.llm-agents.gemini-cli
+    pkgs.llm-agents.crush
+    # Numtide's cached builds; shared-nixpkgs would recompile these on every bump.
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex
     inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr
+    inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.beads
   ];
 
   system.stateVersion = "25.11";

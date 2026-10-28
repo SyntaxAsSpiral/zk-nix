@@ -2,25 +2,43 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 
 {
   imports = [
-    ../../modules/home/profiles/base.nix
-    ../../modules/home/profiles/desktop.nix
+    ../../shared/home/daemon-profile.nix
+    ../../shared/home/nushell.nix
+    ../../shared/home/xdg.nix
+    ../../shared/home/shell/fastfetch/default.nix
+    ../../shared/home/fun.nix
+    ../../shared/home/shell/gh.nix
+    ../../shared/home/shell/lazygit.nix
+    ../../shared/home/shell/zcli.nix
+    ../../shared/home/editors/nano.nix
+    ../../shared/home/editors/zed.nix
+    ../../shared/home/pi/default.nix
 
-    # zrrh-specific
-    ../../modules/home/daemonturgy/lmstudio/zrrh/default.nix
-    ../../modules/home/otter-launcher/zrrh/default.nix
-    ../../modules/home/niri/zrrh.nix
-    ../../modules/home/terminal/ghostty.nix
-    ../../modules/home/noctalia/zrrh/default.nix
-    ../../modules/home/openrgb.nix
+    ../../shared/home/catppuccin.nix
+    ../../shared/home/browser/firefox.nix
+    ../../shared/home/icons.nix
+    ../../shared/home/spotify.nix
+    ../../shared/home/thunar.nix
+    ../../shared/home/fzf-emoji.nix
+
+    ./desk-env/lmstudio/default.nix
+    ./desk-env/otter/default.nix
+    ./desk-env/niri.nix
+    ./desk-env/ghostty.nix
+    ./desk-env/noctalia/default.nix
+    ./desk-env/openrgb.nix
   ];
 
+  programs.home-manager.enable = true;
+
   home = {
+    username = "zk";
+    homeDirectory = "/home/zk";
     stateVersion = "25.11";
 
     packages = with pkgs; [
@@ -34,7 +52,7 @@
 
     file = {
       ".face".source = ../../assets/zrrh-face.png;
-      ".config/ghostty/cursor-blaze.glsl".source = ../../modules/home/terminal/cursor-blaze.glsl;
+      ".config/ghostty/cursor-blaze.glsl".source = ./desk-env/cursor-blaze.glsl;
     };
   };
 
@@ -45,15 +63,8 @@
       enableNushellIntegration = true;
     };
 
-    nushell.shellAliases = {
-      deck-torrents-sync = "ssh zk@adeck '/etc/nixos/scripts/qbt-sync-zrrh.sh'";
-    };
-
     ghostty.settings = {
       custom-shader = "${config.xdg.configHome}/ghostty/cursor-blaze.glsl";
     };
   };
-
-  # Allow nwg-look/GTK to be managed dynamically by disabling declarative HM GTK
-  gtk.enable = lib.mkForce false;
 }
