@@ -23,10 +23,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-colors = {
-      url = "github:misterio77/nix-colors";
-    };
-
     fsel = {
       url = "github:Mjoyufull/fsel";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -77,7 +73,6 @@
     inputs@{
       nixpkgs,
       home-manager,
-      nix-colors,
       jovian,
       ...
     }:
@@ -112,10 +107,7 @@
                 backupFileExtension = "hm-bak";
                 overwriteBackup = true;
                 extraSpecialArgs = { inherit inputs; };
-                users.zk.imports = [
-                  nix-colors.homeManagerModules.default
-                  ./hosts/${name}/home.nix
-                ];
+                users.zk.imports = [ ./hosts/${name}/home.nix ];
               };
             }
           ]

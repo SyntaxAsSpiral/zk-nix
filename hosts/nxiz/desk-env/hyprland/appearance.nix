@@ -1,9 +1,4 @@
 # Hyprland visual config: layout, decoration, animations
-{ config, ... }:
-
-let
-  p = config.colorScheme.palette;
-in
 {
   wayland.windowManager.hyprland.settings = {
     general = {
@@ -11,7 +6,7 @@ in
       gaps_out     = 20;
       border_size  = 2;
       "col.active_border"   = "rgb(cba6f7) rgb(89b4fa) rgb(94e2d5) rgb(f5e0dc) rgb(f2cdcd) rgb(eba0ac) 45deg";
-      "col.inactive_border" = "rgb(${p.base02})";
+      "col.inactive_border" = "rgb(363a4f)";
       resize_on_border = true;
       allow_tearing    = false;
       layout           = "dwindle";
@@ -26,7 +21,7 @@ in
         enabled      = true;
         range        = 4;
         render_power = 3;
-        color        = "rgb(${p.base00})";
+        color        = "rgb(24273a)";
       };
 
       dim_inactive = true;

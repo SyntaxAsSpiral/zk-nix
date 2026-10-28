@@ -18,7 +18,6 @@
     ../../shared/home/editors/zed.nix
     ../../shared/home/pi/default.nix
 
-    ../../shared/home/catppuccin.nix
     ../../shared/home/browser/firefox.nix
     ../../shared/home/icons.nix
     ../../shared/home/spotify.nix
