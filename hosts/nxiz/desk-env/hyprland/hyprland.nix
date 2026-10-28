@@ -11,7 +11,6 @@
     ./monitors.nix
     ./appearance.nix
     ./hypridle.nix
-    ./hyprpanel.nix
   ];
 
   home.packages = with pkgs; [
@@ -27,6 +26,12 @@
     rofi
     wtype
     playerctl
+
+    # HyprPanel and the helpers its dashboard calls.
+    hyprpanel
+    wf-recorder
+    matugen
+    awww
   ];
 
   services.hyprpolkitagent.enable = true;
