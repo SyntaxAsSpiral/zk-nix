@@ -24,15 +24,16 @@
   };
   security.sudo.wheelNeedsPassword = false;
 
-  # Bash stays the login shell. Interactive SSH and tty1 enter Nushell.
+  # Bash stays the login shell. Interactive SSH and the local console enter Nushell. The
+  # console is tty1, or a kmscon pty: no SSH, and no display. Nushell exports NU_VERSION,
+  # so a bash started from inside it stays bash.
   programs.bash = {
     enable = true;
     interactiveShellInit = ''
-      if [[ $- == *i* && -t 0 ]]; then
-        if [[ -n "$SSH_CONNECTION" && -z "$NUSHELL_VERSION" ]]; then
-          exec ${pkgs.nushell}/bin/nu --login
-        fi
-        if [[ "$(tty)" == "/dev/tty1" ]]; then
+      if [[ $- == *i* && -t 0 && -z "$NU_VERSION" ]]; then
+        tty_name=$(tty)
+        if [[ -n "$SSH_CONNECTION" || "$tty_name" == /dev/tty1 ||
+              ( "$tty_name" == /dev/pts/* && -z "$DISPLAY$WAYLAND_DISPLAY" ) ]]; then
           exec ${pkgs.nushell}/bin/nu --login
         fi
       fi

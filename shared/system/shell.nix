@@ -62,32 +62,28 @@ let
 
       RANDOM_ICON="''${ICONS[$RANDOM % ''${#ICONS[@]}]}"
 
-      # The getty at boot is the Linux console. It cannot draw the icon.
-      case "''${TERM:-}" in
-        linux|dumb)
-          exec fastfetch
-          ;;
-      esac
-      tty_path=$(tty 2>/dev/null || true)
-      case "$tty_path" in
-        /dev/tty[0-9]|/dev/tty[0-9][0-9])
-          exec fastfetch
-          ;;
+      # Pick a logo protocol the terminal draws. SSH carries TERM on its own, but TERM_PROGRAM
+      # only if the client sends it, and kitty does not set it.
+      case "''${TERM_PROGRAM:-}:''${TERM:-}" in
+        kitty:*|ghostty:*|WezTerm:*|*:xterm-kitty|*:xterm-ghostty) LOGO_TYPE="kitty-direct" ;;
+        iTerm.app:*|konsole:*)                                     LOGO_TYPE="iterm" ;;
+        *)                                                         LOGO_TYPE="text" ;;
       esac
 
-      # A remote session has no local terminal. Pick a logo protocol the client can draw.
-      if [ -n "''${SSH_CONNECTION:-}" ]; then
-        case "''${TERM_PROGRAM:-}" in
-          kitty|ghostty|WezTerm) LOGO_TYPE="kitty-direct" ;;
-          iTerm.app|konsole)     LOGO_TYPE="iterm" ;;
-          *)                     LOGO_TYPE="chafa" ;;
-        esac
-        jq --arg src "$RANDOM_ICON" --arg type "$LOGO_TYPE" '.logo.source = $src | .logo.type = $type' ${esoBase} > /tmp/eso-fetch.jsonc
+      if [ "$LOGO_TYPE" = text ]; then
+        # Everything else gets block symbols, in a kmscon or kernel console and a herdr pane too.
+        # fastfetch's own chafa logo needs the terminal's pixel size, and a console reports none:
+        # it then drops to its built-in logo. So chafa draws the icon and fastfetch prints the text.
+        art=$(mktemp)
+        chafa --format=symbols --size=20x10 --fg-only --symbols=block+border+space "$RANDOM_ICON" |
+          sed 's/\x1b\[?25[lh]//g' > "$art"
+        jq --arg src "$art" '.logo.type = "file-raw" | .logo.source = $src | del(.logo.width)' ${esoBase} > /tmp/eso-fetch.jsonc
+        fastfetch -c /tmp/eso-fetch.jsonc
+        rm -f "$art"
       else
-        jq --arg src "$RANDOM_ICON" '.logo.source = $src' ${esoBase} > /tmp/eso-fetch.jsonc
+        jq --arg src "$RANDOM_ICON" --arg type "$LOGO_TYPE" '.logo.source = $src | .logo.type = $type' ${esoBase} > /tmp/eso-fetch.jsonc
+        exec fastfetch -c /tmp/eso-fetch.jsonc
       fi
-
-      exec fastfetch -c /tmp/eso-fetch.jsonc
     '';
   };
 in
