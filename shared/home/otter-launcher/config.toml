@@ -2,8 +2,8 @@
 # terminal otter was started in, using shell kit tools (fd, fzf, bat, eza, yazi, nano,
 # glow, nh, lazygit, btop, rg). Run a module without the TUI: otter-launcher nx ripgrep
 [general]
-height = 16 # lines otter occupies: the 10-line header, the prompt, and the list
-default_module = "nx" # text with no known prefix searches nixpkgs
+height = 14 # lines otter occupies: 1 padding, the 5-line header, the prompt, its rule, 5 modules, 1 padding
+default_module = "gr" # text with no known prefix greps the current directory
 empty_module = "fo" # Enter on an empty prompt picks a file
 exec_cmd = "bash -c" # modules are bash
 vi_mode = true # set true to use vi keybinds, false emacs keybinds
@@ -12,60 +12,76 @@ cheatsheet_viewer = "less -R; clear" # command to show cheatsheet; through pipin
 external_editor = "nano" # TUI editor for prompt editing (ctrl+x ctrl+e)
 
 [interface]
-header = "$(otter-header)\n"
+header = "$(otter-header)"
+padding = [1, 2, 1, 1] # top, right, bottom, left
 list_prefix = "  "
 selection_prefix = "\u001B[31;1m> "
-placeholder = "type & search"
+prompt_sign = "@LOGO_ROW@  \u001B[38;2;116;199;236m \u001B[0m" # logo row 5, then nf-fa-search
+prompt_sign_color = "reset"
+placeholder = "search modules"
 suggestion_mode = "list"
 suggestion_position = "bottom" # the list sits below the prompt
 prefix_padding = 3
 prefix_color = "#74c7ec"
 
-# nh search lists the best match last, so less starts at the end.
+
 [[modules]]
-description = "search nixpkgs packages (nh)"
-prefix = "nx"
-cmd = "nh search packages '{}' --limit 25 2>&1 | less -R +G"
+description = "ssh to a tailnet host, pick one or name it (tailscale, fzf, jq)"
+prefix = "sh"
+cmd = "otter-ssh '{}'"
 with_argument = true
-
-[[modules]]
-description = "open a directory in yazi (fd, fzf, eza)"
-prefix = "do"
-cmd = '''
-export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
-sel=$(fd --type d --max-depth 3 . "$HOME" /mnt/*/ 2>/dev/null | fzf --prompt '❱ ' --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'eza --tree --level=2 --icons=always --color=always {}') || exit 0
-yazi "$sel"
-'''
-
-[[modules]]
-description = "edit a file in nano (fd, fzf, bat)"
-prefix = "fo"
-cmd = '''
-export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
-sel=$(fd --type f . "$HOME" /mnt/*/ 2>/dev/null | fzf --prompt '❱ ' --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'bat --color=always --style=numbers --line-range=:200 {}') || exit 0
-nano "$sel"
-'''
-
-[[modules]]
-description = "read a markdown file in glow (fd, fzf, bat)"
-prefix = "md"
-cmd = '''
-export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
-sel=$(fd --type f --extension md . "$HOME" /mnt/*/ 2>/dev/null | fzf --prompt '❱ ' --info-command 'printf " markdown ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'bat --color=always --style=plain --language=markdown {}') || exit 0
-glow -p "$sel"
-'''
 
 [[modules]]
 description = "open a git repo in lazygit (fd, fzf)"
 prefix = "lg"
 cmd = '''
 export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
-sel=$(fd --type d --hidden --no-ignore --max-depth 4 '^\.git$' "$HOME" /mnt/*/ 2>/dev/null | sed 's|/\.git/$||' | fzf --prompt '❱ ' --info-command 'printf " repos ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'git -C {} log --oneline --color=always -n 20') || exit 0
+sel=$(otter-fd --type d --max-depth 4 '^\.git$' | sed 's|/\.git/$||' | fzf --prompt '❱ ' --info-command 'printf " repos ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'git -C {} log --oneline --color=always -n 20') || exit 0
 lazygit -p "$sel"
 '''
 
+
 [[modules]]
-description = "grep the current directory, edit the match in nano (rg, fzf, bat)"
+description = "search beads issues from every workspace on this host (bd, fzf)"
+prefix = "bd"
+cmd = '''
+export BD_JSON_ENVELOPE=1
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --prompt '❱ ' --header 'enter read in glow  ctrl-e edit  ctrl-n notes  ctrl-s claim  ctrl-x close (asks first)' --info-command 'printf " issues ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'cd {1} && bd show {2} 2>/dev/null' --preview-window 'right,60%,wrap' --bind 'enter:execute(otter-bd-read {1} {2})' --bind 'ctrl-e:execute(cd {1} && EDITOR=nano bd edit {2})+reload(otter-bd-list)' --bind 'ctrl-n:execute(cd {1} && EDITOR=nano bd edit {2} --notes)+reload(otter-bd-list)' --bind 'ctrl-s:execute-silent(cd {1} && bd update {2} --claim)+reload(otter-bd-list)' --bind 'ctrl-x:execute(cd {1} && gum confirm "Close {2}?" && bd close {2})+reload(otter-bd-list)' > /dev/null
+'''
+
+[[modules]]
+description = "open a file in nano (fd, fzf, bat)"
+prefix = "fo"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(otter-fd --type f --exclude .git . | fzf --prompt '❱ ' --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'bat --color=always --style=numbers --line-range=:200 {}') || exit 0
+nano "$sel"
+'''
+
+
+[[modules]]
+description = "open a directory in yazi (fd, fzf, eza)"
+prefix = "do"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(otter-fd --type d --max-depth 3 --exclude .git . | fzf --prompt '❱ ' --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'eza --tree --level=2 --icons=always --color=always {}') || exit 0
+yazi "$sel"
+'''
+
+
+[[modules]]
+description = "open a markdown file in glow (fd, fzf)"
+prefix = "md"
+cmd = '''
+export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
+sel=$(otter-fd --type f --extension md --exclude .git . | fzf --prompt '❱ ' --info-command 'printf " markdown ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'glow -s dark -w "$FZF_PREVIEW_COLUMNS" {} < /dev/null') || exit 0
+glow -t "$sel"
+'''
+
+
+[[modules]]
+description = "search file contents in current directory, edit the match in nano (rg, fzf, bat)"
 prefix = "gr"
 with_argument = true
 cmd = '''
@@ -76,13 +92,30 @@ rest=${sel#*:}
 nano "+${rest%%:*}" "$file"
 '''
 
+
 [[modules]]
-description = "run a command in nushell"
-prefix = "sh"
-cmd = "nu -e '{}'"
+description = "ask a model about a file: pick one, type a prompt (fd, fzf, bat, mods)"
+prefix = "ai"
+cmd = "otter-ask"
+
+[[modules]]
+description = "open system monitor (btop)"
+prefix = "tp"
+cmd = "btop"
+
+
+[[modules]]
+description = "search jolt's energy history by day or process (jolt, jq, fzf; adeck only)"
+prefix = "jl"
+cmd = "otter-jolt"
+
+[[modules]]
+description = "search nixpkgs as you type, enter opens nix shell (nh, fzf)"
+prefix = "nx"
+cmd = "otter-nx '{}'"
 with_argument = true
 
 [[modules]]
-description = "system monitor (btop)"
-prefix = "top"
-cmd = "btop"
+description = "search nushell commands by category or name, mouse works (nu tui)"
+prefix = "nu"
+cmd = "otter-nu"

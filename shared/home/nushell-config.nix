@@ -14,11 +14,14 @@
     $"(char newline)(ansi { fg: "#b4befe" })($cwd)($c1)❱($c2)❱($c3)❱($reset) "
   }
 
+  # Chronohex: the last six hex digits of the clock in nanoseconds, each in its own accent, with its green alchemical glyph and gloss.
   def create_right_prompt [] {
-    let hour = (date now | format date "%H" | into int)
-    let emoji = if $hour < 7 { "🌄" } else if $hour < 12 { "🌇" } else if $hour < 18 { "🌆" } else if $hour < 22 { "🌃" } else { "🌉" }
-    let time = (date now | format date "%H:%M")
-    $"(ansi { fg: "#6c7086" })($time) ($emoji)(ansi reset)"
+    let hex = (((date now | into int) | format number).lowerhex | str substring (-6..))
+    let idx = (("0x" + $hex | into int) mod 116)
+    let gloss = (r#'${builtins.readFile ./alchemy.txt}'# | lines | get $idx)
+    let accents = ["#f38ba8" "#fab387" "#f9e2af" "#74c7ec" "#b4befe" "#cba6f7"]
+    let digits = ($hex | split chars | enumerate | each { |c| $"(ansi { fg: ($accents | get $c.index) })($c.item)" } | str join)
+    $"($digits) (ansi { fg: "#a6e3a1" })(char -i (0x1F700 + $idx))(ansi { fg: "#6c7086" }) \(($gloss)\)(ansi reset)"
   }
 
   $env.PROMPT_COMMAND = { || create_left_prompt }
@@ -28,6 +31,8 @@
   $env.PATH = ($env.PATH | append "/home/zk/.local/bin")
 
   alias otter = otter-launcher
+  alias zshell = otter-launcher
+  alias cat = open
 
   # eza keeps its own names so nushell's table ls stays.
   def ll [path: path = "."] {

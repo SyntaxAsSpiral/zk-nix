@@ -3,7 +3,7 @@
 # and Tailscale, SSH in, then partition and install, or run `zcli deploy seed` to deploy itself.
 # core.nix is the shared base. packages.nix and the NVIDIA/Steam desktop
 # blew the stick out to 8.5 GiB, so they are not in this list.
-# Console only: no display server.
+# Console only: no display server. kmscon draws the console.
 { pkgs, ... }:
 
 {
@@ -21,6 +21,21 @@
   boot.loader.efi.canTouchEfiVariables = false;
 
   documentation.enable = false;
+
+  # kmscon replaces the kernel console: a userspace terminal with truecolor and a Nerd
+  # Font, so the otter header draws on the local screen. Autologin is core.nix's getty.
+  services.kmscon = {
+    enable = true;
+    config = {
+      font-name = "RecMonoCasual Nerd Font Mono";
+      font-size = 16;
+      term = "xterm-256color";
+    };
+  };
+  fonts = {
+    fontconfig.enable = true;
+    packages = [ pkgs.nerd-fonts.recursive-mono ];
+  };
 
   users.users.zk = {
     extraGroups = [ "disk" ];

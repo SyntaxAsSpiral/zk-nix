@@ -1,7 +1,8 @@
-# mods as a bare harness: one endpoint, the adeck gateway. Weights run on zrrh.
-# The gateway caps context at 100k, so max-input-chars stays near 392000.
+# mods as a bare harness: one endpoint, the adeck gateway. Weights run on zrrh, except the
+# default, granite-4-h-tiny, which loads on adeck itself (context 31947 in its LM Studio config).
+# The gateway caps context at 100k, so max-input-chars stays near 392000 for the large models.
 default-api: adeck
-default-model: gpt-oss-20b-heretic
+default-model: ibm/granite-4-h-tiny
 format-text:
   markdown: "Format the response as markdown without enclosing backticks."
   json: "Format the response as json without enclosing backticks."
@@ -24,6 +25,9 @@ apis:
     base-url: http://100.89.32.9:1234/v1
     api-key: lmstudio
     models:
+      "ibm/granite-4-h-tiny":
+        aliases: ["granite", "tiny", "local"]
+        max-input-chars: 80000
       "gpt-oss-20b-heretic":
         aliases: ["heretic", "gpt-oss", "zrrh"]
         max-input-chars: 392000
