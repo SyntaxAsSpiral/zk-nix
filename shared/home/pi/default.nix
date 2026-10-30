@@ -1,6 +1,6 @@
 # Declarative pi local-provider config. Does not install the binary:
 # nxiz, adeck, and zrrh install llm-agents.pi and import this module. seed and tm20 do not run Pi.
-# OpenRouter is built-in; the key is OPENROUTER_API_KEY from /run/secrets.
+# OpenRouter is built-in; the key is OPENROUTER_API_KEY, exported by shared/system/secrets.nix.
 #
 # packages is the whole list. A rebuild replaces it. pi update --extensions
 # reconciles each checkout to the pinned ref and installs its npm deps.
@@ -25,27 +25,22 @@ let
   ];
 in
 {
-  home.file.".pi/agent/models.json" = {
-    source = ./models.json;
-    force = true;
+  home = {
+    file.".pi/agent/models.json" = {
+      source = ./models.json;
+      force = true;
+    };
+
+    activation.piPackages = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      settings="${config.home.homeDirectory}/.pi/agent/settings.json"
+      mkdir -p "$(dirname "$settings")"
+      if [ ! -f "$settings" ]; then
+        printf '%s\n' '{}' > "$settings"
+      fi
+      tmp=$(mktemp)
+      ${pkgs.jq}/bin/jq --argjson packages ${lib.escapeShellArg (builtins.toJSON piPackages)} \
+        '.packages = $packages' "$settings" > "$tmp"
+      mv "$tmp" "$settings"
+    '';
   };
-
-  home.activation.piPackages = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-    settings="${config.home.homeDirectory}/.pi/agent/settings.json"
-    mkdir -p "$(dirname "$settings")"
-    if [ ! -f "$settings" ]; then
-      printf '%s\n' '{}' > "$settings"
-    fi
-    tmp=$(mktemp)
-    ${pkgs.jq}/bin/jq --argjson packages ${lib.escapeShellArg (builtins.toJSON piPackages)} \
-      '.packages = $packages' "$settings" > "$tmp"
-    mv "$tmp" "$settings"
-  '';
-
-  home.sessionVariablesExtra = ''
-    if [ -r /run/secrets/pi-openrouter-api-key ]; then
-      OPENROUTER_API_KEY=$(tr -d '\n' < /run/secrets/pi-openrouter-api-key)
-      export OPENROUTER_API_KEY
-    fi
-  '';
 }

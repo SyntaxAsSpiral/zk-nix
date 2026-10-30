@@ -48,7 +48,7 @@ this table.
 |---|---|---|
 | `wifi-password` | all | NetworkManager `nmEnvironmentFiles` in `shared/system/networking.nix` (nxiz, tm20, seed) |
 | `github-token`, `github-recovery-codes` | nxiz, adeck, zrrh | staged only; no consumer found in this repo |
-| `pi-openrouter-api-key` | nxiz, adeck, zrrh | `OPENROUTER_API_KEY` in `shared/system/secrets.nix` and `shared/home/pi/default.nix` |
+| `pi-openrouter-api-key` | nxiz, adeck, zrrh | `OPENROUTER_API_KEY` in `shared/system/secrets.nix` |
 | `festin-openrouter-api-key` | adeck | `FESTIN_MODEL_KEY_FILE` in `hosts/adeck/desk-env/festin.nix` |
 | `print-token` | tm20 | `EnvironmentFile` of `print-receiver` in `hosts/tm20/` |
 | `hosts/<host>/ssh_host_{ed25519,rsa}_key[.pub]` | the matching host | `shared/system/ssh-identity.nix`; silently skipped when absent (seed has none) |

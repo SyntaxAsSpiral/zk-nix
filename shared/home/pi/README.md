@@ -10,7 +10,7 @@ Shared local-provider config: `models.json` → `~/.pi/agent/models.json`.
 OpenRouter is Pi's built-in provider. The API key is not in Nix. It lives in
 gitignored `secrets/pi-openrouter-api-key` (Pi's OpenRouter key only; plain key,
 no `KEY=` prefix), stages to `/run/secrets/pi-openrouter-api-key`, and is
-exported as `OPENROUTER_API_KEY` at login. Hosts: nxiz, zrrh, adeck. Not seed or tm20.
+exported as `OPENROUTER_API_KEY` at login by `shared/system/secrets.nix`. Hosts: nxiz, zrrh, adeck. Not seed or tm20.
 
 Imported by the home files of nxiz, zrrh, and adeck.
 
