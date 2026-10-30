@@ -28,6 +28,9 @@ let
     "catppuccin-macchiato-custom.json" = ./glow-styles/catppuccin-macchiato-custom.json;
     "rose-pine-moon-custom.json" = ./glow-styles/rose-pine-moon-custom.json;
     "nord-custom.json" = ./glow-styles/nord-custom.json;
+
+    # ANSI palette numbers only, so it follows the terminal. Chroma takes hex alone, so code blocks have no syntax colours.
+    "ansi-custom.json" = ./glow-styles/ansi-custom.json;
   };
 in
 {
