@@ -15,6 +15,7 @@ let
     rocmSupport = pkgs.stdenv.hostPlatform.isx86_64;
   };
 
+  # Key colours are ANSI palette codes, so they follow the terminal. Matched to Catppuccin Macchiato (kitty-themes) by nearest colour.
   esoBase = pkgs.writeText "eso-base.jsonc" (builtins.toJSON {
     display = { separator = "  "; };
     logo = {
@@ -32,16 +33,16 @@ let
       { type = "colors"; symbol = "circle"; }
       "break"
       "title"
-      { type = "os"; key = "os    "; keyColor = "38;2;243;139;168"; }
-      { type = "kernel"; key = "kernel"; keyColor = "38;2;166;227;161"; }
+      { type = "os"; key = "os    "; keyColor = "31"; }
+      { type = "kernel"; key = "kernel"; keyColor = "32"; }
       {
         type = "command";
         key = "hw    ";
-        keyColor = "38;2;249;226;175";
+        keyColor = "33";
         text = "fastfetch --json --structure CPU:GPU --logo none | jq -r '(.[] | select(.type == \"CPU\") | .result.cpu | sub(\"AMD Ryzen (?<v>[0-9]) \"; \"R\\(.v) \") | sub(\" [0-9]+-Core Processor\"; \"\") | sub(\"AMD Custom APU \"; \"Deck \")) + \" / \" + (.[] | select(.type == \"GPU\") | .result[0].name | sub(\"GeForce \"; \"\") | sub(\"NVIDIA \"; \"\") | sub(\"AMD Radeon \"; \"\") | sub(\"AMD Custom GPU\"; \"RDNA2\"))'";
       }
-      { type = "packages"; key = "pkgs  "; keyColor = "38;2;116;199;236"; }
-      { type = "uptime"; key = "uptime"; keyColor = "38;2;203;166;247"; format = "{?days}{days}d {?}{hours}h {minutes}m"; }
+      { type = "packages"; key = "pkgs  "; keyColor = "36"; }
+      { type = "uptime"; key = "uptime"; keyColor = "35"; format = "{?days}{days}d {?}{hours}h {minutes}m"; }
       "break"
     ];
   });
