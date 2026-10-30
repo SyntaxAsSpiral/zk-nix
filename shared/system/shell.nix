@@ -91,14 +91,9 @@ let
 in
 {
   environment.systemPackages = [
-    pkgs.nushell
     esofetch
     pkgs.git
-    pkgs.gh
-    pkgs.lazygit
     pkgs.eza
-    pkgs.bat
-    pkgs.fzf
     btop
     pkgs.yazi
     pkgs.fastfetch

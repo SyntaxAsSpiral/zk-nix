@@ -115,7 +115,12 @@ let
   };
 in
 {
-  imports = [ ./fzf.nix ];
+  imports = [
+    ./bat.nix
+    ./fzf.nix
+    ./gh.nix
+    ./lazygit.nix
+  ];
 
   home.packages = [
     inputs.otter-launcher.packages.${pkgs.stdenv.hostPlatform.system}.default
