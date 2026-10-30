@@ -36,7 +36,7 @@
 
   # eza keeps its own names so nushell's table ls stays.
   def la [path: path = "."] {
-    eza $path -l -a --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=default --hyperlink --loc --short-nix
+    eza $path -l -a --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=default --hyperlink --short-nix
   }
   alias lt = eza --tree --level=2 --group-directories-first --icons=auto --short-nix
 
