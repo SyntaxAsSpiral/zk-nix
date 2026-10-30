@@ -35,9 +35,6 @@
   alias cat = open
 
   # eza keeps its own names so nushell's table ls stays.
-  def ll [path: path = "."] {
-    eza $path -l --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=relative --hyperlink --no-permissions --loc --short-nix
-  }
   def la [path: path = "."] {
     eza $path -l -a --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=default --hyperlink --loc --short-nix
   }
