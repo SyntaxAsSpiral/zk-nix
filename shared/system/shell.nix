@@ -97,7 +97,6 @@ in
     btop
     pkgs.yazi
     pkgs.fastfetch
-    pkgs.glow
     pkgs.gum
     pkgs.nano
     pkgs.tmux

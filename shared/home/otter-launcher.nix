@@ -119,6 +119,7 @@ in
     ./bat.nix
     ./fzf.nix
     ./gh.nix
+    ./glow.nix
     ./lazygit.nix
     ./mods.nix
   ];
