@@ -95,7 +95,6 @@ in
     pkgs.git
     pkgs.eza
     btop
-    pkgs.yazi
     pkgs.fastfetch
     pkgs.gum
     pkgs.nano

@@ -12,7 +12,7 @@ let
   '';
 in
 {
-  # yazi itself comes from the shell kit (shared/system/shell.nix).
+  # programs.yazi installs yazi, wrapped with its preview tools.
   # Everything else stays at yazi's defaults; add a setting only on purpose.
   programs.yazi = {
     enable = true;

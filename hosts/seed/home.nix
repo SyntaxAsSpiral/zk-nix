@@ -6,6 +6,7 @@
     ../../shared/home/fastfetch/default.nix
     ../../shared/home/gh.nix
     ../../shared/home/otter-launcher.nix
+    ../../shared/home/yazi/default.nix
     ../../shared/home/zcli.nix
   ];
 

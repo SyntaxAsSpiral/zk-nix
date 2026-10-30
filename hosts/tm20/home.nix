@@ -4,6 +4,7 @@ _:
   imports = [
     ../../shared/home/nushell.nix
     ../../shared/home/otter-launcher.nix
+    ../../shared/home/yazi/default.nix
   ];
 
   home = {
