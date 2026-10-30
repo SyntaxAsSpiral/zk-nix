@@ -2,7 +2,7 @@
 # default, granite-4-h-tiny, which loads on adeck itself (context 31947 in its LM Studio config).
 # The gateway caps context at 100k, so max-input-chars stays near 392000 for the large models.
 default-api: adeck
-default-model: ibm/granite-4-h-tiny
+default-model: qwen/qwen3.8-27b
 format-text:
   markdown: "Format the response as markdown without enclosing backticks."
   json: "Format the response as json without enclosing backticks."
