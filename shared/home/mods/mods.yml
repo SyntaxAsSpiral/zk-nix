@@ -15,11 +15,11 @@ quiet: false
 temp: 1.0
 topp: 1.0
 topk: 50
-word-wrap: 80
+word-wrap: 0
 max-retries: 5
 fanciness: 10
 status-text: Generating
-theme: charm
+theme: dracula
 apis:
   adeck:
     base-url: http://100.89.32.9:1234/v1

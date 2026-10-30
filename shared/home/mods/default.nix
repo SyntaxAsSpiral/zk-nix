@@ -1,0 +1,18 @@
+# mods writes ~/.config/mods/mods.yml when it is absent, so the file is declared on every host.
+# mods renders markdown through glamour, which reads its style from GLAMOUR_STYLE; the
+# theme key in mods.yml only styles mods' forms. The wrapper points it at the custom Nord style.
+{ pkgs, ... }:
+let
+  mods = pkgs.symlinkJoin {
+    name = "mods";
+    paths = [ pkgs.mods ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/mods --set-default GLAMOUR_STYLE ${../glow-styles/nord-custom.json}
+    '';
+  };
+in
+{
+  home.packages = [ mods ];
+  xdg.configFile."mods/mods.yml".source = ./mods.yml;
+}
