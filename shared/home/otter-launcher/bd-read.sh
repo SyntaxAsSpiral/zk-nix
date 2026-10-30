@@ -10,4 +10,4 @@ bd show "$2" --json 2> /dev/null |
       (["description", "design", "acceptance_criteria", "notes"][] as $k
        | select(.[$k] // "" | length > 0)
        | "## \($k | gsub("_"; " ") | .[:1] | ascii_upcase)\($k | gsub("_"; " ") | .[1:])\n\n\(.[$k])\n")' |
-  glow --pager --style dark --width "${COLUMNS:-100}" -
+  glow --pager -
