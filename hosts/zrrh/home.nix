@@ -10,7 +10,6 @@
     ../../shared/home/daemon-profile.nix
     ../../shared/home/nushell.nix
     ../../shared/home/xdg.nix
-    ../../shared/home/fastfetch/default.nix
     ../../shared/home/fun.nix
     ../../shared/home/gh.nix
     ../../shared/home/otter-launcher.nix

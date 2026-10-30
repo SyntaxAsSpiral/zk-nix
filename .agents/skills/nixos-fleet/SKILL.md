@@ -37,7 +37,7 @@ openssh, tty1 autologin, and the SSH-to-nushell handoff. There are no other shar
 | zrrh | same workstation leaves; `./openrgb` and pia | shared home leaves; `./desk-env/` |
 | adeck | shared nixos leaves, no nvidia or steam; llama-tts, pulse, qbittorrent. `jovian` via `extraModules` | shared home leaves; firefox package in `home.nix`, no gtk module; `./desk-env/` |
 | tm20 | `core`, `./print-receiver.nix`. aarch64 | nushell, named in `home.nix` |
-| seed | `core`, `boot`. Empty overlays. Console only | nushell, fastfetch, gh, and zcli, named in `home.nix` |
+| seed | `core`, `boot`. Empty overlays. Console only | nushell, gh, and zcli, named in `home.nix` |
 
 seed is `core` plus the stick, and a new host starts from it. It skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.
 Seed is console only, with no display server. It defines its own `zk` user in the host file.

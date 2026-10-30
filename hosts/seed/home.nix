@@ -3,7 +3,6 @@
 {
   imports = [
     ../../shared/home/nushell.nix
-    ../../shared/home/fastfetch/default.nix
     ../../shared/home/gh.nix
     ../../shared/home/otter-launcher.nix
     ../../shared/home/yazi/default.nix
@@ -16,7 +15,6 @@
     stateVersion = "25.11";
 
     packages = with pkgs; [
-      fastfetch
       nodejs
     ];
   };
