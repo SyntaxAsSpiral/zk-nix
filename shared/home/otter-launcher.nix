@@ -157,6 +157,7 @@ in
     ./glow.nix
     ./lazygit.nix
     ./mods/default.nix
+    ./zoxide.nix
   ];
 
   home.packages = [

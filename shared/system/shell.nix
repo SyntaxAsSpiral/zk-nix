@@ -104,5 +104,10 @@ in
     pkgs.fd
     pkgs.jq
     pkgs.file
+    # yazi previews and sqlite for anything that reads a database
+    pkgs.sqlite
+    pkgs.imagemagick
+    pkgs.poppler-utils
+    pkgs.ffmpegthumbnailer
   ];
 }
