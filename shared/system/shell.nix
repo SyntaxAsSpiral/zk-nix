@@ -69,6 +69,8 @@ let
         iTerm.app:*|konsole:*)                                     LOGO_TYPE="iterm" ;;
         *)                                                         LOGO_TYPE="text" ;;
       esac
+      # Over ssh the graphics image came out blank in kitty, so ssh gets the block-symbol logo.
+      if [ -n "''${SSH_CONNECTION:-}" ]; then LOGO_TYPE="text"; fi
 
       if [ "$LOGO_TYPE" = text ]; then
         # Everything else gets block symbols, in a kmscon or kernel console and a herdr pane too.
