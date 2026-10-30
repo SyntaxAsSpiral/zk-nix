@@ -31,28 +31,30 @@
   my.host = "nxiz";
   my.performance.enable = true;
 
-  programs.thunar = {
-    enable = true;
-    plugins = with pkgs; [
-      thunar-volman
-      thunar-archive-plugin
-    ];
-  };
+  programs = {
+    thunar = {
+      enable = true;
+      plugins = with pkgs; [
+        thunar-volman
+        thunar-archive-plugin
+      ];
+    };
 
-  programs.appimage = {
-    enable = true;
-    binfmt = true;
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
+
+    hyprland = {
+      enable = true;
+      xwayland.enable = true;
+      withUWSM = true;
+    };
   };
 
   # Super I/O fan/RPM sensors (case fans on motherboard headers);
   # harmless no-op if the board's chip isn't Nuvoton
   boot.kernelModules = [ "nct6775" ];
-
-  programs.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-    withUWSM = true;
-  };
 
   # The pinned 0.56.2 bin/Hyprland is a wrapProgram script. The capability
   # wrapper must target an ELF, so point it at the unwrapped binary.

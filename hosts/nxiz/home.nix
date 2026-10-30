@@ -37,10 +37,18 @@
     ./desk-env/kitty.nix
   ];
 
-  programs.home-manager.enable = true;
+  programs = {
+    home-manager.enable = true;
 
-  # Vault archiver on both vault hosts (headless-by-design; see adeck)
-  programs.msgvault.enable = true;
+    # Vault archiver on both vault hosts (headless-by-design; see adeck)
+    msgvault.enable = true;
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      enableNushellIntegration = true;
+    };
+  };
 
   systemd.user.services.grok-bot = {
     Unit = {
@@ -106,12 +114,6 @@
 
       ".config/monitors.xml".source = ./nxiz-monitors.xml;
     };
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    enableNushellIntegration = true;
   };
 
   xdg.desktopEntries.gimp = {

@@ -38,19 +38,6 @@ in
   my.host = "zrrh";
   my.performance.enable = true;
 
-  programs.thunar = {
-    enable = true;
-    plugins = with pkgs; [
-      thunar-volman
-      thunar-archive-plugin
-    ];
-  };
-
-  programs.appimage = {
-    enable = true;
-    binfmt = true;
-  };
-
   boot = {
     # qemu-user so this builder can realize aarch64 closures (tm20 / Pi 3B+).
     # One-time: zcli deploy zrrh. After that, image/build tm20 does not rebuild the kernel.
@@ -73,6 +60,19 @@ in
   };
 
   programs = {
+    thunar = {
+      enable = true;
+      plugins = with pkgs; [
+        thunar-volman
+        thunar-archive-plugin
+      ];
+    };
+
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
+
     # Compositor
     niri.enable = true;
     xwayland.enable = true;
