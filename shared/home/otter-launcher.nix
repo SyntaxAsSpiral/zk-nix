@@ -115,6 +115,8 @@ let
   };
 in
 {
+  imports = [ ./fzf.nix ];
+
   home.packages = [
     inputs.otter-launcher.packages.${pkgs.stdenv.hostPlatform.system}.default
     otterHeader

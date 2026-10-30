@@ -10,7 +10,6 @@ if [ -n "${1:-}" ]; then
   exec ssh "zk@${addr:-$1}"
 fi
 
-export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
 esc=$'\e'
 # fzf expands the single-quoted info command, not the shell
 # shellcheck disable=SC2016
@@ -22,7 +21,7 @@ sel=$(tailscale status --json 2> /dev/null |
     | sort_by(.Online | not)
     | .[]
     | [.TailscaleIPs[0], "\(if .Online then $on else $off end) \(.HostName)", .TailscaleIPs[0], .OS] | @tsv' |
-  fzf --ansi --delimiter '\t' --with-nth 2.. --prompt '❱ ' \
+  fzf --ansi --delimiter '\t' --with-nth 2.. \
     --info-command 'printf " hosts ($FZF_POS/$FZF_TOTAL_COUNT)"' \
     --header 'enter ssh' --no-preview) || exit 0
 exec ssh "zk@${sel%%$'\t'*}"

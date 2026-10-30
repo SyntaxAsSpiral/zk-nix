@@ -18,10 +18,9 @@ case "${1:-}" in
     ;;
 esac
 
-export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
 # fzf expands the single-quoted commands, not the shell
 # shellcheck disable=SC2016
-sel=$(otter-nx --list "${1:-}" | fzf --disabled --query "${1:-}" --prompt '❱ ' \
+sel=$(otter-nx --list "${1:-}" | fzf --disabled --query "${1:-}" \
   --delimiter ' ' --with-nth 1.. \
   --header 'type to search nixpkgs, enter nix shell' \
   --info-command 'printf " packages ($FZF_POS/$FZF_TOTAL_COUNT)"' \

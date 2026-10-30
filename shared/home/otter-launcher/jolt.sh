@@ -52,7 +52,6 @@ export OTTER_JOLT_JSON
 trap 'rm -f "$OTTER_JOLT_JSON"' EXIT
 jolt history export --period all --include-samples --output "$OTTER_JOLT_JSON" > /dev/null 2>&1
 
-export FZF_DEFAULT_OPTS="--reverse --padding 1,3 --cycle --gutter ' ' --pointer ' ▌' --color 'bg+:-1,pointer:1,info:8,separator:8,scrollbar:0'"
 # fzf expands the single-quoted info and preview commands, not the shell
 # shellcheck disable=SC2016
 jq -r '
@@ -63,7 +62,7 @@ jq -r '
    | ["proc", .process_name, "cpu \(.avg_cpu * 10 | round / 10) %", "mem \(.avg_memory_mb | round) MB",
       "impact \(.total_impact | round)", ""])
   | @tsv' "$OTTER_JOLT_JSON" |
-  fzf --delimiter '\t' --with-nth 2.. --prompt '❱ ' \
+  fzf --delimiter '\t' --with-nth 2.. \
     --header 'days and top processes; type a date or a process name' \
     --info-command 'printf " history ($FZF_POS/$FZF_TOTAL_COUNT)"' \
     --preview 'otter-jolt --preview {1} {2}' --preview-window 'right,55%,wrap' > /dev/null
