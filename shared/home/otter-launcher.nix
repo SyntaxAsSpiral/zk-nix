@@ -120,6 +120,7 @@ in
     ./fzf.nix
     ./gh.nix
     ./lazygit.nix
+    ./mods.nix
   ];
 
   home.packages = [
