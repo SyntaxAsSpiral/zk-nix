@@ -1,8 +1,8 @@
-# mods as a bare harness: one endpoint, the adeck gateway. Weights run on zrrh, except the
-# default, granite-4-h-tiny, which loads on adeck itself (context 31947 in its LM Studio config).
+# mods as a bare harness: one endpoint, the adeck gateway. Weights run on zrrh, except
+# granite-4-h-tiny, which loads on adeck itself (context 31947 in its LM Studio config).
 # The gateway caps context at 100k, so max-input-chars stays near 392000 for the large models.
 default-api: adeck
-default-model: qwen/qwen3.8-27b
+default-model: dolphin-mistral-24b-venice-i1
 format-text:
   markdown: "Format the response as markdown without enclosing backticks."
   json: "Format the response as json without enclosing backticks."
@@ -12,9 +12,9 @@ role: "default"
 format: false
 raw: false
 quiet: false
-temp: 1.0
-topp: 1.0
-topk: 50
+temp: 0.6
+topp: 0.95
+topk: 20
 word-wrap: 0
 max-retries: 5
 fanciness: 10

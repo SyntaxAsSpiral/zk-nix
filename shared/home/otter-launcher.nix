@@ -113,6 +113,41 @@ let
     ];
     text = builtins.readFile ./otter-launcher/bd-read.sh;
   };
+
+  # Pick a systemd unit: status, journal, restart, stop.
+  otterSd = pkgs.writeShellApplication {
+    name = "otter-sd";
+    runtimeInputs = with pkgs; [
+      coreutils
+      fzf
+      gum
+    ];
+    text = builtins.readFile ./otter-launcher/sd.sh;
+  };
+
+  # Explore a JSON file with a live jq filter.
+  otterJq = pkgs.writeShellApplication {
+    name = "otter-jq";
+    runtimeInputs = [
+      otterFd
+    ]
+    ++ (with pkgs; [
+      fzf
+      jq
+      less
+    ]);
+    text = builtins.readFile ./otter-launcher/jq.sh;
+  };
+
+  # Pick a process and end it.
+  otterPs = pkgs.writeShellApplication {
+    name = "otter-ps";
+    runtimeInputs = with pkgs; [
+      fzf
+      gum
+    ];
+    text = builtins.readFile ./otter-launcher/ps.sh;
+  };
 in
 {
   imports = [
@@ -133,6 +168,9 @@ in
     otterJolt
     otterSsh
     otterNx
+    otterSd
+    otterJq
+    otterPs
     otterNu
     otterAsk
   ];

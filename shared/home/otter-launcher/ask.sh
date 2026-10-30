@@ -14,6 +14,9 @@ file=$(otter-fd --type f --exclude .git . |
     --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' \
     --preview 'bat --color=always --style=numbers --line-range=:200 {}') || exit 0
 
+# Answers render in Macchiato here; a plain mods call keeps its Nord default.
+export GLAMOUR_STYLE="$HOME/.config/glow/styles/catppuccin-macchiato-custom.json"
+
 # Catppuccin for gum: prompt in sapphire, cursor in lavender.
 export GUM_INPUT_PROMPT_FOREGROUND="#74c7ec" GUM_INPUT_CURSOR_FOREGROUND="#b4befe"
 export GUM_INPUT_PLACEHOLDER_FOREGROUND="#6c7086" GUM_INPUT_WIDTH=0

@@ -88,6 +88,21 @@ description = "open system monitor (btop)"
 prefix = "tp"
 cmd = "btop"
 
+[[modules]]
+description = "pick a process, terminate or kill it (ps, fzf, gum)"
+prefix = "ps"
+cmd = "otter-ps"
+
+[[modules]]
+description = "pick a systemd unit: status, logs, restart, stop (systemctl, fzf, gum)"
+prefix = "sd"
+cmd = "otter-sd"
+
+[[modules]]
+description = "explore a json file with a live jq filter (fd, fzf, jq)"
+prefix = "jq"
+cmd = "otter-jq"
+
 
 [[modules]]
 description = "search jolt's energy history by day or process (jolt, jq, fzf; adeck only)"
