@@ -25,7 +25,13 @@ in
   programs.fzf = {
     enable = true;
     defaultCommand = "${lib.getExe pkgs.fd} --type f --hidden --exclude .git";
+    # fzf 0.74.5's completion.nu prints a deprecation warning on every start, and its **<Tab> picker
+    # does not run under nushell 0.116. Source the key bindings alone until a fzf release carries
+    # junegunn/fzf#4934, then drop this line and the extraConfig below.
+    enableNushellIntegration = false;
   };
+
+  programs.nushell.extraConfig = "source ${pkgs.fzf}/share/fzf/key-bindings.nu";
 
   xdg.configFile."fzf/fzf.opts".text = lib.concatLines options;
   home.sessionVariables.FZF_DEFAULT_OPTS_FILE = "${config.xdg.configHome}/fzf/fzf.opts";
