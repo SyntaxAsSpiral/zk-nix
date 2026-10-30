@@ -16,6 +16,7 @@
     ../../shared/home/otter-launcher.nix
     ../../shared/home/zcli.nix
     ../../shared/home/editors/nano.nix
+    ../../shared/home/yazi/default.nix
     ../../shared/home/editors/zed.nix
     ../../shared/home/pi/default.nix
 
