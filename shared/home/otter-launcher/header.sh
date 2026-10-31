@@ -34,8 +34,9 @@ for i in 0 1 2 3; do
   printf '%s  %s\n' "${logo[i]}" "${info[i]:-}"
 done
 
-# A braille wave under the header: the dots step down and up inside the row, and each step takes
+# A blank line of padding under the logo, then a braille wave under the header: the dots step down and up inside the row, and each step takes
 # the next ANSI slot (red, yellow, green, teal, blue, pink), so the terminal palette colours it.
+printf '\n'
 cols=$({ stty size </dev/tty; } 2>/dev/null | cut -d' ' -f2)
 wave=(⣀ ⠤ ⠒ ⠉ ⠒ ⠤)
 slot=(31 33 32 36 34 35)
