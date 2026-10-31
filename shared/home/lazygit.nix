@@ -2,6 +2,8 @@ _:
 {
   programs.lazygit = {
     enable = true;
+    # The lg name belongs to the otter module, so the home-manager wrapper stays off.
+    enableNushellIntegration = false;
     settings = {
       disableStartupPopups = true;
       notARepository = "skip";

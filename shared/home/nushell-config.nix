@@ -154,6 +154,24 @@
   alias zshell = otter-launcher
   alias cat = open
 
+  # Each otter module is named for the command that runs it. do and ps are nushell built-ins, so the modules are of and sp;
+  # bare ssh opens the host picker, and ssh with arguments is still ssh. help opens the launcher.
+  alias help = otter-launcher
+  alias lg = otter-launcher lg
+  alias fo = otter-launcher fo
+  alias of = otter-launcher of
+  alias gr = otter-launcher gr
+  alias ai = otter-launcher ai
+  alias tp = otter-launcher tp
+  alias sp = otter-launcher sp
+  alias sd = otter-launcher sd
+  alias jl = otter-launcher jl
+  alias nx = otter-launcher nx
+  alias bd = otter-launcher bd
+  def --wrapped ssh [...args] {
+    if ($args | is-empty) { otter-launcher ssh } else { ^ssh ...$args }
+  }
+
   # eza keeps its own names so nushell's table ls stays.
   def la [path: path = "."] {
     eza $path -l -a --git --header --group-directories-first --icons=auto --git-repos --total-size --time-style=default --hyperlink --short-nix
