@@ -28,13 +28,13 @@ description_color = "\u001B[37m"
 
 
 [[modules]]
-description = "ssh to a tailnet host, pick one or name it (tailscale, fzf, jq)"
+description = "Connect to a tailnet host (tailscale, fzf, jq)"
 prefix = "ssh"
 cmd = "otter-ssh '{}'"
 with_argument = true
 
 [[modules]]
-description = "open a git repo in lazygit; hidden folders, snapshots and repos inside repos are skipped (fd, gum)"
+description = "Open a git repo in lazygit (fd, gum)"
 prefix = "lg"
 cmd = '''
 export GUM_FILTER_INDICATOR_FOREGROUND=4 GUM_FILTER_MATCH_FOREGROUND=5 GUM_FILTER_HEADER_FOREGROUND=8
@@ -44,7 +44,7 @@ lazygit -p "$sel"
 
 
 [[modules]]
-description = "search beads issues from every workspace on this host (bd, fzf)"
+description = "Search beads issues across workspaces (bd, fzf)"
 prefix = "bd"
 cmd = '''
 export BD_JSON_ENVELOPE=1
@@ -52,7 +52,7 @@ otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow
 '''
 
 [[modules]]
-description = "open a file in glow, press e to edit in nano (fd, fzf, bat, glow)"
+description = "Open a file in glow, edit in nano (fd, fzf, bat, glow)"
 prefix = "fo"
 cmd = '''
 sel=$(otter-fd --type f --exclude .git . | fzf --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'n=$(head -n 201 {} | wc -l); if case {} in *.md|*.markdown) true;; *) [ "$n" -le 200 ] && grep -Iq . {};; esac; then if [ "$n" -le 200 ]; then s=ansi-custom; else s=nord-custom; fi; glow --style "$HOME/.config/glow/styles/$s.json" {} < /dev/null; else bat --color=always --style=numbers --line-range=:200 {}; fi') || exit 0
@@ -61,7 +61,7 @@ glow -t "$sel"
 
 
 [[modules]]
-description = "open a directory in yazi, frecent ones first then the tree below (zoxide, fd, fzf, eza)"
+description = "Open a directory in yazi (zoxide, fd, fzf, eza)"
 prefix = "of"
 cmd = '''
 sel=$({ zoxide query --list; otter-fd --absolute-path --type d --max-depth 3 --exclude .git . ; } | sed 's|\(.\)/$|\1|' | awk '!seen[$0]++' | fzf --no-sort --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'eza --tree --level=2 --icons=always --color=always {}') || exit 0
@@ -69,7 +69,7 @@ yazi "$sel"
 '''
 
 [[modules]]
-description = "search file contents in current directory, hidden files included, edit the match in nano (rg, fzf, bat)"
+description = "Search file contents, edit the match in nano (rg, fzf, bat)"
 prefix = "gr"
 with_argument = true
 cmd = '''
@@ -81,61 +81,61 @@ nano "+${rest%%:*}" "$file"
 
 
 [[modules]]
-description = "ask a model about a file: pick one, type a prompt (fd, fzf, bat, mods)"
+description = "Ask a model about a file (fd, fzf, bat, mods)"
 prefix = "ai"
 cmd = "otter-ask"
 
 [[modules]]
-description = "start kmscon on a VT: a truecolor Nerd Font console, VT number optional (kms)"
+description = "Start kmscon on a VT (kms)"
 prefix = "kms"
 cmd = "kms '{}'"
 with_argument = true
 
 [[modules]]
-description = "render text in every figlet and toilet font, with filters and a text effect (toilet, fzf, gum, tte)"
+description = "Render text in figlet and toilet fonts (toilet, fzf, gum, tte)"
 prefix = "fig"
 cmd = "otter-fig '{}'"
 with_argument = true
 
 [[modules]]
-description = "say something as any cow, with any face; no text uses a fortune (cowsay, fortune, fzf, gum)"
+description = "Say text as a cow, fortune if empty (cowsay, fortune, fzf, gum)"
 prefix = "cow"
 cmd = "otter-cow '{}'"
 with_argument = true
 
 [[modules]]
-description = "open system monitor (btop)"
+description = "Monitor the system (btop)"
 prefix = "tp"
 cmd = "btop"
 
 [[modules]]
-description = "pick a process, terminate or kill it (ps, fzf, gum)"
+description = "Kill a process (ps, fzf, gum)"
 prefix = "sp"
 cmd = "otter-ps"
 
 [[modules]]
-description = "pick a systemd unit: status, logs, restart, stop (systemctl, fzf, gum)"
+description = "Manage a systemd unit (systemctl, fzf, gum)"
 prefix = "sd"
 cmd = "otter-sd"
 
 [[modules]]
-description = "explore a json file with a live jq filter (fd, fzf, jq)"
+description = "Filter a json file live (fd, fzf, jq)"
 prefix = "jq"
 cmd = "otter-jq"
 
 
 [[modules]]
-description = "search jolt's energy history by day or process (jolt, jq, fzf; adeck only)"
+description = "Search jolt energy history, adeck only (jolt, jq, fzf)"
 prefix = "jl"
 cmd = "otter-jolt"
 
 [[modules]]
-description = "search nixpkgs as you type, enter opens nix shell (nh, fzf)"
+description = "Search nixpkgs, open a nix shell (nh, fzf)"
 prefix = "nx"
 cmd = "otter-nx '{}'"
 with_argument = true
 
 [[modules]]
-description = "search nushell commands by category or name, mouse works (nu tui)"
+description = "Browse nushell commands (nu tui)"
 prefix = "nu"
 cmd = "otter-nu"
