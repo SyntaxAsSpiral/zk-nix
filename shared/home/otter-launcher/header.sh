@@ -74,11 +74,11 @@ fi
 
 mapfile -t logo < "$LOGO_ANSI"
 
-# Nerd font icons: calendar, clock. Four lines beside four logo rows.
+# Nerd font icons: sun (the date carries the sun's sign), clock. Four lines beside four logo rows.
 info=(
   "${lavender}${esc}[1m🐚 Z Shell${off}"
   "${dim}────────────────────${off}"
-  "${peach}  $(date '+%a %d %b')${sunglyph:+ $sunglyph}${off}"
+  "${peach}  $(date '+%a %d %b')${sunglyph:+ $sunglyph}${off}"
   "${yellow}  $(date '+%H:%M') $tod${off}"
 )
 for i in 0 1 2 3; do
