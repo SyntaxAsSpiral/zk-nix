@@ -52,7 +52,7 @@ otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow
 description = "open a file in glow, press e to edit in nano (fd, fzf, bat, glow)"
 prefix = "fo"
 cmd = '''
-sel=$(otter-fd --type f --exclude .git . | fzf --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'n=$(head -n 201 {} | wc -l); if case {} in *.md|*.markdown) true;; *) [ "$n" -le 200 ] && grep -Iq . {};; esac; then if [ "$n" -le 200 ]; then s=catppuccin-macchiato-custom; else s=nord-custom; fi; glow --style "$HOME/.config/glow/styles/$s.json" {} < /dev/null; else bat --color=always --style=numbers --line-range=:200 {}; fi') || exit 0
+sel=$(otter-fd --type f --exclude .git . | fzf --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'n=$(head -n 201 {} | wc -l); if case {} in *.md|*.markdown) true;; *) [ "$n" -le 200 ] && grep -Iq . {};; esac; then if [ "$n" -le 200 ]; then s=ansi-custom; else s=nord-custom; fi; glow --style "$HOME/.config/glow/styles/$s.json" {} < /dev/null; else bat --color=always --style=numbers --line-range=:200 {}; fi') || exit 0
 glow -t "$sel"
 '''
 

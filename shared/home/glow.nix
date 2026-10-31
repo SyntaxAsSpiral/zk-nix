@@ -3,12 +3,6 @@
 # Extra styles sit in ~/.config/glow/styles. glow takes a style by path: glow -s ~/.config/glow/styles/x.json
 { lib, pkgs, ... }:
 let
-  catppuccin = pkgs.fetchFromGitHub {
-    owner = "catppuccin";
-    repo = "glamour";
-    rev = "00c97fa3823d272d9d041d5d872ae6335555a776";
-    hash = "sha256-SI/COnVFdKltMRqeqLTbR/Rh0xUJcWSqiX/YlR221eo=";
-  };
   tomorrowNight = pkgs.fetchFromGitHub {
     owner = "gbraad";
     repo = "glow-glamour-tomorrownightbright";
@@ -18,14 +12,9 @@ let
 
   # File name under ~/.config/glow/styles, and where it sits in its repo.
   styles = {
-    "catppuccin-frappe.json" = "${catppuccin}/themes/catppuccin-frappe.json";
-    "catppuccin-latte.json" = "${catppuccin}/themes/catppuccin-latte.json";
-    "catppuccin-macchiato.json" = "${catppuccin}/themes/catppuccin-macchiato.json";
-    "catppuccin-mocha.json" = "${catppuccin}/themes/catppuccin-mocha.json";
     "tomorrow-night-bright.json" = "${tomorrowNight}/tomorrownightbright.json";
 
-    # Editable copies: Macchiato as the Catppuccin base, and Rosé Pine Moon. Change these, not upstream.
-    "catppuccin-macchiato-custom.json" = ./glow-styles/catppuccin-macchiato-custom.json;
+    # Editable copies: Rosé Pine Moon and Nord. Change these, not upstream.
     "rose-pine-moon-custom.json" = ./glow-styles/rose-pine-moon-custom.json;
     "nord-custom.json" = ./glow-styles/nord-custom.json;
 

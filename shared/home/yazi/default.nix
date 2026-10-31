@@ -33,7 +33,7 @@ in
         }
         {
           url = "*.md";
-          run = "piper -- CLICOLOR_FORCE=1 glow -w=$w -s=\"$HOME/.config/glow/styles/catppuccin-macchiato-custom.json\" \"$1\"";
+          run = "piper -- CLICOLOR_FORCE=1 glow -w=$w -s=\"$HOME/.config/glow/styles/ansi-custom.json\" \"$1\"";
         }
         {
           url = "*.csv";
