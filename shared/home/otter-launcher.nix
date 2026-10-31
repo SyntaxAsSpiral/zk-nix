@@ -1,10 +1,10 @@
 # One otter-launcher for every host. The modules use only shell kit tools.
 { pkgs, inputs, ... }:
 let
-  # The header text beside the logo: name, date and time.
+  # The header text beside the logo: name, sun and moon, date and time.
   otterHeader = pkgs.writeShellApplication {
     name = "otter-header";
-    runtimeInputs = [ pkgs.coreutils ];
+    runtimeInputs = with pkgs; [ coreutils curl jq gawk ];
     text = ''
       LOGO_ANSI=${../../assets/otter-logo.ansi}
       ${builtins.readFile ./otter-launcher/header.sh}
