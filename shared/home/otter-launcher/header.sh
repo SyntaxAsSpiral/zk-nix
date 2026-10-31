@@ -57,14 +57,14 @@ if [ -z "$elong" ]; then
 fi
 phases=(🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘)
 phase=${phases[$(awk -v e="$elong" 'BEGIN { print int(e / 45 + 0.5) % 8 }')]}
-# Zodiac glyphs, forced to text presentation (U+FE0E) so the line's colour applies to them.
+# Zodiac glyphs, forced to emoji presentation (U+FE0F) so they draw as colour emoji.
 declare -A zodiac=(
   [Aries]=♈ [Taurus]=♉ [Gemini]=♊ [Cancer]=♋ [Leo]=♌ [Virgo]=♍
   [Libra]=♎ [Scorpio]=♏ [Sagittarius]=♐ [Capricorn]=♑ [Aquarius]=♒ [Pisces]=♓
 )
 sunglyph="" moonglyph=""
-if [ -n "$sun" ] && [ -n "${zodiac[$sun]:-}" ]; then sunglyph="${zodiac[$sun]}"$'\ufe0e'; fi
-if [ -n "$moon" ] && [ -n "${zodiac[$moon]:-}" ]; then moonglyph="${zodiac[$moon]}"$'\ufe0e'; fi
+if [ -n "$sun" ] && [ -n "${zodiac[$sun]:-}" ]; then sunglyph="${zodiac[$sun]}"$'\ufe0f'; fi
+if [ -n "$moon" ] && [ -n "${zodiac[$moon]:-}" ]; then moonglyph="${zodiac[$moon]}"$'\ufe0f'; fi
 
 # The glyph beside the time: by day the sun, at night the moon in its phase and sign.
 # The sun's sign rides on the date.
