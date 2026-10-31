@@ -13,29 +13,32 @@ external_editor = "nano" # TUI editor for prompt editing (ctrl+x ctrl+e)
 
 [interface]
 header = "$(otter-header)"
-padding = [1, 2, 1, 1] # top, right, bottom, left
+padding = [1, 50, 1, 1] # top, right, bottom, left
 list_prefix = "  "
 selection_prefix = "\u001B[31;1m> "
-prompt_sign = "@LOGO_ROW@  \u001B[38;2;116;199;236m \u001B[0m" # logo row 5, then nf-fa-search
+prompt_sign = "@LOGO_ROW@  \u001B[34m \u001B[0m" # logo row 5, then nf-fa-search
 prompt_sign_color = "reset"
 placeholder = "search modules"
 suggestion_mode = "list"
 suggestion_position = "bottom" # the list sits below the prompt
 prefix_padding = 3
-prefix_color = "#74c7ec"
+prefix_color = "\u001B[34m"
+# Palette slot 7 for the module descriptions. Bright black (90) is too dark to read on a dark background.
+description_color = "\u001B[37m"
 
 
 [[modules]]
 description = "ssh to a tailnet host, pick one or name it (tailscale, fzf, jq)"
-prefix = "sh"
+prefix = "ssh"
 cmd = "otter-ssh '{}'"
 with_argument = true
 
 [[modules]]
-description = "open a git repo in lazygit (fd, fzf)"
+description = "open a git repo in lazygit; hidden folders, snapshots and repos inside repos are skipped (fd, gum)"
 prefix = "lg"
 cmd = '''
-sel=$(otter-fd --type d --max-depth 4 '^\.git$' | sed 's|/\.git/$||' | fzf --info-command 'printf " repos ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'git -C {} log --oneline --color=always -n 20') || exit 0
+export GUM_FILTER_INDICATOR_FOREGROUND=4 GUM_FILTER_MATCH_FOREGROUND=5 GUM_FILTER_HEADER_FOREGROUND=8
+sel=$(otter-fd --type d --max-depth 4 '^\.git$' | sed 's|/\.git/$||' | grep -v -E '/\.|/@' | sort | awk '{ for (p in seen) if (index($0, p "/") == 1) next; seen[$0] = 1; print }' | gum filter --header 'open in lazygit' --placeholder 'type to narrow' --height 12) || exit 0
 lazygit -p "$sel"
 '''
 
@@ -58,13 +61,12 @@ glow -t "$sel"
 
 
 [[modules]]
-description = "open a directory in yazi (fd, fzf, eza)"
-prefix = "do"
+description = "open a directory in yazi, frecent ones first then the tree below (zoxide, fd, fzf, eza)"
+prefix = "of"
 cmd = '''
-sel=$(otter-fd --type d --max-depth 3 --exclude .git . | fzf --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'eza --tree --level=2 --icons=always --color=always {}') || exit 0
+sel=$({ zoxide query --list; otter-fd --absolute-path --type d --max-depth 3 --exclude .git . ; } | sed 's|\(.\)/$|\1|' | awk '!seen[$0]++' | fzf --no-sort --info-command 'printf " directories ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'eza --tree --level=2 --icons=always --color=always {}') || exit 0
 yazi "$sel"
 '''
-
 
 [[modules]]
 description = "search file contents in current directory, hidden files included, edit the match in nano (rg, fzf, bat)"
@@ -84,13 +86,25 @@ prefix = "ai"
 cmd = "otter-ask"
 
 [[modules]]
+description = "start kmscon on a VT: a truecolor Nerd Font console, VT number optional (kms)"
+prefix = "kms"
+cmd = "kms '{}'"
+with_argument = true
+
+[[modules]]
+description = "render text in every figlet and toilet font, with filters and a text effect (toilet, fzf, gum, tte)"
+prefix = "fig"
+cmd = "otter-fig '{}'"
+with_argument = true
+
+[[modules]]
 description = "open system monitor (btop)"
 prefix = "tp"
 cmd = "btop"
 
 [[modules]]
 description = "pick a process, terminate or kill it (ps, fzf, gum)"
-prefix = "ps"
+prefix = "sp"
 cmd = "otter-ps"
 
 [[modules]]

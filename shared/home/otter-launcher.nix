@@ -9,7 +9,7 @@ let
     (builtins.replaceStrings [ esc ] [ "\\u001B" ] (lib.last logoRows))
   ] (builtins.readFile ./otter-launcher/config.toml);
 
-  # The header text beside the logo: name, host, date and time.
+  # The header text beside the logo: name, date and time.
   otterHeader = pkgs.writeShellApplication {
     name = "otter-header";
     runtimeInputs = [ pkgs.coreutils ];
@@ -64,6 +64,23 @@ let
       tailscale
     ];
     text = builtins.readFile ./otter-launcher/ssh.sh;
+  };
+
+  # Render text in every figlet and toilet font, with filters and a terminal text effect.
+  otterFig = pkgs.writeShellApplication {
+    name = "otter-fig";
+    runtimeInputs = with pkgs; [
+      coreutils
+      fzf
+      gum
+      terminaltexteffects
+      toilet
+    ];
+    text = ''
+      FIGLET_FONTS=${pkgs.figlet}/share/figlet
+      TOILET_FONTS=${pkgs.toilet}/share/figlet
+      ${builtins.readFile ./otter-launcher/fig.sh}
+    '';
   };
 
   # Search nixpkgs as you type.
@@ -153,6 +170,7 @@ in
   imports = [
     ./bat.nix
     ./fzf.nix
+    ./fun.nix
     ./gh.nix
     ./glow.nix
     ./lazygit.nix
@@ -169,6 +187,7 @@ in
     otterJolt
     otterSsh
     otterNx
+    otterFig
     otterSd
     otterJq
     otterPs

@@ -20,7 +20,7 @@ esac
 
 # fzf expands the single-quoted commands, not the shell
 # shellcheck disable=SC2016
-sel=$(otter-nx --list "${1:-}" | fzf --disabled --query "${1:-}" \
+sel=$(otter-nx --list "${1:-}" | fzf --height=40% --min-height=15 --disabled --query "${1:-}" \
   --delimiter ' ' --with-nth 1.. \
   --header 'type to search nixpkgs, enter nix shell' \
   --info-command 'printf " packages ($FZF_POS/$FZF_TOTAL_COUNT)"' \

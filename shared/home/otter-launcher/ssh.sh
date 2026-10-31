@@ -1,27 +1,28 @@
 # Pick one of your own tailnet hosts and ssh in as zk. Online hosts come first.
 # Usage: otter-ssh [host]   a host name or address skips the picker
 # A name is looked up in tailscale and connected by address, so it works without MagicDNS.
-if [ -n "${1:-}" ]; then
+connect() {
   addr=$(tailscale status --json 2> /dev/null |
     jq -r --arg h "$1" '
       [.Self, (.Peer | to_entries[].value)]
       | map(select((.HostName | ascii_downcase) == ($h | ascii_downcase)))
       | .[0].TailscaleIPs[0] // empty')
   exec ssh "zk@${addr:-$1}"
+}
+
+if [ -n "${1:-}" ]; then
+  connect "$1"
 fi
 
-esc=$'\e'
-# fzf expands the single-quoted info command, not the shell
-# shellcheck disable=SC2016
+# A short list, so gum choose rather than fzf. Colours are ANSI palette slots, not hexes.
+export GUM_CHOOSE_CURSOR_FOREGROUND=4 GUM_CHOOSE_HEADER_FOREGROUND=8
 sel=$(tailscale status --json 2> /dev/null |
-  jq -r --arg on "${esc}[32m●${esc}[0m" --arg off "${esc}[90m○${esc}[0m" '
+  jq -r '
     .Self.UserID as $u
     | [.Self, (.Peer | to_entries[].value)]
     | map(select(.UserID == $u and .OS == "linux"))
     | sort_by(.Online | not)
     | .[]
-    | [.TailscaleIPs[0], "\(if .Online then $on else $off end) \(.HostName)", .TailscaleIPs[0], .OS] | @tsv' |
-  fzf --ansi --delimiter '\t' --with-nth 2.. \
-    --info-command 'printf " hosts ($FZF_POS/$FZF_TOTAL_COUNT)"' \
-    --header 'enter ssh' --no-preview) || exit 0
-exec ssh "zk@${sel%%$'\t'*}"
+    | "\(if .Online then "●" else "○" end) \(.HostName)"' |
+  gum choose --header 'ssh to  (● online  ○ offline)' --height 12) || exit 0
+connect "${sel#* }"

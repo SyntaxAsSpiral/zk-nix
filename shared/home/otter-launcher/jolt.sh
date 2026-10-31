@@ -62,7 +62,7 @@ jq -r '
    | ["proc", .process_name, "cpu \(.avg_cpu * 10 | round / 10) %", "mem \(.avg_memory_mb | round) MB",
       "impact \(.total_impact | round)", ""])
   | @tsv' "$OTTER_JOLT_JSON" |
-  fzf --delimiter '\t' --with-nth 2.. \
+  fzf --height=40% --min-height=15 --delimiter '\t' --with-nth 2.. \
     --header 'days and top processes; type a date or a process name' \
     --info-command 'printf " history ($FZF_POS/$FZF_TOTAL_COUNT)"' \
     --preview 'otter-jolt --preview {1} {2}' --preview-window 'right,55%,wrap' > /dev/null
