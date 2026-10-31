@@ -78,29 +78,6 @@ otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow
 '''
 
 [[modules]]
-description = "Ask a model about a file (fd, fzf, bat, mods)"
-prefix = "ai"
-cmd = "otter-ask"
-
-[[modules]]
-description = "Start kmscon on a VT (kms)"
-prefix = "kms"
-cmd = "kms '{}'"
-with_argument = true
-
-[[modules]]
-description = "Render text in figlet and toilet fonts (toilet, fzf, gum, tte)"
-prefix = "fig"
-cmd = "otter-fig '{}'"
-with_argument = true
-
-[[modules]]
-description = "Say text as a cow, fortune if empty (cowsay, fortune, fzf, gum)"
-prefix = "cow"
-cmd = "otter-cow '{}'"
-with_argument = true
-
-[[modules]]
 description = "Monitor the system (btop)"
 prefix = "tp"
 cmd = "btop"
@@ -135,3 +112,26 @@ with_argument = true
 description = "Browse nushell commands (nu tui)"
 prefix = "nu"
 cmd = "otter-nu"
+
+[[modules]]
+description = "Ask a model about a file (fd, fzf, bat, mods)"
+prefix = "ai"
+cmd = "otter-ask"
+
+[[modules]]
+description = "Start kmscon on a VT (kms)"
+prefix = "kms"
+cmd = "kms '{}'"
+with_argument = true
+
+[[modules]]
+description = "Render text in figlet and toilet fonts (toilet, fzf, gum, tte)"
+prefix = "fig"
+cmd = "otter-fig '{}'"
+with_argument = true
+
+[[modules]]
+description = "Say text as a cow, fortune if empty (cowsay, fortune, fzf, gum)"
+prefix = "cow"
+cmd = "otter-cow '{}'"
+with_argument = true
