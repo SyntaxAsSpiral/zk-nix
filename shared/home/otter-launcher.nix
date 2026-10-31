@@ -184,6 +184,7 @@ in
     ./glow.nix
     ./lazygit.nix
     ./mods/default.nix
+    ./sky.nix
     ./zoxide.nix
   ];
 
