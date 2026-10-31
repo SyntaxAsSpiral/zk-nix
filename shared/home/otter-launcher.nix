@@ -1,14 +1,6 @@
 # One otter-launcher for every host. The modules use only shell kit tools.
-{ pkgs, lib, inputs, ... }:
+{ pkgs, inputs, ... }:
 let
-  # The saved chafa logo. Rows 0-4 sit beside the header text; row 5 becomes part of the
-  # prompt line in config.toml, with its escapes written as TOML \u001B.
-  esc = builtins.fromJSON ''"\u001b"'';
-  logoRows = lib.splitString "\n" (lib.removeSuffix "\n" (builtins.readFile ../../assets/otter-logo.ansi));
-  configToml = builtins.replaceStrings [ "@LOGO_ROW@" ] [
-    (builtins.replaceStrings [ esc ] [ "\\u001B" ] (lib.last logoRows))
-  ] (builtins.readFile ./otter-launcher/config.toml);
-
   # The header text beside the logo: name, date and time.
   otterHeader = pkgs.writeShellApplication {
     name = "otter-header";
@@ -213,5 +205,5 @@ in
     otterAsk
   ];
 
-  xdg.configFile."otter-launcher/config.toml".text = configToml;
+  xdg.configFile."otter-launcher/config.toml".source = ./otter-launcher/config.toml;
 }

@@ -2,7 +2,7 @@
 # terminal otter was started in, using shell kit tools (fd, fzf, bat, eza, yazi, nano,
 # glow, nh, lazygit, btop, rg). Run a module without the TUI: otter-launcher nx ripgrep
 [general]
-height = 26 # lines otter occupies: 1 padding, the 5-line header, the prompt, its rule, every module (17), 1 padding
+height = 25 # lines otter occupies: 1 padding, the 4-line header, the prompt, its rule, every module (17), 1 padding
 default_module = "gr" # text with no known prefix greps the current directory
 empty_module = "fo" # Enter on an empty prompt picks a file
 exec_cmd = "bash -c" # modules are bash
@@ -13,10 +13,10 @@ external_editor = "nano" # TUI editor for prompt editing (ctrl+x ctrl+e)
 
 [interface]
 header = "$(otter-header)"
-padding = [1, 50, 1, 1] # top, right, bottom, left
+padding = [1, 0, 1, 1] # top, right, bottom, left
 list_prefix = "  "
 selection_prefix = "\u001B[31;1m> "
-prompt_sign = "@LOGO_ROW@  \u001B[34m \u001B[0m" # logo row 5, then nf-fa-search
+prompt_sign = "\u001B[34m \u001B[0m" # nf-fa-search
 prompt_sign_color = "reset"
 placeholder = "search modules"
 suggestion_mode = "list"
