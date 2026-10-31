@@ -89,10 +89,24 @@ let
       fi
     '';
   };
+
+  # kmscon is not a service here: the plain console stays the default. `kms [vt]` starts it on a VT
+  # (2 by default) as a truecolor Nerd Font terminal and logs zk in. Ctrl+Logo+Backspace closes it.
+  kms = pkgs.writeShellScriptBin "kms" ''
+    exec sudo ${pkgs.kmscon}/bin/kmscon --vt="''${1:-2}" --login \
+      --font-name="RecMonoCasual Nerd Font Mono" --font-size=16 --term=xterm-256color \
+      -- ${pkgs.shadow}/bin/login -f zk
+  '';
 in
 {
+  fonts = {
+    fontconfig.enable = true;
+    packages = [ pkgs.nerd-fonts.recursive-mono ];
+  };
+
   environment.systemPackages = [
     esofetch
+    kms
     pkgs.git
     pkgs.eza
     btop
@@ -109,5 +123,7 @@ in
     pkgs.imagemagick
     pkgs.poppler-utils
     pkgs.ffmpegthumbnailer
+    # terminal text effects: echo hi | tte decrypt
+    pkgs.terminaltexteffects
   ];
 }
