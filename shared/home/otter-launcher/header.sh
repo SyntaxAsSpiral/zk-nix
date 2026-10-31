@@ -57,11 +57,19 @@ if [ -z "$elong" ]; then
 fi
 phases=(🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘)
 phase=${phases[$(awk -v e="$elong" 'BEGIN { print int(e / 45 + 0.5) % 8 }')]}
-# The glyph beside the time: by day the sun's, at night the moon's phase, each with its sign.
+# Zodiac glyphs, forced to text presentation (U+FE0E) so the line's colour applies to them.
+declare -A zodiac=(
+  [Aries]=♈ [Taurus]=♉ [Gemini]=♊ [Cancer]=♋ [Leo]=♌ [Virgo]=♍
+  [Libra]=♎ [Scorpio]=♏ [Sagittarius]=♐ [Capricorn]=♑ [Aquarius]=♒ [Pisces]=♓
+)
+sunglyph="" moonglyph=""
+if [ -n "$sun" ] && [ -n "${zodiac[$sun]:-}" ]; then sunglyph="${zodiac[$sun]}"$'\ufe0e'; fi
+if [ -n "$moon" ] && [ -n "${zodiac[$moon]:-}" ]; then moonglyph="${zodiac[$moon]}"$'\ufe0e'; fi
+
+# The glyph beside the time: by day the sun, at night the moon in its phase and sign.
+# The sun's sign rides on the date.
 if [ "$tod" = "🌃" ]; then
-  tod=$phase sign=$moon
-else
-  sign=$sun
+  tod="$phase${moonglyph:+ $moonglyph}"
 fi
 
 mapfile -t logo < "$LOGO_ANSI"
@@ -70,8 +78,8 @@ mapfile -t logo < "$LOGO_ANSI"
 info=(
   "${lavender}${esc}[1m🐚 Z Shell${off}"
   "${dim}────────────────────${off}"
-  "${peach}  $(date '+%a %d %b')${off}"
-  "${yellow}  $(date '+%H:%M') $tod${sign:+ $sign}${off}"
+  "${peach}  $(date '+%a %d %b')${sunglyph:+ $sunglyph}${off}"
+  "${yellow}  $(date '+%H:%M') $tod${off}"
 )
 for i in 0 1 2 3; do
   printf '%s  %s\n' "${logo[i]}" "${info[i]:-}"
