@@ -1,4 +1,4 @@
-# The otter header: the saved logo (4 rows) beside name, sun and moon, date and time. LOGO_ANSI is set
+# The otter header: the saved logo (4 rows) beside name, rule, date and time. LOGO_ANSI is set
 # by otter-launcher.nix. The art is chafa output of assets/nix-logo-work/nix-logo-solid-tight.png
 # (--format=symbols --size=9x4 --fg-only --symbols=block+border+space --colors=full), with each
 # of its six Mocha colours mapped to the nearest slot of the kitty Mocha palette.
@@ -6,9 +6,9 @@ esc=$'\e'
 
 # ANSI palette slots, so the terminal theme sets the colours. Each is the nearest slot of the
 # official Catppuccin Mocha kitty palette to the Mocha colour it replaces.
-lavender="${esc}[34m" peach="${esc}[31m" yellow="${esc}[33m" off="${esc}[0m"
+lavender="${esc}[34m" peach="${esc}[31m" yellow="${esc}[33m" dim="${esc}[90m" off="${esc}[0m"
 
-# Time of day: sunrise, day, sunset, night.
+# Time of day: sunrise, day, sunset or night, as the glyph beside the time.
 hour=$((10#$(date +%H)))
 if [ "$hour" -ge 7 ] && [ "$hour" -lt 18 ]; then
   tod="🌞"
@@ -57,16 +57,21 @@ if [ -z "$elong" ]; then
 fi
 phases=(🌑 🌒 🌓 🌔 🌕 🌖 🌗 🌘)
 phase=${phases[$(awk -v e="$elong" 'BEGIN { print int(e / 45 + 0.5) % 8 }')]}
-sky="${yellow}☉ ${sun}${off}  ${lavender}☽ ${moon:+$moon }${phase}${off}"
+# The glyph beside the time: by day the sun's, at night the moon's phase, each with its sign.
+if [ "$tod" = "🌃" ]; then
+  tod=$phase sign=$moon
+else
+  sign=$sun
+fi
 
 mapfile -t logo < "$LOGO_ANSI"
 
 # Nerd font icons: calendar, clock. Four lines beside four logo rows.
 info=(
   "${lavender}${esc}[1m🐚 Z Shell${off}"
-  "$sky"
+  "${dim}────────────────────${off}"
   "${peach}  $(date '+%a %d %b')${off}"
-  "${yellow}  $(date '+%H:%M') $tod${off}"
+  "${yellow}  $(date '+%H:%M') $tod${sign:+ $sign}${off}"
 )
 for i in 0 1 2 3; do
   printf '%s  %s\n' "${logo[i]}" "${info[i]:-}"

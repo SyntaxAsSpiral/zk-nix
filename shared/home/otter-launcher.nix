@@ -1,7 +1,7 @@
 # One otter-launcher for every host. The modules use only shell kit tools.
 { pkgs, inputs, ... }:
 let
-  # The header text beside the logo: name, sun and moon, date and time.
+  # The header text beside the logo: name, date and time.
   otterHeader = pkgs.writeShellApplication {
     name = "otter-header";
     runtimeInputs = with pkgs; [ coreutils curl jq gawk ];
