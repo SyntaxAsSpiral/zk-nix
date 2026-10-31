@@ -33,6 +33,7 @@ cell() {
   printf '%s%s%s %-11s%s%3s°%s %s%s%s' "$yellow" "$g" "$off" "$s" "$dim" "$d" "$off" "$red" "${r:- }" "$off"
 }
 
+echo # a line of padding above
 for i in 0 1 2 3 4; do
   line="  $(cell "${rows[i]}")   $(cell "${rows[i + 5]}")"
   if [ "$i" -eq 0 ]; then line+=" $phase"; fi
