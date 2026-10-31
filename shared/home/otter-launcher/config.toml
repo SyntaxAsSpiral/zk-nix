@@ -34,31 +34,12 @@ cmd = "otter-ssh '{}'"
 with_argument = true
 
 [[modules]]
-description = "Open a git repo in lazygit (fd, gum)"
-prefix = "lg"
-cmd = '''
-export GUM_FILTER_INDICATOR_FOREGROUND=4 GUM_FILTER_MATCH_FOREGROUND=5 GUM_FILTER_HEADER_FOREGROUND=8
-sel=$(otter-fd --type d --max-depth 4 '^\.git$' | sed 's|/\.git/$||' | grep -v -E '/\.|/@' | sort | awk '{ for (p in seen) if (index($0, p "/") == 1) next; seen[$0] = 1; print }' | gum filter --header 'open in lazygit' --placeholder 'type to narrow' --height 12) || exit 0
-lazygit -p "$sel"
-'''
-
-
-[[modules]]
-description = "Search beads issues across workspaces (bd, fzf)"
-prefix = "bd"
-cmd = '''
-export BD_JSON_ENVELOPE=1
-otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow  ctrl-e edit  ctrl-n notes  ctrl-s claim  ctrl-x close (asks first)' --info-command 'printf " issues ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'cd {1} && bd show {2} 2>/dev/null' --preview-window 'right,60%,wrap' --bind 'enter:execute(otter-bd-read {1} {2})' --bind 'ctrl-e:execute(cd {1} && EDITOR=nano bd edit {2})+reload(otter-bd-list)' --bind 'ctrl-n:execute(cd {1} && EDITOR=nano bd edit {2} --notes)+reload(otter-bd-list)' --bind 'ctrl-s:execute-silent(cd {1} && bd update {2} --claim)+reload(otter-bd-list)' --bind 'ctrl-x:execute(cd {1} && gum confirm "Close {2}?" && bd close {2})+reload(otter-bd-list)' > /dev/null
-'''
-
-[[modules]]
 description = "Open a file in glow, edit in nano (fd, fzf, bat, glow)"
 prefix = "fo"
 cmd = '''
 sel=$(otter-fd --type f --exclude .git . | fzf --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'n=$(head -n 201 {} | wc -l); if case {} in *.md|*.markdown) true;; *) [ "$n" -le 200 ] && grep -Iq . {};; esac; then if [ "$n" -le 200 ]; then s=ansi-custom; else s=nord-custom; fi; glow --style "$HOME/.config/glow/styles/$s.json" {} < /dev/null; else bat --color=always --style=numbers --line-range=:200 {}; fi') || exit 0
 glow -t "$sel"
 '''
-
 
 [[modules]]
 description = "Open a directory in yazi (zoxide, fd, fzf, eza)"
@@ -79,6 +60,22 @@ rest=${sel#*:}
 nano "+${rest%%:*}" "$file"
 '''
 
+[[modules]]
+description = "Open a git repo in lazygit (fd, gum)"
+prefix = "lg"
+cmd = '''
+export GUM_FILTER_INDICATOR_FOREGROUND=4 GUM_FILTER_MATCH_FOREGROUND=5 GUM_FILTER_HEADER_FOREGROUND=8
+sel=$(otter-fd --type d --max-depth 4 '^\.git$' | sed 's|/\.git/$||' | grep -v -E '/\.|/@' | sort | awk '{ for (p in seen) if (index($0, p "/") == 1) next; seen[$0] = 1; print }' | gum filter --header 'open in lazygit' --placeholder 'type to narrow' --height 12) || exit 0
+lazygit -p "$sel"
+'''
+
+[[modules]]
+description = "Search beads issues across workspaces (bd, fzf)"
+prefix = "bd"
+cmd = '''
+export BD_JSON_ENVELOPE=1
+otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow  ctrl-e edit  ctrl-n notes  ctrl-s claim  ctrl-x close (asks first)' --info-command 'printf " issues ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'cd {1} && bd show {2} 2>/dev/null' --preview-window 'right,60%,wrap' --bind 'enter:execute(otter-bd-read {1} {2})' --bind 'ctrl-e:execute(cd {1} && EDITOR=nano bd edit {2})+reload(otter-bd-list)' --bind 'ctrl-n:execute(cd {1} && EDITOR=nano bd edit {2} --notes)+reload(otter-bd-list)' --bind 'ctrl-s:execute-silent(cd {1} && bd update {2} --claim)+reload(otter-bd-list)' --bind 'ctrl-x:execute(cd {1} && gum confirm "Close {2}?" && bd close {2})+reload(otter-bd-list)' > /dev/null
+'''
 
 [[modules]]
 description = "Ask a model about a file (fd, fzf, bat, mods)"
@@ -122,7 +119,6 @@ cmd = "otter-sd"
 description = "Filter a json file live (fd, fzf, jq)"
 prefix = "jq"
 cmd = "otter-jq"
-
 
 [[modules]]
 description = "Search jolt energy history, adeck only (jolt, jq, fzf)"
