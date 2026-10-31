@@ -14,5 +14,9 @@ let
 in
 {
   home.packages = [ mods ];
-  xdg.configFile."mods/mods.yml".source = ./mods.yml;
+  # force: a stale mods.yml left by an older setup would otherwise stop home-manager from activating.
+  xdg.configFile."mods/mods.yml" = {
+    source = ./mods.yml;
+    force = true;
+  };
 }
