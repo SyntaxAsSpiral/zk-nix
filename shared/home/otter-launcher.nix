@@ -83,6 +83,23 @@ let
     '';
   };
 
+  # Say something as a cow: any cow, any face.
+  otterCow = pkgs.writeShellApplication {
+    name = "otter-cow";
+    runtimeInputs = with pkgs; [
+      coreutils
+      cowsay
+      fortune
+      fzf
+      gnused
+      gum
+    ];
+    text = ''
+      COWS=${pkgs.cowsay}/share/cowsay/cows
+      ${builtins.readFile ./otter-launcher/cow.sh}
+    '';
+  };
+
   # Search nixpkgs as you type.
   otterNx = pkgs.writeShellApplication {
     name = "otter-nx";
@@ -188,6 +205,7 @@ in
     otterSsh
     otterNx
     otterFig
+    otterCow
     otterSd
     otterJq
     otterPs
