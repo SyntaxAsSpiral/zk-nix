@@ -33,3 +33,9 @@ info=(
 for i in 0 1 2 3; do
   printf '%s  %s\n' "${logo[i]}" "${info[i]:-}"
 done
+
+# A braille hairline under the header: the bottom dots of each cell, so the gap reads as part of a line.
+cols=$({ stty size </dev/tty; } 2>/dev/null | cut -d' ' -f2)
+rule=""
+for ((i = 0; i < ${cols:-80} - 2; i++)); do rule+="⣀"; done
+printf '%s%s%s\n' "$dim" "$rule" "$off"
