@@ -14,9 +14,10 @@ file=$(otter-fd --type f --exclude .git . |
     --info-command 'printf " files ($FZF_POS/$FZF_TOTAL_COUNT)"' \
     --preview 'bat --color=always --style=numbers --line-range=:200 {}') || exit 0
 
-# Catppuccin for gum: prompt in sapphire, cursor in lavender.
-export GUM_INPUT_PROMPT_FOREGROUND="#74c7ec" GUM_INPUT_CURSOR_FOREGROUND="#b4befe"
-export GUM_INPUT_PLACEHOLDER_FOREGROUND="#6c7086" GUM_INPUT_WIDTH=0
+# ANSI slots for gum, so the terminal palette sets the colours: prompt cyan, cursor blue,
+# placeholder bright black.
+export GUM_INPUT_PROMPT_FOREGROUND=6 GUM_INPUT_CURSOR_FOREGROUND=4
+export GUM_INPUT_PLACEHOLDER_FOREGROUND=8 GUM_INPUT_WIDTH=0
 
 printf '\n  %s\n\n' "$file"
 question=$(gum input --placeholder "ask about $(basename "$file")") || exit 0
