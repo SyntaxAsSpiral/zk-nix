@@ -2,7 +2,7 @@
 # terminal otter was started in, using shell kit tools (fd, fzf, bat, eza, yazi, nano,
 # glow, nh, lazygit, btop, rg). Run a module without the TUI: otter-launcher nx ripgrep
 [general]
-height = 20 # lines otter occupies: 1 padding, the 4-line header, a blank line, the wave, the prompt, its rule, 10 modules, 1 padding
+height = 16 # lines otter occupies: 1 padding, the 4-line header, a blank line, the wave, the prompt, its rule, 6 modules, 1 padding
 default_module = "gr" # text with no known prefix greps the current directory
 empty_module = "fo" # Enter on an empty prompt picks a file
 exec_cmd = "bash -c" # modules are bash
