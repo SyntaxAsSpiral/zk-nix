@@ -85,9 +85,9 @@ let
       fzf
       gnused
       gum
+      terminaltexteffects
     ];
     text = ''
-      COWS=${pkgs.cowsay}/share/cowsay/cows
       ${builtins.readFile ./otter-launcher/cow.sh}
     '';
   };

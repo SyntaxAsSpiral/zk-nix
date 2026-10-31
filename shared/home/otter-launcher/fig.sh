@@ -3,8 +3,35 @@
 #        otter-fig --render font [filter...]   one font, text from $OTTER_FIG_TEXT (fzf preview)
 # A font is f:name (figlet's own) or t:name (toilet's). toilet draws both, and its filters
 # colour with ANSI palette slots. FIGLET_FONTS and TOILET_FONTS are set by otter-launcher.nix.
+# The last line printed is the command that drew the text, for reference.
 
-render() {
+# nuq quotes one word so nushell reads it back unchanged: bare when safe, single quotes
+# for plain text, escaped double quotes when it holds an apostrophe, a quote or a control.
+nuq() {
+  local s=$1
+  if [[ $s =~ ^[A-Za-z0-9_./:=+-]+$ ]]; then
+    printf '%s' "$s"
+  elif [[ $s != *[\'\"\\$'\n\t\r']* ]]; then
+    printf "'%s'" "$s"
+  else
+    s=${s//\\/\\\\}
+    s=${s//\"/\\\"}
+    s=${s//$'\n'/\\n}
+    s=${s//$'\t'/\\t}
+    s=${s//$'\r'/\\r}
+    printf '"%s"' "$s"
+  fi
+}
+
+# shown prints cmd as a nushell command line.
+shown() {
+  local w out=
+  for w in "${cmd[@]}"; do out+="$(nuq "$w") "; done
+  printf '%s' "$out"
+}
+
+# build sets cmd to the toilet command for a font and its filters.
+build() {
   tag=${1%%:*} name=${1#*:}
   shift
   if [ "$tag" = f ]; then dir=$FIGLET_FONTS; else dir=$TOILET_FONTS; fi
@@ -13,7 +40,12 @@ render() {
     filters=$(IFS=:; echo "$*")
     args=(-F "$filters")
   fi
-  toilet -d "$dir" -f "$name" -w "${FZF_PREVIEW_COLUMNS:-${COLUMNS:-80}}" "${args[@]}" -- "$OTTER_FIG_TEXT"
+  cmd=(toilet -d "$dir" -f "$name" -w "${FZF_PREVIEW_COLUMNS:-${COLUMNS:-80}}" "${args[@]}" -- "$OTTER_FIG_TEXT")
+}
+
+render() {
+  build "$@"
+  "${cmd[@]}"
 }
 
 if [ "${1:-}" = "--render" ]; then
@@ -60,9 +92,13 @@ effect=$(printf '%s\n' none beams binarypath blackhole bouncyballs bubbles burn 
   swarm sweep synthgrid thunderstorm unstable vhstape waves wipe |
   gum filter --header 'effect' --placeholder 'type to narrow' --height 12) || exit 0
 
-out=$(render "$font" "${filters[@]}")
+build "$font" "${filters[@]}"
+out=$("${cmd[@]}")
+line=$(shown)
 if [ "$effect" = none ]; then
   printf '%s\n' "$out"
 else
   printf '%s\n' "$out" | tte "$effect"
+  line="$line| tte $effect"
 fi
+printf '\n\033[90m%s\033[0m\n' "$line"
