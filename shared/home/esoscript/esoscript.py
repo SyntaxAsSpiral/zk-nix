@@ -5,8 +5,9 @@ usage: esoscript [-s SCRIPT] [text...]   text from the arguments, else from stdi
        esoscript --all [text...]         the text in every script, one per line
        esoscript --list                  the scripts, each with the font that draws it
 
-The tables are those of the greek-to-me mod for Claude Code (SyntaxAsSpiral/greek-to-me,
-hooks/register.tsx); keep the two alike. Aurebesh, Maya and Tengwar live in the private use
+This file is the source of truth for every table here. The greek-to-me mod for Claude Code
+(SyntaxAsSpiral/greek-to-me) is written from it by its scripts/sync-tables.py; edit the tables here,
+never there. Aurebesh, Maya and Tengwar live in the private use
 plane and need the fonts in assets/esofonts (AurebeshPUA.otf, Maya.otf, TengwarPUA.ttf),
 which shared/system/fonts.nix installs on a NixOS host. A remote terminal needs them on the
 machine that draws it.
