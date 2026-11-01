@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+"""esoscript: write text in an esoteric script, one character for one letter.
+
+usage: esoscript [-s SCRIPT] [text...]   text from the arguments, else from stdin
+       esoscript --all [text...]         the text in every script, one per line
+       esoscript --list                  the scripts, each with the font that draws it
+
+The tables are those of the greek-to-me mod for Claude Code (SyntaxAsSpiral/greek-to-me,
+hooks/register.tsx); keep the two alike. Aurebesh, Maya and Tengwar live in the private use
+plane and need the fonts in assets/esofonts (AurebeshPUA.otf, Maya.otf, TengwarPUA.ttf),
+which shared/system/fonts.nix installs on a NixOS host. A remote terminal needs them on the
+machine that draws it.
+"""
+import sys
+
+LATIN = "abcdefghijklmnopqrstuvwxyz"
+
+# a b c d e f g h i j k l m n o p q r s t u v w x y z
+ALPHABETS = {
+    "greek": ("αβκδεφγηιξκλμνοπθρστυϝωχψζ", "ΑΒΚΔΕΦΓΗΙΞΚΛΜΝΟΠΘΡΣΤΥϜΩΧΨΖ"),
+    "runic": ("ᚨᛒᚲᛞᛖᚠᚷᚺᛁᛃᚲᛚᛗᚾᛟᛈᚲᚱᛊᛏᚢᚢᚹᛉᛃᛉ", None),
+    "braille": ("⠁⠃⠉⠙⠑⠋⠛⠓⠊⠚⠅⠇⠍⠝⠕⠏⠟⠗⠎⠞⠥⠧⠺⠭⠽⠵", None),
+    "hebrew": ("אבכדעפגהישקלמנופקרסתטווצחז", None),
+    "katakana": ("ｱﾊｾﾄｴﾌｹﾍｲｼｶﾘﾏﾅｵﾎｸﾗｻﾀｳﾋﾜｽﾔｿ", None),
+    "malayalam": ("അബചദഎഫഗഹഇജകലമനഒപഖരസതഉവഴഷയശ", None),
+    "arabic": ("ابثدعفغهيجكلمنوضقرستظزصحطذ", None),
+    "grimdark": ("☠ᛒ🜂ᛞ⚙ᚠ🜃ᚺ✠🜄ᚲᛚᛗᚾ☥ᛈ🜔ᚱᛊᛏ⚜🜍ᚹ⚔⛧🜏", None),
+    "hiero": ("𓄿𓃀𓎡𓂧𓇋𓆑𓎼𓉔𓇋𓆓𓎡𓃭𓅓𓈖𓂝𓊪𓈎𓂋𓋴𓏏𓅱𓆑𓅱𓐍𓇌𓊃", None),
+}
+KLINGON = [0xf8d0, 0xf8d1, 0xf8d2, 0xf8d3, 0xf8d4, 0xf8de, 0xf8d5, 0xf8d6, 0xf8d7, 0xf8d8, 0xf8df, 0xf8d9, 0xf8da, 0xf8db, 0xf8dd, 0xf8de, 0xf8e0, 0xf8e1, 0xf8e2, 0xf8e3, 0xf8e5, 0xf8e6, 0xf8e7, 0xf8d2, 0xf8e8, 0xf8e2]
+KLINGON_DIGITS = [0xf8f0, 0xf8f1, 0xf8f2, 0xf8f3, 0xf8f4, 0xf8f5, 0xf8f6, 0xf8f7, 0xf8f8, 0xf8f9]
+
+# Maya.otf: only the 392 main signs that fit one cell, one fixed sign per character.
+MAYA_RANGES = "f656f-f6587,f6589-f658e,f6590-f659a,f659c-f65a2,f65a4-f65a6,f65a8-f65af,f65b2-f65c8,f65ca-f65ce,f65d0-f65d7,f65d9-f65e3,f65e6-f65f2,f65f4-f65fb,f65fd-f6600,f6603-f660a,f660c-f661a,f661c-f6620,f6622-f662b,f662d-f662f,f6632-f6636,f6638-f663a,f663c-f6643,f6647,f6649-f664a,f664c-f6651,f6653-f6655,f6657-f6658,f665c,f665f,f6661,f6664-f6671,f6675,f6678-f6679,f667b,f6682-f6683,f6686-f6687,f6689-f668c,f668f-f6690,f6696,f6698,f66a0,f66a4,f66a8,f66aa-f66ab,f66ad-f66ae,f66b5,f66b9-f66ba,f66be,f66c0,f66c4-f66c5,f66c8-f66c9,f66cf,f66d1,f66d3-f66d4,f66d7,f66da-f66db,f66e0,f66e4,f66e7,f66f3-f66f5,f66f8,f66fc,f6706,f670a-f670b,f670d-f670e,f6710,f6713,f6715,f6719-f671a,f671f,f6722,f6728,f672a,f6730-f6733,f6738,f673b,f673f,f6743,f6745-f6748,f674b-f674c,f674e-f6750,f6752,f6757-f6758,f675b-f675c,f6761,f6763,f6767-f6768,f676e-f676f,f6772-f6774,f6778-f6779,f677b-f677c,f677e,f6780,f6788-f6789,f678b,f678d,f6792-f6793,f6795-f6796,f679c,f679e-f679f,f67a3,f67a6,f67ab,f67ae,f67b5-f67b6,f67b9,f67c1,f67c3-f67c4,f67c6-f67c7,f67ca-f67cc,f67d0-f67f0,f67f2-f67f5,f67f9-f67fa,f67fe,f6800-f6801,f6804,f6806,f680a,f680e-f680f,f6816"
+MAYA = [c for r in MAYA_RANGES.split(",") for c in range(int(r.split("-")[0], 16), int(r.split("-")[-1], 16) + 1)]
+
+# Tengwar (Unifont CSUR, moved to U+F5100 + (cp - U+E000) so Nerd Font icons do not take it)
+Q_CONS = [
+    ("qu", 0xE003), ("th", 0xE008), ("ng", 0xE006), ("nd", 0xE004), ("mb", 0xE005), ("ch", 0xE00A), ("hw", 0xE00B),
+    ("t", 0xE000), ("p", 0xE001), ("c", 0xE002), ("k", 0xE002), ("q", 0xE003), ("d", 0xE004), ("b", 0xE005),
+    ("g", 0xE006), ("f", 0xE009), ("n", 0xE010), ("m", 0xE011), ("v", 0xE015), ("w", 0xE017), ("s", 0xE020),
+    ("z", 0xE021), ("h", 0xE024), ("y", 0xE026), ("j", 0xE026), ("r", 0xE030), ("l", 0xE032),
+]
+TENGWAR_LETTERS = [
+    0xE000, 0xE001, 0xE002, 0xE003, 0xE004, 0xE005, 0xE006, 0xE008, 0xE009, 0xE00A, 0xE00B, 0xE010, 0xE011, 0xE015,
+    0xE017, 0xE020, 0xE021, 0xE024, 0xE026, 0xE030, 0xE032, 0xE02C,
+]
+CARRIER = 0xE02C
+VOWELS = "aeiou"
+
+# the font that draws each script, for the picker; anything not listed is in ordinary system fonts
+FONTS = {
+    "quenya": "Tengwar PUA", "tengwar": "Tengwar PUA", "klingon": "Tengwar PUA", "aurebesh": "Aurebesh PUA",
+    "maya": "Maya", "hiero": "Noto Sans Egyptian Hieroglyphs", "grimdark": "Symbola",
+}
+
+
+def table(name):
+    if name == "klingon":
+        lo = [chr(c) for c in KLINGON]
+        digits = [chr(c) for c in KLINGON_DIGITS]
+    else:
+        lower, upper = ALPHABETS[name]
+        lo = list(lower)
+        digits = []
+    up = list(upper) if name == "greek" and ALPHABETS[name][1] else lo
+    m = {}
+    for i, c in enumerate(LATIN):
+        m[c] = lo[i] if i < len(lo) else c
+        m[c.upper()] = up[i] if i < len(up) else m[c]
+    for i, d in enumerate(digits):
+        m[str(i)] = d
+    return m
+
+
+def mapped(name):
+    m = table(name)
+    return lambda line: "".join(m.get(c, c) for c in line)
+
+
+def maya(line):
+    return "".join(
+        chr(MAYA[(ord(c.lower()) * 2654435761 & 0xFFFFFFFF) % len(MAYA)]) if c.isascii() and c.isalnum() else c
+        for c in line
+    )
+
+
+def aurebesh(line):
+    return "".join(chr(0xF5000 + ord(c)) if c.isascii() and c.isalnum() else c for c in line)
+
+
+def t(cp):
+    return chr(cp - 0xE000 + 0xF5100)
+
+
+def syllable(letter, vowel):
+    return chr(0xF5200 + TENGWAR_LETTERS.index(letter) * 5 + VOWELS.index(vowel))
+
+
+def _tengwar(line, vowel_on_next):
+    """quenya puts a vowel on the NEXT consonant, tengwar on the one BEFORE it; a carrier otherwise."""
+    out, s = [], line.lower()
+    pending = None  # quenya: a vowel waiting for its consonant
+    last = -1  # tengwar: the letter just drawn, while it has no vowel yet
+
+    def flush():
+        nonlocal pending
+        if pending:
+            out.append(syllable(CARRIER, pending))
+        pending = None
+
+    def letter(cp):
+        nonlocal pending, last
+        if vowel_on_next:
+            out.append(syllable(cp, pending) if pending else t(cp))
+            pending = None
+        else:
+            out.append(t(cp))
+            last = cp
+
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if c in VOWELS:
+            if vowel_on_next:
+                flush()
+                pending = c
+            else:
+                if last >= 0:
+                    out[-1] = syllable(last, c)
+                else:
+                    out.append(syllable(CARRIER, c))
+                last = -1
+            i += 1
+            continue
+        if c == "x":
+            letter(0xE002)
+            if vowel_on_next:
+                out.append(t(0xE020))
+            else:
+                letter(0xE020)
+            i += 1
+            continue
+        hit = next(((k, cp) for k, cp in Q_CONS if s.startswith(k, i)), None)
+        if hit:
+            letter(hit[1])
+            i += len(hit[0])
+            continue
+        if vowel_on_next:
+            flush()
+        else:
+            last = -1
+        out.append(line[i])
+        i += 1
+    if vowel_on_next:
+        flush()
+    return "".join(out)
+
+
+SCRIPTS = {
+    **{n: mapped(n) for n in [*ALPHABETS, "klingon"]},
+    "quenya": lambda line: _tengwar(line, True),
+    "tengwar": lambda line: _tengwar(line, False),
+    "maya": maya,
+    "aurebesh": aurebesh,
+}
+ORDER = ["greek", "runic", "braille", "klingon", "quenya", "tengwar", "hebrew", "katakana", "malayalam", "arabic",
+         "grimdark", "hiero", "aurebesh", "maya"]
+
+
+def main(argv):
+    args = argv[1:]
+    script, mode = "greek", "one"
+    while args and args[0].startswith("-"):
+        a = args.pop(0)
+        if a in ("-s", "--script") and args:
+            script = args.pop(0)
+        elif a == "--all":
+            mode = "all"
+        elif a == "--list":
+            mode = "list"
+        else:
+            sys.exit(__doc__)
+    if mode == "list":
+        for n in ORDER:
+            print(f"{n}\t{FONTS.get(n, '')}")
+        return
+    if script not in SCRIPTS:
+        sys.exit(f"esoscript: no script {script!r}; try --list")
+    text = " ".join(args) if args else (sys.stdin.read() if not sys.stdin.isatty() else "")
+    text = text.rstrip("\n")
+    if mode == "all":
+        for n in ORDER:
+            print(f"{n:<10} {SCRIPTS[n](text)}")
+    else:
+        print(SCRIPTS[script](text))
+
+
+if __name__ == "__main__":
+    main(sys.argv)

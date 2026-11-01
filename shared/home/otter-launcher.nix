@@ -92,6 +92,18 @@ let
     '';
   };
 
+  # Write text in an esoteric script: pick one by its preview. The esoscript command it calls
+  # comes from esoscript.nix, on the path with the rest of the kit.
+  otterEso = pkgs.writeShellApplication {
+    name = "otter-eso";
+    runtimeInputs = with pkgs; [
+      fzf
+      gawk
+      gum
+    ];
+    text = builtins.readFile ./otter-launcher/eso.sh;
+  };
+
   # Search nixpkgs as you type.
   otterNx = pkgs.writeShellApplication {
     name = "otter-nx";
@@ -179,6 +191,7 @@ in
   imports = [
     ./bat.nix
     ./fzf.nix
+    ./esoscript.nix
     ./fun.nix
     ./gh.nix
     ./glow.nix
@@ -199,6 +212,7 @@ in
     otterNx
     otterFig
     otterCow
+    otterEso
     otterSd
     otterJq
     otterPs

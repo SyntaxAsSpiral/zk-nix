@@ -135,3 +135,9 @@ description = "Say text as a cow, fortune if empty (cowsay, fortune, fzf, gum)"
 prefix = "cow"
 cmd = "otter-cow '{}'"
 with_argument = true
+
+[[modules]]
+description = "Write text in an esoteric script: quenya, klingon, maya, aurebesh... (esoscript, fzf, gum)"
+prefix = "eso"
+cmd = "otter-eso '{}'"
+with_argument = true
