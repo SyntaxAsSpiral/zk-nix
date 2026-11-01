@@ -1,18 +1,10 @@
-# All fonts: system + esoteric
+# System fonts, on every host through core.nix. The fonts of the esoteric scripts are in esofonts.nix.
 { pkgs, ... }:
 
-let
-  esofontsSrc = ../../assets/esofonts;
-in
 {
   fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-    nerd-fonts.iosevka
-    nerd-fonts.fira-code
-    nerd-fonts.victor-mono
-    nerd-fonts.ubuntu-mono
     nerd-fonts.recursive-mono
-    cascadia-code
+    nerd-fonts.victor-mono
     ibm-plex
     cinzel
     eb-garamond
@@ -25,18 +17,31 @@ in
     noto-fonts-cjk-sans
     liberation_ttf
     vt323
-  ] ++ [
-    # Esoteric fonts from assets
-    (pkgs.runCommand "esofonts" {} ''
-      mkdir -p $out/share/fonts
-      cp -r ${esofontsSrc}/* $out/share/fonts/
-    '')
+    kode-mono
+    miracode
+    (google-fonts.override {
+      fonts = [
+        "Syne Mono"
+        "Nova Mono"
+        "Aladin"
+        "Amarante"
+        "Aubrey"
+        "Combo"
+        "Faculty Glyphic"
+        "Glass Antiqua"
+        "Spicy Rice"
+        "Viaoda Libre"
+        # IM Fell English, under the file names Google ships it as
+        "IMFeENrm28P"
+        "IMFeENit28P"
+      ];
+    })
   ];
 
   fonts.fontconfig = {
     enable = true;
     defaultFonts = {
-      monospace = [ "RecMonoCasual Nerd Font" "JetBrainsMono Nerd Font" ];
+      monospace = [ "RecMonoCasual Nerd Font" "DejaVu Sans Mono" ];
       sansSerif = [ "Noto Sans" ];
       serif = [ "RecMonoCasual Nerd Font" ];
       emoji = [ "Noto Color Emoji" ];

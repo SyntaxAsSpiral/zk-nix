@@ -10,6 +10,7 @@
     ./networking.nix
     ./ssh-identity.nix
     ./shell.nix
+    ./fonts.nix
   ];
 
   users.users.zk = {

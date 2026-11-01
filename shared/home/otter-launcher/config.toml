@@ -74,7 +74,7 @@ description = "Search beads issues across workspaces (bd, fzf)"
 prefix = "bd"
 cmd = '''
 export BD_JSON_ENVELOPE=1
-otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow  ctrl-e edit  ctrl-n notes  ctrl-s claim  ctrl-x close (asks first)' --info-command 'printf " issues ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'cd {1} && bd show {2} 2>/dev/null' --preview-window 'right,60%,wrap' --bind 'enter:execute(otter-bd-read {1} {2})' --bind 'ctrl-e:execute(cd {1} && EDITOR=nano bd edit {2})+reload(otter-bd-list)' --bind 'ctrl-n:execute(cd {1} && EDITOR=nano bd edit {2} --notes)+reload(otter-bd-list)' --bind 'ctrl-s:execute-silent(cd {1} && bd update {2} --claim)+reload(otter-bd-list)' --bind 'ctrl-x:execute(cd {1} && gum confirm "Close {2}?" && bd close {2})+reload(otter-bd-list)' > /dev/null
+otter-bd-list | fzf --delimiter '\t' --with-nth 2.. --header 'enter read in glow  ctrl-e edit  ctrl-n notes  ctrl-x close (asks first)' --info-command 'printf " issues ($FZF_POS/$FZF_TOTAL_COUNT)"' --preview 'cd {1} && bd show {2} 2>/dev/null' --preview-window 'right,60%,wrap' --bind 'enter:execute(otter-bd-read {1} {2})' --bind 'ctrl-e:execute(cd {1} && EDITOR=nano bd edit {2})+reload(otter-bd-list)' --bind 'ctrl-n:execute(cd {1} && EDITOR=nano bd edit {2} --notes)+reload(otter-bd-list)' --bind 'ctrl-x:execute(cd {1} && gum confirm "Close {2}?" && bd close {2})+reload(otter-bd-list)' > /dev/null
 '''
 
 [[modules]]

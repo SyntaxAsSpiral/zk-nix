@@ -16,7 +16,7 @@
     ../../shared/system/services.nix
     ../../shared/system/storage.nix
     ../../shared/system/packages.nix
-    ../../shared/system/fonts.nix
+    ../../shared/system/esofonts.nix
 
     ./llama-tts.nix
     ./pulse-generator.nix

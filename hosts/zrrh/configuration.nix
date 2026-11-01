@@ -25,7 +25,7 @@ in
     ../../shared/system/services.nix
     ../../shared/system/storage.nix
     ../../shared/system/packages.nix
-    ../../shared/system/fonts.nix
+    ../../shared/system/esofonts.nix
 
     ../../shared/system/nvidia.nix
     ../../shared/system/steam.nix

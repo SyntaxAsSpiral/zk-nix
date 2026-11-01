@@ -99,11 +99,6 @@ let
   '';
 in
 {
-  fonts = {
-    fontconfig.enable = true;
-    packages = [ pkgs.nerd-fonts.recursive-mono ];
-  };
-
   environment.systemPackages = [
     esofetch
     kms

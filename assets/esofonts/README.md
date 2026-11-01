@@ -1,10 +1,14 @@
 # Esoteric fonts
 
-The fonts in this directory are checked into the flake and installed
-declaratively by `shared/system/fonts.nix`. The module copies this directory into a
-Nix font package, so no manual copy or `fc-cache` step is required.
+The source fonts of the esoteric scripts. `shared/system/esofonts.nix` builds from them and installs the result;
+nothing here is installed as it stands except what has no package.
 
-It currently includes Mayan, Aurebesh, Tengwar/Quenya, runic, Symbola, and
-other display fonts. Maya.otf also holds the Mayan numerals 0 to 19 (U+1D2E0 to U+1D2F3), copied from Noto Sans Mayan Numerals (SIL OFL 1.1) and scaled to the size of its signs; `scripts/build-maya-numerals.py` rebuilds that from the original. TengwarPUA.ttf (Unifont CSUR, SIL OFL 1.1) and AurebeshPUA.otf also hold their glyphs in the private use plane, which `esoscript` and the greek-to-me mod draw. The complete installed font set, including fonts supplied
-by nixpkgs, is defined in `shared/system/fonts.nix`; keep this file focused on the
-checked-in asset directory.
+- `Aurebesh*.otf` (Neale Davidson, OFL 1.1): the faces are installed as they are. `Aurebesh.otf` is also the source of
+  `AurebeshPUA.otf`, built by `scripts/build-aurebesh.py`.
+- `Maya.otf` (Unicode Fonts for Ancient Scripts, George Douros; personal use): the unmodified original. The installed
+  `Maya.otf` is this plus the Mayan numerals from Noto Sans Mayan Numerals, added by `scripts/build-maya-numerals.py`.
+- `QUEN*.TTF` and `ModernRunic-Regular.ttf`: no package; installed as they are.
+
+`TengwarPUA.ttf` has no source here. It is built from Unifont CSUR (nixpkgs `unifont`) by `scripts/build-tengwar.py`,
+reading its letters from `shared/home/esoscript/esoscript.py`. The fonts for everyday use (Syne Mono, Kode Mono,
+Miracode, the Google display faces) come from nixpkgs through `shared/system/fonts.nix`.

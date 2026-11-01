@@ -4,7 +4,7 @@
 usage: session-verbs.py [TRANSCRIPT.jsonl] [--repo PATH]...
 
 TRANSCRIPT defaults to the newest session of the current directory (~/.claude/projects/<cwd>/*.jsonl).
-Each verb is a call to mcp__matrix-spinner__status; the transcript stores each call twice, so they are
+Each verb is a call to mcp__matrix-spinner__status or mcp__gerunds__status; the transcript stores each call twice, so they are
 de-duplicated by call id. Each --repo adds that repo's commit titles from the session's span, taken from the
 `[ ☠ title ]` bracket of a commit-style message, else its subject. Times are local.
 """
@@ -16,7 +16,7 @@ import subprocess
 import sys
 from datetime import datetime
 
-TOOL = "mcp__matrix-spinner__status"
+TOOLS = {"mcp__matrix-spinner__status", "mcp__gerunds__status"}  # the verb tool, before and after the split
 
 
 def newest_transcript():
@@ -45,7 +45,7 @@ def verbs_of(path):
         if not isinstance(content, list):
             continue
         for b in content:
-            if isinstance(b, dict) and b.get("type") == "tool_use" and b.get("name") == TOOL:
+            if isinstance(b, dict) and b.get("type") == "tool_use" and b.get("name") in TOOLS:
                 text = str((b.get("input") or {}).get("text", "")).strip()
                 if text and b["id"] not in seen and ts:
                     seen.add(b["id"])
