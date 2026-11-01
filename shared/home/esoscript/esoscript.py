@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """esoscript: write text in an esoteric script, one character for one letter.
 
-usage: esoscript [-s SCRIPT] [text...]   text from the arguments, else from stdin
+usage: esoscript [-s SCRIPT] [text...]   text from the arguments, else a filter over stdin (ANSI colours kept)
        esoscript --all [text...]         the text in every script, one per line
        esoscript --list                  the scripts, each with the font that draws it
 
@@ -12,6 +12,7 @@ plane and need the fonts in assets/esofonts (AurebeshPUA.otf, Maya.otf, TengwarP
 which shared/system/fonts.nix installs on a NixOS host. A remote terminal needs them on the
 machine that draws it.
 """
+import re
 import sys
 
 LATIN = "abcdefghijklmnopqrstuvwxyz"
@@ -190,6 +191,14 @@ ORDER = ["greek", "runic", "braille", "klingon", "quenya", "tengwar", "hebrew", 
          "grimdark", "hiero", "cirth", "ogham", "gothic", "shavian", "aurebesh", "maya"]
 
 
+ANSI = re.compile(r"(\x1b\[[0-9;?]*[ -/]*[@-~])")
+
+
+def through(tf, text):
+    """tf over the text between ANSI colour codes; the codes themselves are kept, so coloured output can be piped."""
+    return "".join(part if i % 2 else tf(part) for i, part in enumerate(ANSI.split(text)))
+
+
 def main(argv):
     args = argv[1:]
     script, mode = "greek", "one"
@@ -209,14 +218,16 @@ def main(argv):
         return
     if script not in SCRIPTS:
         sys.exit(f"esoscript: no script {script!r}; try --list")
-    text = " ".join(args) if args else (sys.stdin.read() if not sys.stdin.isatty() else "")
-    text = text.rstrip("\n")
+    piped = not args and not sys.stdin.isatty()
+    text = " ".join(args) if args else (sys.stdin.read() if piped else "")
     if mode == "all":
+        text = text.rstrip("\n")
         for n in ORDER:
-            print(f"{n:<10} {SCRIPTS[n](text)}")
+            print(f"{n:<10} {through(SCRIPTS[n], text)}")
+    elif piped:
+        sys.stdout.write(through(SCRIPTS[script], text))  # a filter: every newline and blank line kept as it came
     else:
-        print(SCRIPTS[script](text))
-
+        print(through(SCRIPTS[script], text))
 
 if __name__ == "__main__":
     main(sys.argv)
