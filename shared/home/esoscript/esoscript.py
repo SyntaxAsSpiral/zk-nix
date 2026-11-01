@@ -69,6 +69,8 @@ CARRIER = 0xE02C
 VOWELS = "aeiou"
 
 # the font that draws each script, for the picker; anything not listed is in ordinary system fonts
+# digits 0-9 for scripts that have a numeral set of their own; braille and maya number in runs (below)
+DIGITS = {"arabic": "٠١٢٣٤٥٦٧٨٩", "malayalam": "൦൧൨൩൪൫൬൭൮൯"}
 FONTS = {
     "quenya": "Tengwar PUA", "tengwar": "Tengwar PUA", "klingon": "Tengwar PUA", "aurebesh": "Aurebesh PUA",
     "maya": "Maya", "hiero": "Noto Sans Egyptian Hieroglyphs", "grimdark": "Symbola", "ogham": "DejaVu Sans",
@@ -85,7 +87,7 @@ def table(name):
     else:
         lower, upper = ALPHABETS[name]
         lo = list(lower)
-        digits = []
+        digits = list(DIGITS.get(name, ""))
     up = list(upper) if name == "greek" and ALPHABETS[name][1] else lo
     m = {}
     for i, c in enumerate(LATIN):
@@ -101,11 +103,25 @@ def mapped(name):
     return lambda line: "".join(m.get(c, c) for c in line)
 
 
+def braille(line):
+    """Letters from the table; a run of digits is one number sign, then a-j for 1-9,0."""
+    m = table("braille")
+    return re.sub(r"\d+", lambda r: "\u283c" + "".join(m["jabcdefghi"[int(d)]] for d in r[0]), "".join(m.get(c, c) for c in line))
+
+
+def mayan_number(run):
+    """A whole number in Mayan numerals: base 20, most significant first, U+1D2E0 is zero."""
+    n, digits = int(run), []
+    while True:
+        n, d = divmod(n, 20)
+        digits.append(chr(0x1D2E0 + d))
+        if not n:
+            return "".join(reversed(digits))
+
+
 def maya(line):
-    return "".join(
-        chr(MAYA[(ord(c.lower()) * 2654435761 & 0xFFFFFFFF) % len(MAYA)]) if c.isascii() and c.isalnum() else c
-        for c in line
-    )
+    letter = lambda c: chr(MAYA[(ord(c.lower()) * 2654435761 & 0xFFFFFFFF) % len(MAYA)]) if c.isascii() and c.isalpha() else c
+    return "".join(mayan_number(p) if p.isdigit() else "".join(map(letter, p)) for p in re.split(r"(\d+)", line))
 
 
 def aurebesh(line):
@@ -184,6 +200,7 @@ SCRIPTS = {
     **{n: mapped(n) for n in [*ALPHABETS, "klingon", *BLOCKS]},
     "quenya": lambda line: _tengwar(line, True),
     "tengwar": lambda line: _tengwar(line, False),
+    "braille": braille,
     "maya": maya,
     "aurebesh": aurebesh,
 }
