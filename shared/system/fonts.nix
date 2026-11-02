@@ -5,7 +5,7 @@
   fonts.packages = with pkgs; [
     nerd-fonts.recursive-mono
     nerd-fonts.victor-mono
-    ibm-plex
+   # ibm-plex
     cinzel
     eb-garamond
     cardo
