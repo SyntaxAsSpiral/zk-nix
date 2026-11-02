@@ -22,6 +22,8 @@ let
     "git:github.com/nicobailon/pi-subagents@8fcc3c787a6e7d9da0f21bafb604fe937084c21b"
     # Already at origin. No host-package warning.
     "git:github.com/burggraf/pi-teams@d01336d0b3f948988ffda76a7a06021ea82c212a"
+    # v0.1.0, zk's own. Also on npm as pi-gerunds. Owns setWorkingMessage only.
+    "git:github.com/SyntaxAsSpiral/pi-gerunds@1107d6c05b3a1ba529bc332bce33316400af1489"
   ];
 in
 {
