@@ -69,7 +69,7 @@ CARRIER = 0xE02C
 VOWELS = "aeiou"
 
 # the font that draws each script, for the picker; anything not listed is in ordinary system fonts
-# digits 0-9 for scripts that have a numeral set of their own; braille and maya number in runs (below)
+# digits 0-9 for scripts that have a numeral set of their own; braille numbers a run with one number sign (below), maya writes each digit (below)
 DIGITS = {"arabic": "٠١٢٣٤٥٦٧٨٩", "malayalam": "൦൧൨൩൪൫൬൭൮൯"}
 FONTS = {
     "quenya": "Tengwar PUA", "tengwar": "Tengwar PUA", "klingon": "Tengwar PUA", "aurebesh": "Aurebesh PUA",
@@ -121,7 +121,7 @@ def mayan_number(run):
 
 def maya(line):
     letter = lambda c: chr(MAYA[(ord(c.lower()) * 2654435761 & 0xFFFFFFFF) % len(MAYA)]) if c.isascii() and c.isalpha() else c
-    return "".join(mayan_number(p) if p.isdigit() else "".join(map(letter, p)) for p in re.split(r"(\d+)", line))
+    return "".join("".join(mayan_number(d) for d in p) if p.isdigit() else "".join(map(letter, p)) for p in re.split(r"(\d+)", line))
 
 
 def aurebesh(line):
