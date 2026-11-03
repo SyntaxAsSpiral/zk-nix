@@ -177,6 +177,20 @@ let
     text = builtins.readFile ./otter-launcher/jq.sh;
   };
 
+  # Choose an eikon avatar from the public catalog or a local file and play it.
+  otterEk = pkgs.writeShellApplication {
+    name = "otter-ek";
+    runtimeInputs = with pkgs; [
+      coreutils
+      curl
+      findutils
+      fzf
+      gzip
+      jq
+    ];
+    text = builtins.readFile ./otter-launcher/ek.sh;
+  };
+
   # Pick a process and end it.
   otterPs = pkgs.writeShellApplication {
     name = "otter-ps";
@@ -218,6 +232,7 @@ in
     otterPs
     otterNu
     otterAsk
+    otterEk
   ];
 
   xdg.configFile."otter-launcher/config.toml".source = ./otter-launcher/config.toml;

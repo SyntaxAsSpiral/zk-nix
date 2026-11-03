@@ -141,3 +141,9 @@ description = "Write text in an esoteric script: quenya, klingon, maya, aurebesh
 prefix = "eso"
 cmd = "otter-eso '{}'"
 with_argument = true
+
+[[modules]]
+description = "Pick an eikon avatar and play it, or play a .eikon path (curl, jq, fzf)"
+prefix = "ek"
+cmd = "otter-ek '{}'"
+with_argument = true
