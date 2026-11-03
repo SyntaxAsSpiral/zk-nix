@@ -11,12 +11,19 @@
 # replace the hash below, switch, then run pi update --extensions.
 {
   config,
+  osConfig,
   pkgs,
   lib,
   ...
 }:
 
 let
+  # Packages a host loads from a local checkout: pi reads the directory in place, so /reload picks
+  # up an edit. /mnt/echo lives on adeck only.
+  perHost = {
+    adeck.localPackages = [ "/mnt/echo/mod-workshop/pi-eikon" ];
+  };
+
   piPackages = [
     # v0.77.0. typebox is a peer. The v0.24.3 checkout listed it as a dependency.
     "git:github.com/nicobailon/pi-subagents@8fcc3c787a6e7d9da0f21bafb604fe937084c21b"
@@ -24,7 +31,8 @@ let
     "git:github.com/burggraf/pi-teams@d01336d0b3f948988ffda76a7a06021ea82c212a"
     # v0.1.0, zk's own. Also on npm as pi-gerunds. Owns setWorkingMessage only.
     "git:github.com/SyntaxAsSpiral/pi-gerunds@1107d6c05b3a1ba529bc332bce33316400af1489"
-  ];
+  ]
+  ++ perHost.${osConfig.my.host}.localPackages or [ ];
 in
 {
   home = {
