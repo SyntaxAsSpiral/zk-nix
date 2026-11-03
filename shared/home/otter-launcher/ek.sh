@@ -9,6 +9,7 @@
 # A signal resolves through the header's signals map and its fallback chain, then
 # defaultSignal. A clip's loopFrom follows the eikon SPEC: absent or 0 loops it all,
 # 0 < N < count plays the intro once and loops from N, N == count holds the last frame.
+# A clip colour of ansi:N tints with the terminal palette, #rrggbb with truecolor.
 # Catalog runtimes are checked against their sha256 digest and cached. Local eikons live in
 # $XDG_DATA_HOME/eikons and herm's eikons directory. The last line printed is the command.
 
@@ -112,10 +113,14 @@ index() {
   echo "$((start + (t - start) % (n - start)))"
 }
 
-# fg prints the truecolor escape for a #rrggbb colour, or nothing.
+# fg prints the escape for a colour: ansi:N is terminal palette slot N (0-15, so it follows the
+# theme), #rrggbb is truecolor. Anything else prints nothing.
 fg() {
   local h=${1#\#}
-  if [[ $h =~ ^[0-9a-fA-F]{6}$ ]]; then
+  if [[ $1 =~ ^ansi:(1[0-5]|[0-9])$ ]]; then
+    local n=${BASH_REMATCH[1]}
+    if [ "$n" -lt 8 ]; then printf '\033[%dm' "$((30 + n))"; else printf '\033[%dm' "$((82 + n))"; fi
+  elif [[ $h =~ ^[0-9a-fA-F]{6}$ ]]; then
     printf '\033[38;2;%d;%d;%dm' "0x${h:0:2}" "0x${h:2:2}" "0x${h:4:2}"
   fi
 }
