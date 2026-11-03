@@ -24,8 +24,6 @@ let
     "git:github.com/burggraf/pi-teams@d01336d0b3f948988ffda76a7a06021ea82c212a"
     # v0.1.0, zk's own. Also on npm as pi-gerunds. Owns setWorkingMessage only.
     "git:github.com/SyntaxAsSpiral/pi-gerunds@1107d6c05b3a1ba529bc332bce33316400af1489"
-    # v0.1.2, apat183's animated π mascot: a state widget by the composer and a launch header.
-    "git:github.com/apat183/pi-buddy@1f103ebe72db076ef8d491f83b5dc0f979037aa9"
   ];
 in
 {
