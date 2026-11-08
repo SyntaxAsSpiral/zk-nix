@@ -3,9 +3,6 @@
 # awww query: show the current wallpaper per output.
 { pkgs, ... }:
 {
+  # awww-daemon is started from hyprland/lua/hyprland.lua.
   home.packages = [ pkgs.awww ];
-
-  wayland.windowManager.hyprland.settings."exec-once" = [
-    "awww-daemon"
-  ];
 }

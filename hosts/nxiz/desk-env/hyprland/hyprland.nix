@@ -1,15 +1,9 @@
-# Hyprland compositor core — variables, exec-once, and module imports
+# Hyprland compositor core. The config is hand-written Lua in ./lua: hyprland.lua is the
+# entry file (variables, env, autostart) and requires monitors, appearance, windowrules and
+# keybinds. home-manager's own settings-to-Lua translation is not used.
 { pkgs, ... }:
 {
-  # Lua auto-translation is still wrong (hl.animations / hl["$var"] are nil).
-  # Pin hyprlang until a real Lua port exists; see LUA-MIGRATION.md.
-  # 2262afa inverted a "revert" and shipped configType=lua — this undoes that.
-
   imports = [
-    ./keybinds.nix
-    ./windowrules.nix
-    ./monitors.nix
-    ./appearance.nix
     ./hypridle.nix
   ];
 
@@ -38,35 +32,26 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "hyprlang";
-    settings = {
-      "$terminal" = "kitty";
-      "$fileManager" = "thunar";
-      "$menu" = "kitty --class launcher -e fsel -d";
-      "$search" = "kitty --class launcher -e otter-launcher";
-      "$browser" = "firefox";
-      "$editor" = "zeditor";
-      "$editor-alt" = "kitty --class tui-float -e nano";
-      "$notes" = "obsidian";
-      "$mainMod" = "SUPER";
-      "$screensaver" =
-        "bash -c 'for ws in $(hyprctl monitors -j | jq -r \".[].activeWorkspace.id\"); do hyprctl dispatch exec \"[fullscreen;silent;workspace:$ws] kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\"; done'";
-
-      cursor = {
-        no_hardware_cursors = true;
+    configType = "lua";
+    extraConfig = builtins.readFile ./lua/hyprland.lua;
+    # autoLoad is off: hyprland.lua requires these itself, after it sets the shared variables.
+    extraLuaFiles = {
+      monitors = {
+        content = ./lua/monitors.lua;
+        autoLoad = false;
       };
-
-      env = [
-        "XCURSOR_SIZE,30"
-        "HYPRCURSOR_SIZE,30"
-        "XCURSOR_THEME,catppuccin-mocha-blue-cursors"
-        "HYPRCURSOR_THEME,catppuccin-mocha-blue-cursors"
-        "TZDIR,/etc/zoneinfo"
-      ];
-
-      "exec-once" = [
-        "hyprpanel"
-      ];
+      appearance = {
+        content = ./lua/appearance.lua;
+        autoLoad = false;
+      };
+      windowrules = {
+        content = ./lua/windowrules.lua;
+        autoLoad = false;
+      };
+      keybinds = {
+        content = ./lua/keybinds.lua;
+        autoLoad = false;
+      };
     };
   };
 
