@@ -23,6 +23,7 @@ let
       }
     '';
     seed.loginFile = "";
+    quita.loginFile = ""; # no compositor started from tty1 yet
     tm20.loginFile = "";
   };
 in

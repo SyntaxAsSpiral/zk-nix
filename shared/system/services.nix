@@ -5,6 +5,7 @@ let
   guiFileHosts = [
     "nxiz"
     "zrrh"
+    "quita"
   ];
 in
 {

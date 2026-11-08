@@ -9,9 +9,6 @@ let
 
   fromInputs = {
     cachyosKernel = inputs.nix-cachyos-kernel.overlays.pinned;
-    hyprland = _final: _prev: {
-      hyprland = inputs.nixpkgs-hyprland.legacyPackages.${system}.hyprland;
-    };
     openrgb = _final: _prev: {
       openrgb-with-all-plugins = inputs.nixpkgs-openrgb.legacyPackages.${system}.openrgb-with-all-plugins;
     };
@@ -40,7 +37,6 @@ in
 
     nxiz = [
       fromInputs.cachyosKernel
-      fromInputs.hyprland
       fromInputs.llmAgents
     ]
     ++ nixpkgsFixes
@@ -60,5 +56,8 @@ in
 
     # Rescue stick: stock nixpkgs kernel and packages, all from cache.nixos.org.
     seed = [ ];
+
+    # Laptop terminal: stock kernel and packages, no overlays.
+    quita = [ ];
   };
 }

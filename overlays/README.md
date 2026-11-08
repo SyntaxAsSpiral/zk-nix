@@ -16,7 +16,6 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 | Input | Locked to | Hosts | Why | Drop when |
 | --- | --- | --- | --- | --- |
 | `nixpkgs-llm` | `e73de5be` (2026-06-26) | zrrh | CUDA `llama-cpp`. `hosts/zrrh/configuration.nix` sets `cudaCapabilities = [ "8.9" ]` so the build is the 4090 kernel only. | A CUDA rebuild is acceptable. Replace the rev, then `nix flake update nixpkgs-llm`. |
-| `nixpkgs-hyprland` | `34ab99075` (2026-08-31) | nxiz | Hyprland 0.56.2 while the nxiz config is still hyprlang. Its `bin/Hyprland` is a wrapProgram script, which the nixpkgs 2026-10-20 wrapper ELF check rejects. `hosts/nxiz/configuration.nix` points `security.wrappers.Hyprland.source` at `.Hyprland-wrapped`. That wrapper drops the script's PATH additions (binutils, hyprland-qtutils, pciutils, pkgconf). | The nxiz config leaves hyprlang. |
 | `nix-cachyos-kernel` | `02ba4db` (2026-10-22) | nxiz, zrrh | Kernel patches are bound to that flake's own nixpkgs. It has no `follows`. Its nixpkgs must be no older than root nixpkgs' kernel build: since nixpkgs 2026-10-17 the module aggregator copies `modules.cer`, which older kernel builds lack. | A newer kernel pin is worth the rebuild. |
 
 ## Package holds
@@ -47,7 +46,7 @@ This directory is where package behavior diverges from upstream nixpkgs and flak
 ## Host map
 
 - `adeck`: llm-agents, cached Codex, cached herdr, cached beads, fsel, llama-tts binary.
-- `nxiz`: CachyOS kernel, Hyprland pin, llm-agents, cached Codex, cached herdr, cached beads, HyprPanel, tumbler, LM Studio, fsel, sonic-pi checks disabled.
+- `nxiz`: CachyOS kernel, llm-agents, cached Codex, cached herdr, cached beads, HyprPanel, tumbler, LM Studio, fsel, sonic-pi checks disabled.
 - `zrrh`: CachyOS kernel, llm-agents, cached Codex, cached herdr, cached beads, HyprPanel overlay, tumbler, LM Studio, `nixpkgs-llm`, OpenRGB 1.0rc3.1, noctalia-shell from the OpenRGB rev.
 - `tm20`: tm20-cli. `tm20-source` is a branch input and moves on `nix flake update`.
 - `seed`: no overlays. Stock nixpkgs kernel and packages, all from cache.nixos.org.

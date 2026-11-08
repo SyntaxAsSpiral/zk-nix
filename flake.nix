@@ -4,9 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # nxiz keeps Hyprland 0.56.2 while its configuration is still hyprlang.
-    nixpkgs-hyprland.url = "github:NixOS/nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
-
     # zrrh keeps OpenRGB 1.0rc3.1. 1.0 renamed the addressable header and
     # drops Hypnotoad's saved colors. The rev is in the URL. Replace it, then
     # `nix flake update nixpkgs-openrgb`. Registry: overlays/README.md.
@@ -120,6 +117,7 @@
         adeck = mkHost "adeck" { extraModules = [ jovian.nixosModules.default ]; };
         tm20 = mkHost "tm20" { hostPlatform = "aarch64-linux"; };
         seed = mkHost "seed" { };
+        quita = mkHost "quita" { };
       };
 
       # 6. Formatter (nix fmt)

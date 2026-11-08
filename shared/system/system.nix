@@ -9,6 +9,7 @@
       "zrrh"
       "tm20"
       "seed"
+      "quita"
     ];
     description = "Host identifier — selects per-host blocks in shared modules";
   };
@@ -26,6 +27,7 @@
         zrrh = "/etc/nixos";
         tm20 = "/etc/nixos";
         seed = "/etc/nixos";
+        quita = "/etc/nixos";
       }
       .${config.my.host};
 

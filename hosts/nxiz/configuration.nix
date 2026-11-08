@@ -56,8 +56,8 @@
   # harmless no-op if the board's chip isn't Nuvoton
   boot.kernelModules = [ "nct6775" ];
 
-  # The pinned 0.56.2 bin/Hyprland is a wrapProgram script. The capability
-  # wrapper must target an ELF, so point it at the unwrapped binary.
+  # bin/Hyprland is a wrapper around .Hyprland-wrapped. The capability wrapper
+  # must target the real binary, so point it there.
   security.wrappers.Hyprland.source =
     lib.mkForce "${config.programs.hyprland.package}/bin/.Hyprland-wrapped";
 
