@@ -1,4 +1,4 @@
--- windowrules.nix
+-- windowrules: window rules
 
 hl.window_rule({
     name       = "screensaver-fullscreen",

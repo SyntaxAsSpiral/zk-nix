@@ -1,4 +1,4 @@
--- monitors.nix: monitors, input, per-device settings
+-- monitors: monitors, input, per-device settings
 
 hl.monitor({ output = "HDMI-A-2", mode = "2560x1080",           position = "1440x1260", scale = 1 })
 hl.monitor({ output = "HDMI-A-1", mode = "2560x1440@144.00000", position = "0x0",       scale = 1, transform = 1 })

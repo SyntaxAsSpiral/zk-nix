@@ -1,4 +1,4 @@
--- appearance.nix: layout, decoration, animations
+-- appearance: layout, decoration, animations
 -- hyprpaper is not used. nxiz wallpapers come from awww.
 
 hl.config({

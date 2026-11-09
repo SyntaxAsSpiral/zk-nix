@@ -16,7 +16,7 @@ local editorAlt  = "kitty --class tui-float -e nano"
 local notes      = "obsidian"
 local mainMod    = "SUPER"
 
--- Defined in hyprland.nix but bound to nothing there either. The hyprlang form
+-- Was defined in hyprland.nix, bound to nothing there either. The hyprlang form
 -- called `hyprctl dispatch exec "[rules] cmd"`; a Lua session wants a Lua
 -- expression, so this runs the same thing through hl.dsp.exec_cmd's rules.
 local screensaver = [[bash -c 'for ws in $(hyprctl monitors -j | jq -r ".[].activeWorkspace.id"); do hyprctl dispatch "hl.dsp.exec_cmd(\"kitty --class hypr-screensaver -e neo --colormode=32 -C ~/.config/neo/frappe-sapphire.cfg\", { fullscreen = true, workspace = \"$ws silent\" })"; done']]

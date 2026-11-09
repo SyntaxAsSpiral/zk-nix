@@ -1,4 +1,4 @@
--- keybinds.nix: bind / bindm / bindel / bindl
+-- keybinds: bind / bindm / bindel / bindl
 
 local n = _G.nxiz
 local mainMod = n.mainMod
