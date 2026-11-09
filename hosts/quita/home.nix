@@ -1,8 +1,10 @@
 # Quita home: laptop terminal. Nushell and the shared CLI set, Zed, Firefox, Thunar, GTK.
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
+    inputs.nixarchy.homeManagerModules.nixarchy
+
     ../../shared/home/daemon-profile.nix
     ../../shared/home/nushell.nix
     ../../shared/home/gh.nix
@@ -19,6 +21,7 @@
 
   programs = {
     home-manager.enable = true;
+    nixarchy.enable = true;
 
     kitty = {
       enable = true;

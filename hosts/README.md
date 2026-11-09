@@ -6,7 +6,7 @@ Host files are the table of contents for each machine.
 
 `seed` is the portable x86_64 UEFI stick. It is the core: the base a new host is copied from, then extended, and also the rescue stick. Its `configuration.nix` and `home.nix` name the shared modules it wants and skip the rest (no `packages.nix`, no NVIDIA, no Zed). It is console only: no display server, and autologin is the tty getty. It is a `zcli` host (`zcli deploy seed`), but it is left out of `zcli sync all`, since the stick is often offline. A booted seed has `zcli`, so it can deploy itself from zrrh. Its `hardware-configuration.nix` is hand-written and uses filesystem labels, because the stick moves between machines.
 
-`quita` is a laptop terminal: core, stock kernel, and no display stack yet, pending a nixarchy (Hyprland) trial. It skips `packages.nix`, `storage.nix`, `xdg.nix`, NVIDIA, and Steam. Its `hardware-configuration.nix` is a placeholder until the installer writes the real one. It is not yet in the `zcli` host tables; add it once it runs NixOS.
+`quita` is a laptop terminal: core, stock kernel, and no display stack yet, pending a nixarchy (Hyprland) trial. It skips `packages.nix`, `storage.nix`, `xdg.nix`, NVIDIA, and Steam. Its `hardware-configuration.nix` is the one `nixos-generate-config` wrote on the machine (btrfs `@`, `@home`, `@swap`, with an 8 GiB swapfile), plus `noatime` on `/swap`. It is not in the `zcli` host tables.
 
 ## Host-local app config
 

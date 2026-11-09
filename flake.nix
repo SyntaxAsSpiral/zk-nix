@@ -1,6 +1,19 @@
 {
   description = "NixOS configurations for zk mesh";
 
+  # nixarchy's own caches, for quita. Without them a build compiles a compositor.
+  # Builds need --accept-flake-config to use them.
+  nixConfig = {
+    extra-substituters = [
+      "https://nixarchy.cachix.org"
+      "https://hyprland.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nixarchy.cachix.org-1:05JOuIlsQOWY2/5DQMq7JEA1hwlhgvmMWowMfka8mMM="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -64,6 +77,12 @@
       url = "github:numtide/llm-agents.nix";
     };
 
+    # quita's trial: Omarchy on NixOS. The release channel follows the newest tagged release.
+    nixarchy = {
+      url = "github:olafkfreund/nixarchy/release";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -71,6 +90,7 @@
       nixpkgs,
       home-manager,
       jovian,
+      nixarchy,
       ...
     }:
     let
@@ -117,7 +137,7 @@
         adeck = mkHost "adeck" { extraModules = [ jovian.nixosModules.default ]; };
         tm20 = mkHost "tm20" { hostPlatform = "aarch64-linux"; };
         seed = mkHost "seed" { };
-        quita = mkHost "quita" { };
+        quita = mkHost "quita" { extraModules = [ nixarchy.nixosModules.nixarchy ]; };
       };
 
       # 6. Formatter (nix fmt)
@@ -145,11 +165,14 @@
         in
         {
           statix = pkgs.runCommand "statix-check" { buildInputs = [ pkgs.statix ]; } ''
-            statix check ${./.}
+            # hosts/quita/etc-nixos is quita's /etc/nixos kept verbatim, so it is not linted.
+            cd ${./.}
+            statix check . --ignore 'hosts/quita/etc-nixos/*'
             touch $out
           '';
           deadnix = pkgs.runCommand "deadnix-check" { buildInputs = [ pkgs.deadnix ]; } ''
-            deadnix --fail ${./.}
+            cd ${./.}
+            deadnix --fail --exclude hosts/quita/etc-nixos/*.nix .
             touch $out
           '';
         };

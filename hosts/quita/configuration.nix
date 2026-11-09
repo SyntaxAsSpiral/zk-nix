@@ -1,11 +1,11 @@
-# NixOS configuration for quita — laptop terminal. Core, no display stack yet: the
-# desktop (nixarchy's Hyprland) is added once the trial settles.
+# NixOS configuration for quita — laptop terminal. Core plus nixarchy (Omarchy on NixOS), on trial.
 # No NVIDIA, Steam, or packages.nix (its playwright browsers are the bulk of that set).
 { lib, pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
+    ./nixarchy-apps.nix
 
     ../../shared/system/core.nix
     ../../shared/system/boot.nix
@@ -22,6 +22,13 @@
   # No performance.nix here, so zram is set per host. The swapfile (@swap) comes with the
   # installer's hardware-configuration.nix.
   zramSwap.enable = true;
+
+  # nixarchy, as the doctor asked for it on this machine. The Home Manager half is in home.nix.
+  programs.nixarchy = {
+    enable = true;
+    user = "zk";
+  };
+  hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
   programs = {
     thunar = {
