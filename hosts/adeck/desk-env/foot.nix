@@ -1,5 +1,4 @@
 # adeck terminal. The server is a user unit on the graphical session; windows are footclient.
-# hosts/adeck/desk-env/alacritty.nix stays unwired so the previous terminal can be imported again.
 { pkgs, ... }:
 
 {
