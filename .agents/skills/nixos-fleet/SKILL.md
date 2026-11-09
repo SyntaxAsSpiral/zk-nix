@@ -4,13 +4,13 @@ description: >
   Use when organizing the nix-os flake across hosts: add or change a host, share a module,
   keep a change off the wrong machine, see what a host imports, add a perHost entry, or
   choose shared/system/, shared/home/, hosts/<host>/, hosts/<host>/desk-env/, or overlays/.
-  Triggers: mkHost, my.host, perHost, nxiz, zrrh, adeck, tm20, seed, quita.
+  Triggers: mkHost, my.host, perHost, nxiz, zrrh, adeck, tm20, seed.
   Deploy is zcli. Credentials are nixos-secrets.
 ---
 
 # nixos-fleet
 
-One flake, six hosts. Shared leaf modules live in `shared/`. Each host file is that
+One flake, five hosts. Shared leaf modules live in `shared/`. Each host file is that
 machine's profile. Host-only Home Manager modules live in `hosts/<host>/desk-env/`.
 Shared modules vary per host through a `perHost` table keyed on `config.my.host`.
 Ownership rules are in `shared/README.md`. Host-file conventions are in `hosts/README.md`.
@@ -37,7 +37,6 @@ openssh, tty1 autologin, and the SSH-to-nushell handoff. There are no other shar
 | zrrh | same workstation leaves; `./openrgb` and pia | shared home leaves; `./desk-env/` |
 | adeck | shared nixos leaves, no nvidia or steam; llama-tts, pulse, qbittorrent. `jovian` via `extraModules` | shared home leaves; firefox package in `home.nix`, no gtk module; `./desk-env/` |
 | tm20 | `core`, `./print-receiver.nix`. aarch64 | nushell, named in `home.nix` |
-| quita | `core`, `boot`, `user`, `services`, `esofonts`; No display stack yet. Stock kernel. Not yet in zcli | nushell, zed, kitty, firefox, thunar, gtk, CLI toolchain, named in `home.nix` |
 | seed | `core`, `boot`. Empty overlays. Console only | nushell, gh, and zcli, named in `home.nix` |
 
 seed is `core` plus the stick, and a new host starts from it. It skips `packages.nix` and the NVIDIA/Steam modules. That set blew the stick out to 8.5 GiB.

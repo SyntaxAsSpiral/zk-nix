@@ -79,26 +79,6 @@ let
       };
       terminal = "ghostty";
     };
-
-    quita = {
-      bookmarks = [
-        "${dav "adeck" "echo"} 🪞 Echo (adeck)"
-        "file:///home/zk/Downloads ⬇ Downloads"
-        "file:///home/zk/Images 🖼 Images"
-      ];
-      thunarrc = {
-        LastView = "ThunarIconView";
-        LastSidePane = "ThunarShortcutsPane";
-        LastLocationBar = "ThunarLocationButtons";
-        LastMenubarVisible = "TRUE";
-        LastStatusbarVisible = "TRUE";
-        MiscShowHiddenFiles = "TRUE";
-        MiscFileSizeBinary = "TRUE";
-        MiscSingleClick = "FALSE";
-        MiscDateStyle = "THUNAR_DATE_STYLE_ISO";
-      };
-      terminal = "kitty";
-    };
   };
 
   h = perHost.${osConfig.my.host};

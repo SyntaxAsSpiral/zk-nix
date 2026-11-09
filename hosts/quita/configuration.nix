@@ -1,55 +1,61 @@
-# NixOS configuration for quita — laptop terminal. Core plus nixarchy (Omarchy on NixOS), on trial.
-# No NVIDIA, Steam, or packages.nix (its playwright browsers are the bulk of that set).
-{ lib, pkgs, ... }:
+# quita: bare NixOS, installed from seed. No flake yet. Tailscale first, then nixarchy.
+{ pkgs, nixarchy, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-    ./nixarchy-apps.nix
+  imports = [ ./hardware-configuration.nix ];
 
-    ../../shared/system/core.nix
-    ../../shared/system/boot.nix
-    ../../shared/system/user.nix
-    ../../shared/system/services.nix
-    ../../shared/system/esofonts.nix
-  ];
+  boot.loader = {
+    systemd-boot = {
+      enable = true;
+      configurationLimit = 5;
+    };
+    efi.canTouchEfiVariables = true;
+  };
 
-  my.host = "quita";
+  networking = {
+    hostName = "quita";
+    networkmanager.enable = true;
+  };
 
-  # No Steam, so no 32-bit audio stack.
-  services.pipewire.alsa.support32Bit = lib.mkForce false;
+  services = {
+    openssh.enable = true;
+    tailscale = {
+      enable = true;
+      useRoutingFeatures = "client";
+      extraUpFlags = [ "--ssh" ];
+    };
+  };
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
-  # No performance.nix here, so zram is set per host. The swapfile (@swap) comes with the
-  # installer's hardware-configuration.nix.
   zramSwap.enable = true;
 
-  # nixarchy adds fcitx5-mozc to its input-method addons, and nixpkgs' mozc does not build here
-  # (uic rejects a class name in dictionary_tool.ui). Stub it: no Japanese input on quita until
-  # the hold in overlays/README.md is dropped.
-  nixpkgs.overlays = [ (_final: prev: { fcitx5-mozc = prev.emptyDirectory; }) ];
+  time.timeZone = "America/Los_Angeles";
 
-  # nixarchy, as the doctor asked for it on this machine. The Home Manager half is in home.nix.
+  users.users.zk = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBfoVdWpimtBi0htouhMDsD1NXuKbIAusgzB1dxYDW4z"
+    ];
+  };
+  security.sudo.wheelNeedsPassword = false;
+
+  environment.systemPackages = with pkgs; [ git vim ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # nixarchy: Omarchy for NixOS. Doctor output, 2026-11-09.
   programs.nixarchy = {
     enable = true;
     user = "zk";
   };
   hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
-  programs = {
-    thunar = {
-      enable = true;
-      plugins = with pkgs; [
-        thunar-volman
-        thunar-archive-plugin
-      ];
-    };
-    nm-applet.enable = true;
+  home-manager.users.zk = {
+    imports = [ nixarchy.homeManagerModules.nixarchy ];
+    programs.nixarchy.enable = true;
+    home.stateVersion = "25.11";
   };
-
-  environment.systemPackages = with pkgs; [
-    bluetuith
-    networkmanagerapplet
-  ];
 
   system.stateVersion = "25.11";
 }

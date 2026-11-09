@@ -56,8 +56,5 @@ in
 
     # Rescue stick: stock nixpkgs kernel and packages, all from cache.nixos.org.
     seed = [ ];
-
-    # Laptop terminal: stock kernel and packages, no overlays.
-    quita = [ ];
   };
 }

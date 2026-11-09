@@ -10,7 +10,7 @@ NixOS flake for the `zk` Tailscale mesh. Shared leaf modules live in `shared/`. 
 | zrrh  | Central builder (every `zcli` build runs here), Niri, RTX 4090 | CachyOS kernel; binfmt aarch64 (deploy zrrh once) |
 | adeck | Agentic server on Steam Deck hardware, Niri | Jovian kernel and module |
 | tm20  | Pi 3B+ print-host appliance | aarch64, SD image |
-| quita | Laptop terminal, no display stack yet (nixarchy trial), NixOS install pending | Stock kernel, no NVIDIA or Steam, no `packages.nix`. Not yet a `zcli` host |
+| quita | Laptop, bare NixOS with nixarchy on top. Standalone flake in `hosts/quita/`, verbatim from its `/etc/nixos` | Not a mesh-flake host: no `mkHost`, no `zcli` |
 | seed  | Portable x86_64 core and rescue stick; the base a new host is copied from | Console only. No `packages.nix`, NVIDIA, or Steam. A `zcli` host, but not in `sync all` |
 
 ## Skills

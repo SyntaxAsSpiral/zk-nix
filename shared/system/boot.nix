@@ -63,14 +63,6 @@ let
       stockKernel = true;
       kernelParams = [ "boot.shell_on_fail" ];
     };
-    # Laptop terminal: stock kernel, no nouveau blacklist, no NVIDIA sleep params.
-    quita = {
-      canTouchEfiVariables = true;
-      plymouth = false;
-      blacklistNouveau = false;
-      stockKernel = true;
-      kernelParams = [ "quiet" "boot.shell_on_fail" ];
-    };
   };
   h = perHost.${config.my.host};
 in
