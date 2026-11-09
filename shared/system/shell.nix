@@ -67,6 +67,7 @@ let
       # only if the client sends it, and kitty does not set it.
       case "''${TERM_PROGRAM:-}:''${TERM:-}" in
         kitty:*|ghostty:*|WezTerm:*|*:xterm-kitty|*:xterm-ghostty) LOGO_TYPE="kitty-direct" ;;
+        *:foot|*:foot-direct)                                      LOGO_TYPE="sixel" ;;
         iTerm.app:*|konsole:*)                                     LOGO_TYPE="iterm" ;;
         *)                                                         LOGO_TYPE="text" ;;
       esac

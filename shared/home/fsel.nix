@@ -1,5 +1,13 @@
-{ pkgs, ... }:
+{ osConfig, pkgs, ... }:
 
+let
+  # fsel appends the command, so the launcher is a prefix. footclient takes the command
+  # as positional args; kitty wants -e in front of them.
+  perHost = {
+    nxiz.terminal = "kitty -e";
+    adeck.terminal = "footclient";
+  };
+in
 {
   home.packages = [
     pkgs.fsel
@@ -9,8 +17,11 @@
     # ===== BASIC SETTINGS =====
     # These settings go at the ROOT LEVEL (not in any [section])
 
-    # Highlight color for selected items and cursor
-    highlight_color = "rgb(137,180,250)"
+    # Highlight color for selected items and cursor.
+    # ANSI indices follow the Kitty Catppuccin Mocha theme: each old hex is a
+    # Mocha color, and the index is that theme's nearest color0–color15 slot.
+    # blue #89b4fa is color4. sapphire #74c7ec (pin) is nearest to color4 too.
+    highlight_color = "4"
 
     # Keybinds (optional - uncomment to customize)
     # See keybinds.toml for examples
@@ -25,7 +36,7 @@
     cursor = "█"
 
     # Command to launch terminal apps (apps with Terminal=true). Use "tty" for TTY mode (same as -t/--tty).
-    terminal_launcher = "kitty -e"
+    terminal_launcher = "${perHost.${osConfig.my.host}.terminal}"
 
     # Don't wrap around at list ends (false = wrap around)
     hard_stop = false
@@ -40,9 +51,9 @@
     #          RGB ("rgb(255,0,0)"), 8-bit ("196")
 
     # Border colors for each panel
-    main_border_color = "rgb(137,220,235)"      # Border color for the main info panel (top)
-    apps_border_color = "rgb(203,166,247)"      # Border color for the apps list panel (middle)
-    input_border_color = "rgb(245,224,220)"     # Border color for the input panel (bottom)
+    main_border_color = "6"       # sky #89dceb, nearest slot color6 teal
+    apps_border_color = "7"       # mauve #cba6f7, nearest slot color7 subtext1
+    input_border_color = "5"      # rosewater #f5e0dc, nearest slot color5 pink
 
     # Text Colors (non-highlighted text in each panel)
     main_text_color = "White"        # Text color for the main info panel
@@ -50,14 +61,14 @@
     input_text_color = "White"       # Text color for the input field
 
     # Pin/Favorite Settings
-    pin_color = "rgb(116,199,236)"     # Color for pin icon (default: orange)
+    pin_color = "4"                    # sapphire #74c7ec, nearest slot color4 blue
     pin_icon = "󰐃"                   # Icon for pinned apps (use Ctrl+Space to pin/unpin)
 
     # Show selected app name in panel titles (instead of "Apps"/"Fsel")
     fancy_mode = true
 
     # Panel title color
-    header_title_color = "rgb(137,180,250)"
+    header_title_color = "4"          # blue #89b4fa, color4
 
     # ===== LAYOUT =====
 

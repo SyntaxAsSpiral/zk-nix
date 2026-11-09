@@ -267,9 +267,9 @@ layout {
 spawn-sh-at-startup "swayidle -w timeout 300 'brightnessctl -s set 10%' resume 'brightnessctl -r' timeout 600 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors' before-sleep 'brightnessctl -s set 0'"
 spawn-sh-at-startup "grok-bot --password-store=basic"
 //spawn-at-startup "waybar"
-//spawn-sh-at-startup "alacritty -e jolt"
-//spawn-sh-at-startup "alacritty -e neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"
-//spawn-at-startup "alacritty"
+//spawn-sh-at-startup "footclient jolt"
+//spawn-sh-at-startup "footclient neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"
+//spawn-at-startup "footclient"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 //spawn-sh-at-startup ""
@@ -320,8 +320,8 @@ window-rule {
 }
 
 window-rule {
-    match app-id="Alacritty"
-    //open-maximized-to-edges true
+    match app-id="foot"
+    match app-id="footclient"
     open-fullscreen true
 }
 
@@ -376,9 +376,9 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
-    Mod+Q hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
-    Mod+S hotkey-overlay-title="screensaver" { spawn-sh "alacritty -e neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"; }    
-    Mod+R hotkey-overlay-title="Open Otter Launcher" { spawn-sh "alacritty --title=otter-launcher -e otter-launcher"; }
+    Mod+Q hotkey-overlay-title="Open a Terminal: foot" { spawn "footclient"; }
+    Mod+S hotkey-overlay-title="screensaver" { spawn-sh "footclient neo --colormode=32 -s -C ~/.config/neo/frappe-sapphire.cfg"; }
+    Mod+R hotkey-overlay-title="Open Otter Launcher" { spawn-sh "footclient --title=otter-launcher otter-launcher"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.

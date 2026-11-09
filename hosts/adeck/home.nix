@@ -25,7 +25,7 @@
     ./desk-env/awww-cycle.nix
     ../../shared/home/niri.nix
     ./desk-env/waybar.nix
-    ./desk-env/alacritty.nix
+    ./desk-env/foot.nix
   ];
 
   programs.home-manager.enable = true;
