@@ -81,6 +81,8 @@
     nixarchy = {
       url = "github:olafkfreund/nixarchy/release";
       inputs.nixpkgs.follows = "nixpkgs";
+      # One Home Manager for the fleet. Two copies declare home-manager.users twice.
+      inputs.home-manager.follows = "home-manager";
     };
 
   };
