@@ -23,6 +23,11 @@
   # installer's hardware-configuration.nix.
   zramSwap.enable = true;
 
+  # nixarchy adds fcitx5-mozc to its input-method addons, and nixpkgs' mozc does not build here
+  # (uic rejects a class name in dictionary_tool.ui). Stub it: no Japanese input on quita until
+  # the hold in overlays/README.md is dropped.
+  nixpkgs.overlays = [ (_final: prev: { fcitx5-mozc = prev.emptyDirectory; }) ];
+
   # nixarchy, as the doctor asked for it on this machine. The Home Manager half is in home.nix.
   programs.nixarchy = {
     enable = true;
