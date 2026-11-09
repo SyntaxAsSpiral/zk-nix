@@ -11,11 +11,17 @@
   boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
 
   fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
+    device = "/dev/disk/by-label/QUITA";
+    fsType = "btrfs";
+    options = [ "subvol=@" ];
+  };
+  fileSystems."/home" = {
+    device = "/dev/disk/by-label/QUITA";
+    fsType = "btrfs";
+    options = [ "subvol=@home" ];
   };
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
+    device = "/dev/disk/by-label/boot";
     fsType = "vfat";
     options = [ "fmask=0077" "dmask=0077" ];
   };

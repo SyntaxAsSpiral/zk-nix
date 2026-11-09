@@ -1,5 +1,5 @@
 # NixOS configuration for quita — laptop terminal. Core, no display stack yet: the
-# desktop (nixarchy's Hyprland, or XFCE) is added once the trial settles.
+# desktop (nixarchy's Hyprland) is added once the trial settles.
 # No NVIDIA, Steam, or packages.nix (its playwright browsers are the bulk of that set).
 { lib, pkgs, ... }:
 
@@ -18,6 +18,10 @@
 
   # No Steam, so no 32-bit audio stack.
   services.pipewire.alsa.support32Bit = lib.mkForce false;
+
+  # No performance.nix here, so zram is set per host. The swapfile (@swap) comes with the
+  # installer's hardware-configuration.nix.
+  zramSwap.enable = true;
 
   programs = {
     thunar = {
