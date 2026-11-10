@@ -54,6 +54,7 @@
   home-manager.users.zk = {
     imports = [ nixarchy.homeManagerModules.nixarchy ];
     programs.nixarchy.enable = true;
+    services.nixi.enable = false; # nixi is what pulls in codex, which does not build
     home.stateVersion = "25.11";
   };
 
